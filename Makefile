@@ -2,7 +2,7 @@ HOST_ARCH := $(shell uname -m)
 PROJECT := native/FolderMaster.xcodeproj
 DERIVED := build/DerivedData
 
-.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke script-proof script-isolation-proof ocr-proof check
+.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke script-proof script-isolation-proof ocr-proof metadata-proof check
 
 generate:
 	xcodegen generate --spec native/project.yml
@@ -46,3 +46,7 @@ script-isolation-proof: script-proof
 ocr-proof: generate
 	xcodebuild -quiet -project $(PROJECT) -scheme OCRProof -configuration Debug -derivedDataPath $(DERIVED) -destination 'platform=macOS,arch=$(HOST_ARCH)' build
 	python3 scripts/run-ocr-proof.py '$(DERIVED)/Build/Products/Debug/OCRProofHost.app'
+
+# Creates, mounts and removes only a new disposable APFS image under build/.
+metadata-proof:
+	python3 tests/native/metadata-proof/run.py

@@ -161,7 +161,7 @@ Action implementation contracts:
 - **Permanent delete:** opt-in and exact snapshot validation, unlink only selected regular directory entry, not recursive removal; record no undo. Revalidate capability at step boundary.
 - **Script:** D8; isolate and stage first, no script retry after uncertain execution. Publish only validated outputs with normal journal/conflicts; script outcome and output publication are separate recorded phases.
 
-Cross-volume/preservation paths should use platform copy primitives or explicit stream+metadata adapters selected after M1 proof; pure `std::fs::copy` alone is not accepted as evidence of Finder/xattr/resource-fork parity. Built-in output metadata verification is independent of byte verification.
+Cross-volume/preservation paths should use platform copy primitives or explicit stream+metadata adapters selected after M1 proof; pure `std::fs::copy` alone is not accepted as evidence of Finder/xattr/resource-fork parity. Built-in output metadata verification is independent of byte verification. The [M1 native metadata proof](../../../docs/METADATA_PROOF.md) now demonstrates both native copy methods on two local APFS volumes. Measured bytes, Finder values, non-quarantine xattrs/resource forks, mode and nanosecond mtime match, but macOS can rewrite quarantine records. Preserve system quarantine and verify/report platform-managed metadata separately rather than forcing raw-byte equality. Tag/label writes must snapshot and read back both fields; multi-key write order is undefined. The proof establishes no production publication, source-unlink, ACL or other-filesystem guarantee.
 
 ### D7. Undo is conditional compensation, not time travel
 

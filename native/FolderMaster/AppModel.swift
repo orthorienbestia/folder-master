@@ -2,6 +2,7 @@ import SwiftUI
 
 enum WorkspaceDestination: Hashable { case folder(UUID), history }
 enum PreviewPhase { case review, running, finished, canceled }
+enum QuitDecision { case save, discard, cancel }
 
 struct DemoActivity: Identifiable {
     let id = UUID()
@@ -38,13 +39,23 @@ final class AppModel: ObservableObject {
     @Published var folderCandidate: FolderCandidate?
     @Published var showLiveUnsaved = false
     @Published var folderSavedFeedback = false
+    @Published var quitPending = false
     private enum PendingLiveAction { case select(String?), demo }
     private var pendingLiveAction: PendingLiveAction?
     private enum PendingEditorAction { case select(UUID?), create }
     private var pendingEditorAction: PendingEditorAction?
     private var started = false
     private var simulation: Task<Void, Never>?
+    private let dataDirectory: URL?
     let engine = EngineClient()
+
+    init(dataDirectory: URL? = nil) {
+        #if DEBUG
+        self.dataDirectory = dataDirectory ?? ProcessInfo.processInfo.environment["FOLDER_MASTER_TEST_DATA_ROOT"].map { URL(fileURLWithPath: $0, isDirectory: true) }
+        #else
+        self.dataDirectory = dataDirectory
+        #endif
+    }
 
     var dirty: Bool { draft != experience.rules.first { $0.id == selectedRuleID } }
     var validDraft: Bool {
@@ -67,8 +78,13 @@ final class AppModel: ObservableObject {
             let reply: EngineReply
             if current.payload.store_open == true { reply = current }
             else {
-                let parent = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-                reply = try await engine.openStore(at: parent.appendingPathComponent("Folder Master", isDirectory: true))
+                let directory: URL
+                if let dataDirectory { directory = dataDirectory }
+                else {
+                    let parent = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                    directory = parent.appendingPathComponent("Folder Master", isDirectory: true)
+                }
+                reply = try await engine.openStore(at: directory)
             }
             guard reply.payload.store_open == true else { throw EngineClientError.protocolMismatch }
             enginePaused = reply.payload.paused ?? true
@@ -86,7 +102,7 @@ final class AppModel: ObservableObject {
     }
 
     func setPaused(_ paused: Bool) {
-        guard !enginePending, workspaceReady else { return }
+        guard !enginePending, workspaceReady, !quitPending else { return }
         enginePending = true
         Task {
             defer { enginePending = false }
@@ -99,7 +115,7 @@ final class AppModel: ObservableObject {
     }
 
     func exploreDemo() {
-        guard !folderPending else { return }
+        guard !folderPending, !quitPending else { return }
         if liveDirty { pendingLiveAction = .demo; showLiveUnsaved = true; return }
         enterDemo()
     }
@@ -113,7 +129,7 @@ final class AppModel: ObservableObject {
     }
 
     func selectLiveFolder(_ id: String?) {
-        guard !folderPending else { return }
+        guard !folderPending, !quitPending else { return }
         guard selectedLiveFolderID != id else { return }
         if liveDirty { pendingLiveAction = .select(id); showLiveUnsaved = true; return }
         loadLiveFolder(id)
@@ -123,9 +139,9 @@ final class AppModel: ObservableObject {
         liveDraft = storedFolders.first { $0.id == id }
         folderSavedFeedback = false
     }
-    func discardLiveDraft() { loadLiveFolder(selectedLiveFolderID) }
+    func discardLiveDraft() { guard !folderPending, !quitPending else { return }; loadLiveFolder(selectedLiveFolderID) }
     func resolveLiveUnsaved(save: Bool) async {
-        guard !folderPending else { return }
+        guard !folderPending, !quitPending else { return }
         if save, !(await saveLiveFolder()) { return }
         let action = pendingLiveAction; pendingLiveAction = nil
         discardLiveDraft()
@@ -136,6 +152,10 @@ final class AppModel: ObservableObject {
         }
     }
     func saveLiveFolder() async -> Bool {
+        guard !quitPending else { return false }
+        return await persistLiveFolderDraft()
+    }
+    private func persistLiveFolderDraft() async -> Bool {
         guard let draft = liveDraft, validLiveDraft, workspaceReady, !folderPending else { return false }
         folderPending = true; error = nil
         defer { folderPending = false }
@@ -147,7 +167,7 @@ final class AppModel: ObservableObject {
         } catch { self.error = error.localizedDescription; return false }
     }
     func chooseFolder() {
-        guard workspaceReady, !folderPending else { return }
+        guard workspaceReady, !folderPending, !quitPending else { return }
         let panel = NSOpenPanel()
         panel.canChooseDirectories = true; panel.canChooseFiles = false
         panel.allowsMultipleSelection = false; panel.resolvesAliases = false
@@ -158,13 +178,14 @@ final class AppModel: ObservableObject {
             Task { @MainActor in
                 do {
                     let candidate = try await Task.detached(priority: .userInitiated) { try NativeFolderAccess.candidate(for: url) }.value
+                    guard self?.quitPending == false else { return }
                     self?.folderCandidate = candidate; self?.error = nil; self?.showAddFolder = true
                 } catch { self?.error = error.localizedDescription }
             }
         }
     }
     func addLiveFolder(name: String) async -> Bool {
-        guard let candidate = folderCandidate, workspaceReady, !folderPending else { return false }
+        guard let candidate = folderCandidate, workspaceReady, !folderPending, !quitPending else { return false }
         folderPending = true; error = nil
         defer { folderPending = false }
         do {
@@ -179,7 +200,7 @@ final class AppModel: ObservableObject {
         } catch { self.error = error.localizedDescription; return false }
     }
     func removeLiveFolder(_ folder: StoredFolder) async {
-        guard workspaceReady, !folderPending else { return }
+        guard workspaceReady, !folderPending, !quitPending else { return }
         folderPending = true; error = nil
         defer { folderPending = false }
         do {
@@ -262,5 +283,24 @@ final class AppModel: ObservableObject {
     }
 
     func cancelSimulation() { simulation?.cancel(); previewPhase = .canceled }
+    func prepareForQuit(confirm: @MainActor () async -> QuitDecision) async -> Bool {
+        guard !quitPending else { return false }
+        quitPending = true
+        // Allow acknowledged configuration updates to settle before inspecting
+        // dirty state or shutting down the worker. This never waits on the UI
+        // thread synchronously. File-effect draining remains a later milestone.
+        do {
+            while folderPending || enginePending || workspaceConnecting { try await Task.sleep(nanoseconds: 10_000_000) }
+        } catch { quitPending = false; return false }
+        if liveDirty {
+            switch await confirm() {
+            case .cancel: quitPending = false; return false
+            case .save:
+                guard await persistLiveFolderDraft() else { quitPending = false; return false }
+            case .discard: break
+            }
+        }
+        return true
+    }
     func shutdown() async { simulation?.cancel(); await engine.shutdown() }
 }

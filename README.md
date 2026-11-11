@@ -20,7 +20,7 @@ Build the development app with `make build`; see [development instructions and e
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 6/65 complete; M1 lifecycle/UX/platform gates remain open.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 7/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master
@@ -32,6 +32,8 @@ git log --oneline
 Planning is complete and the OpenSpec apply workflow is underway. Script isolation, native metadata preservation and target-OS runtime compatibility have explicit early feasibility gates. A plan passing validation is not proof of runtime behavior.
 
 The separate [staged script proof](docs/SCRIPT_PROOF.md) passes basic XPC execution, but its strict IPC isolation gate fails. Product scripts remain unavailable; no unrestricted fallback is connected.
+
+Run `make metadata-proof` for the standalone [Finder metadata and cross-volume copy proof](docs/METADATA_PROOF.md), which creates and cleans up its own disposable APFS image. This is feasibility evidence, not an action executor.
 
 Run `make ocr-proof` for the separate [local content/OCR proof and its evidence limits](docs/OCR_PROOF.md). The native adapter is not yet a working text rule in the main app.
 

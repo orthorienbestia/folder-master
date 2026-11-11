@@ -1,0 +1,2591 @@
+{
+  "note": "Condensed actual generated-fixture runs. Earlier run predates runner environment/cleanup annotations. Nullable tags remain raw Foundation nil, not normalized to empty.",
+  "runs": [
+    {
+      "copies": [
+        {
+          "allXattrsByteIdentical": true,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112317194,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 76,
+                "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112317196,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "7d3abaf278f2993db1ab9ae511f46b348ffae627d03ba95e5d1746f5f9e5c739"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af42e22;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 30,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "7d3abaf278f2993db1ab9ae511f46b348ffae627d03ba95e5d1746f5f9e5c739"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0281;6af42e22;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 32,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "7d3abaf278f2993db1ab9ae511f46b348ffae627d03ba95e5d1746f5f9e5c739"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af42e22;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112317198,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "7d3abaf278f2993db1ab9ae511f46b348ffae627d03ba95e5d1746f5f9e5c739"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0281;6af42e22;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112317200,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "7d3abaf278f2993db1ab9ae511f46b348ffae627d03ba95e5d1746f5f9e5c739"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af42e22;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        },
+        {
+          "allXattrsByteIdentical": true,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 34,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 76,
+                "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 36,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "7d3abaf278f2993db1ab9ae511f46b348ffae627d03ba95e5d1746f5f9e5c739"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af42e22;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        }
+      ],
+      "os": "Version 26.6.2 (Build 25G83)",
+      "result": "passed",
+      "scope": "generated regular-file fixtures only",
+      "sources": [
+        {
+          "bytes": 262144,
+          "device": 16777232,
+          "inode": 112317192,
+          "label": 6,
+          "mode": "640",
+          "mtimeNanoseconds": 987654321,
+          "mtimeSeconds": 1700000000,
+          "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+          "tags": [
+            "FolderMasterFixture",
+            "Red"
+          ],
+          "xattrs": {
+            "com.apple.FinderInfo": {
+              "bytes": 32,
+              "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+            },
+            "com.apple.ResourceFork": {
+              "bytes": 36,
+              "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+            },
+            "com.apple.metadata:_kMDItemUserTags": {
+              "bytes": 76,
+              "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+            },
+            "com.apple.provenance": {
+              "bytes": 11,
+              "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+            },
+            "com.apple.quarantine": {
+              "bytes": 76,
+              "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+            },
+            "com.foldermaster.metadata-proof": {
+              "bytes": 5,
+              "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+            }
+          }
+        },
+        {
+          "bytes": 262144,
+          "device": 16777257,
+          "inode": 28,
+          "label": 6,
+          "mode": "640",
+          "mtimeNanoseconds": 987654321,
+          "mtimeSeconds": 1700000000,
+          "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+          "tags": [
+            "FolderMasterFixture",
+            "Red"
+          ],
+          "xattrs": {
+            "com.apple.FinderInfo": {
+              "bytes": 32,
+              "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+            },
+            "com.apple.ResourceFork": {
+              "bytes": 36,
+              "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+            },
+            "com.apple.metadata:_kMDItemUserTags": {
+              "bytes": 76,
+              "sha256": "9c64f9662d1c7d917b4829ad6c1f8e4bf6ff86767e112bf009865ab6a17c7382"
+            },
+            "com.apple.provenance": {
+              "bytes": 11,
+              "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+            },
+            "com.apple.quarantine": {
+              "bytes": 76,
+              "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+            },
+            "com.foldermaster.metadata-proof": {
+              "bytes": 5,
+              "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+            }
+          }
+        }
+      ],
+      "transitionsByVolume": [
+        {
+          "device": 16777232,
+          "transitions": [
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": null
+              },
+              "operation": "add plain tag",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterPlain"
+              ]
+            },
+            {
+              "after": {
+                "label": 6,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "operation": "set Red label 6, leave tags",
+              "requestedLabel": 6,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "before": {
+                "label": 6,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "operation": "replace with plain tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterReplacement"
+              ]
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "operation": "clear label 0, leave tags",
+              "requestedLabel": 0,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "Red"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "operation": "replace with named Red tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": null
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "Red"
+                ]
+              },
+              "operation": "remove all tags, leave label",
+              "requestedLabel": null,
+              "requestedTags": []
+            },
+            {
+              "after": {
+                "label": 4,
+                "tags": [
+                  "Blue"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": null
+              },
+              "operation": "set Blue label 4, leave tags",
+              "requestedLabel": 4,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ]
+              },
+              "before": {
+                "label": 4,
+                "tags": [
+                  "Blue"
+                ]
+              },
+              "operation": "set tags and Red label in one resource-values write",
+              "requestedLabel": 6,
+              "requestedTags": [
+                "FolderMasterFixture",
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "label": 6,
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ]
+              },
+              "operation": "set final Red label separately",
+              "requestedLabel": 6,
+              "requestedTags": null
+            }
+          ],
+          "volumeIndex": 0
+        },
+        {
+          "device": 16777257,
+          "transitions": [
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": null
+              },
+              "operation": "add plain tag",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterPlain"
+              ]
+            },
+            {
+              "after": {
+                "label": 6,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "operation": "set Red label 6, leave tags",
+              "requestedLabel": 6,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "before": {
+                "label": 6,
+                "tags": [
+                  "FolderMasterPlain"
+                ]
+              },
+              "operation": "replace with plain tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterReplacement"
+              ]
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "operation": "clear label 0, leave tags",
+              "requestedLabel": 0,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "Red"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterReplacement"
+                ]
+              },
+              "operation": "replace with named Red tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": null
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "Red"
+                ]
+              },
+              "operation": "remove all tags, leave label",
+              "requestedLabel": null,
+              "requestedTags": []
+            },
+            {
+              "after": {
+                "label": 4,
+                "tags": [
+                  "Blue"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": null
+              },
+              "operation": "set Blue label 4, leave tags",
+              "requestedLabel": 4,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ]
+              },
+              "before": {
+                "label": 4,
+                "tags": [
+                  "Blue"
+                ]
+              },
+              "operation": "set tags and Red label in one resource-values write",
+              "requestedLabel": 6,
+              "requestedTags": [
+                "FolderMasterFixture",
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "label": 6,
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ]
+              },
+              "before": {
+                "label": 0,
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ]
+              },
+              "operation": "set final Red label separately",
+              "requestedLabel": 6,
+              "requestedTags": null
+            }
+          ],
+          "volumeIndex": 1
+        }
+      ]
+    },
+    {
+      "architecture": "arm64",
+      "copies": [
+        {
+          "allXattrsByteIdentical": true,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112332095,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 76,
+                "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112332097,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "8160db36547deb33384ff19e501a8f31ff6668c65c75fb96d4b24e92e42e360f"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af4352c;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 21,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "8160db36547deb33384ff19e501a8f31ff6668c65c75fb96d4b24e92e42e360f"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0281;6af4352c;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 23,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "8160db36547deb33384ff19e501a8f31ff6668c65c75fb96d4b24e92e42e360f"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af4352c;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 0
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112332099,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "8160db36547deb33384ff19e501a8f31ff6668c65c75fb96d4b24e92e42e360f"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0281;6af4352c;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": true,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777232,
+            "inode": 112332101,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "8160db36547deb33384ff19e501a8f31ff6668c65c75fb96d4b24e92e42e360f"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 0,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af4352c;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        },
+        {
+          "allXattrsByteIdentical": true,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 25,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 76,
+                "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "Foundation.copyItem",
+          "quarantineDestination": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        },
+        {
+          "allXattrsByteIdentical": false,
+          "crossVolume": false,
+          "destination": {
+            "bytes": 262144,
+            "device": 16777257,
+            "inode": 27,
+            "label": 6,
+            "mode": "640",
+            "mtimeNanoseconds": 987654321,
+            "mtimeSeconds": 1700000000,
+            "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+            "tags": [
+              "FolderMasterFixture",
+              "Red"
+            ],
+            "xattrs": {
+              "com.apple.FinderInfo": {
+                "bytes": 32,
+                "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+              },
+              "com.apple.ResourceFork": {
+                "bytes": 36,
+                "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+              },
+              "com.apple.metadata:_kMDItemUserTags": {
+                "bytes": 76,
+                "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+              },
+              "com.apple.provenance": {
+                "bytes": 11,
+                "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+              },
+              "com.apple.quarantine": {
+                "bytes": 51,
+                "sha256": "8160db36547deb33384ff19e501a8f31ff6668c65c75fb96d4b24e92e42e360f"
+              },
+              "com.foldermaster.metadata-proof": {
+                "bytes": 5,
+                "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+              }
+            }
+          },
+          "destinationVolumeIndex": 1,
+          "existingDestination": "rejected and unchanged",
+          "method": "copyfile.ALL_EXCL",
+          "quarantineDestination": "0281;6af4352c;;00000000-0000-0000-0000-000000000001",
+          "quarantineSource": "0081;6553f100;FolderMasterMetadataProof;00000000-0000-0000-0000-000000000001",
+          "result": "passed",
+          "sourceUnchanged": true,
+          "sourceVolumeIndex": 1
+        }
+      ],
+      "deploymentTarget": "macOS 14.0 (compile only)",
+      "observedAt": "2026-11-11T09:28:12Z",
+      "os": "Version 26.6.2 (Build 25G83)",
+      "ownedImageDetachedAndRemoved": true,
+      "result": "passed",
+      "scope": "generated regular-file fixtures only",
+      "sources": [
+        {
+          "bytes": 262144,
+          "device": 16777232,
+          "inode": 112332093,
+          "label": 6,
+          "mode": "640",
+          "mtimeNanoseconds": 987654321,
+          "mtimeSeconds": 1700000000,
+          "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+          "tags": [
+            "FolderMasterFixture",
+            "Red"
+          ],
+          "xattrs": {
+            "com.apple.FinderInfo": {
+              "bytes": 32,
+              "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+            },
+            "com.apple.ResourceFork": {
+              "bytes": 36,
+              "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+            },
+            "com.apple.metadata:_kMDItemUserTags": {
+              "bytes": 76,
+              "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+            },
+            "com.apple.provenance": {
+              "bytes": 11,
+              "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+            },
+            "com.apple.quarantine": {
+              "bytes": 76,
+              "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+            },
+            "com.foldermaster.metadata-proof": {
+              "bytes": 5,
+              "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+            }
+          }
+        },
+        {
+          "bytes": 262144,
+          "device": 16777257,
+          "inode": 19,
+          "label": 6,
+          "mode": "640",
+          "mtimeNanoseconds": 987654321,
+          "mtimeSeconds": 1700000000,
+          "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+          "tags": [
+            "FolderMasterFixture",
+            "Red"
+          ],
+          "xattrs": {
+            "com.apple.FinderInfo": {
+              "bytes": 32,
+              "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+            },
+            "com.apple.ResourceFork": {
+              "bytes": 36,
+              "sha256": "7e46805402c16d78135c1da7fd3b71547274bf0d4c59ae083c92e18fd856c7e7"
+            },
+            "com.apple.metadata:_kMDItemUserTags": {
+              "bytes": 76,
+              "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+            },
+            "com.apple.provenance": {
+              "bytes": 11,
+              "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+            },
+            "com.apple.quarantine": {
+              "bytes": 76,
+              "sha256": "b954ceccdc820f7f0caf71663b1d0c4536246eedb12ae98da30f942968779d0d"
+            },
+            "com.foldermaster.metadata-proof": {
+              "bytes": 5,
+              "sha256": "0150a92bb1212cd00516b65fde0704614760000963874fcbb11eaa734ee87809"
+            }
+          }
+        }
+      ],
+      "transitionsByVolume": [
+        {
+          "device": 16777232,
+          "transitions": [
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": null,
+                "xattrs": {
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "add plain tag",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterPlain"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set Red label 6, leave tags",
+              "requestedLabel": 6,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "clear nonzero label, leave plain tag",
+              "requestedLabel": 0,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "restore Red label, leave plain tag",
+              "requestedLabel": 6,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "replace with plain tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterReplacement"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "clear label 0, leave tags",
+              "requestedLabel": 0,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 50,
+                    "sha256": "0c5a0bd9a94eedb727d03481895d9bfd41f523bacc26dc2dd7797f57021a23ba"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "replace with named Red tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": null,
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 50,
+                    "sha256": "0c5a0bd9a94eedb727d03481895d9bfd41f523bacc26dc2dd7797f57021a23ba"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "remove all tags, leave label",
+              "requestedLabel": null,
+              "requestedTags": []
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 4,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Blue"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "7549d699d3d1989d940600f25501c243e9af21fe51ef2adb8358c159c9e9663f"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": null,
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set Blue label 4, leave tags",
+              "requestedLabel": 4,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 76,
+                    "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 4,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Blue"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "7549d699d3d1989d940600f25501c243e9af21fe51ef2adb8358c159c9e9663f"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set tags and Red label in one resource-values write",
+              "requestedLabel": 6,
+              "requestedTags": [
+                "FolderMasterFixture",
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 76,
+                    "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777232,
+                "inode": 112332093,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 154950829,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 76,
+                    "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set final Red label separately",
+              "requestedLabel": 6,
+              "requestedTags": null
+            }
+          ],
+          "volumeIndex": 0
+        },
+        {
+          "device": 16777257,
+          "transitions": [
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": null,
+                "xattrs": {
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "add plain tag",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterPlain"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set Red label 6, leave tags",
+              "requestedLabel": 6,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "clear nonzero label, leave plain tag",
+              "requestedLabel": 0,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "restore Red label, leave plain tag",
+              "requestedLabel": 6,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterPlain"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 66,
+                    "sha256": "3a811aa53527ba00dde2ab6c0ad0ddcf4ff335c869c6ba811584a492df2b3606"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "replace with plain tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "FolderMasterReplacement"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "clear label 0, leave tags",
+              "requestedLabel": 0,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 50,
+                    "sha256": "0c5a0bd9a94eedb727d03481895d9bfd41f523bacc26dc2dd7797f57021a23ba"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterReplacement"
+                ],
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 72,
+                    "sha256": "c51907558676d2a13fc614411df515ff6446e395970e9f2155b6042d426c9f24"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "replace with named Red tag, leave label",
+              "requestedLabel": null,
+              "requestedTags": [
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": null,
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 50,
+                    "sha256": "0c5a0bd9a94eedb727d03481895d9bfd41f523bacc26dc2dd7797f57021a23ba"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "remove all tags, leave label",
+              "requestedLabel": null,
+              "requestedTags": []
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 4,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Blue"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "7549d699d3d1989d940600f25501c243e9af21fe51ef2adb8358c159c9e9663f"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 0,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": null,
+                "xattrs": {
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set Blue label 4, leave tags",
+              "requestedLabel": 4,
+              "requestedTags": null
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 76,
+                    "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 4,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "Blue"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "7549d699d3d1989d940600f25501c243e9af21fe51ef2adb8358c159c9e9663f"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 42,
+                    "sha256": "aad02e1bbbb00b10402fb9abc3fb93c5eee7df168946b1f75bbdb510b6763a1f"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set tags and Red label in one resource-values write",
+              "requestedLabel": 6,
+              "requestedTags": [
+                "FolderMasterFixture",
+                "Red"
+              ]
+            },
+            {
+              "after": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 76,
+                    "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "before": {
+                "bytes": 262144,
+                "device": 16777257,
+                "inode": 19,
+                "label": 6,
+                "mode": "644",
+                "mtimeNanoseconds": 236338322,
+                "mtimeSeconds": 1794389292,
+                "sha256": "1d5f3d1b4e60e759d96b7c7bc439f2b475fda84391af7c5a0e8a06aa95549f74",
+                "tags": [
+                  "FolderMasterFixture",
+                  "Red"
+                ],
+                "xattrs": {
+                  "com.apple.FinderInfo": {
+                    "bytes": 32,
+                    "sha256": "9769e8a548638b7737b22d076d9c5d069505c05cb7376604dc82b4fc2652e185"
+                  },
+                  "com.apple.metadata:_kMDItemUserTags": {
+                    "bytes": 76,
+                    "sha256": "8b7ba1051c5fab0a2f61d3469c1c8b49aa8864ed7bca639ba1fa857bca46c692"
+                  },
+                  "com.apple.provenance": {
+                    "bytes": 11,
+                    "sha256": "9460cdadee26f5c932cf2a2ff474bca8b44e7389f38f6fb3a7489decd44590fa"
+                  }
+                }
+              },
+              "operation": "set final Red label separately",
+              "requestedLabel": 6,
+              "requestedTags": null
+            }
+          ],
+          "volumeIndex": 1
+        }
+      ],
+      "volumes": [
+        {
+          "filesystem": "apfs",
+          "index": 0,
+          "nativeLocal": true
+        },
+        {
+          "filesystem": "apfs",
+          "index": 1,
+          "nativeLocal": true
+        }
+      ]
+    }
+  ]
+}

@@ -164,6 +164,6 @@ struct AppSettingsView: View {
                 Text("Folder configuration and pause settings are saved locally. Sample rule previews use synthetic data. Watching, OCR, file actions, history execution and undo are still being implemented.")
                     .font(.caption).foregroundStyle(.secondary)
             }
-        }.formStyle(.grouped).padding(8).disabled(!model.workspaceReady)
+        }.formStyle(.grouped).padding(8).disabled(!model.workspaceReady || model.quitPending)
     }
 }

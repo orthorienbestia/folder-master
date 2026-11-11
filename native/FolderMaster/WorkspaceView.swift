@@ -3,8 +3,17 @@ import SwiftUI
 struct WorkspaceView: View {
     @ObservedObject var model: AppModel
     var body: some View {
-        if model.demo { DemoWorkspaceView(model: model) }
-        else { PersistentWorkspaceView(model: model) }
+        Group {
+            if model.demo { DemoWorkspaceView(model: model) }
+            else { PersistentWorkspaceView(model: model) }
+        }
+        .disabled(model.quitPending)
+        .overlay(alignment: .bottom) {
+            if model.quitPending && (model.folderPending || model.enginePending || model.workspaceConnecting) {
+                HStack { ProgressView().controlSize(.small); Text("Finishing settings update before quitting…") }
+                    .padding(12).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8)).padding(16)
+            }
+        }
     }
 }
 

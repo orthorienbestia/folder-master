@@ -27,6 +27,7 @@ make presentation-smoke
 make persistence-smoke
 make script-proof
 make ocr-proof
+make metadata-proof
 make check
 make universal
 ```
@@ -41,11 +42,19 @@ The app owns `~/Library/Application Support/Folder Master` with user-only permis
 
 `make ocr-proof` builds the separate `OCRProof` scheme and runs a sandboxed, direct-network-denied synthetic content suite. The reusable adapter source is native/PlatformAdapters/DocumentText.swift; it takes Data/options, exposes structured coverage/issues and performs no source URL access or persistence. Dispatch it off the UI actor. Complete extraction refers to the selected source, not guaranteed recognition accuracy. Fast requires explicit supported languages; Accurate supports automatic detection. See [format, deadline, language and network evidence](OCR_PROOF.md). Rust request/response integration must respect the bridge's bounded envelopes rather than placing a multi-megabyte text result in one JSON message.
 
+`make metadata-proof` compiles a standalone native harness targeting macOS 14 and creates a new disposable APFS image under build/. Host disk-image access is required. It tests tags/labels and native copies on the repository volume and the owned image, then detaches/removes that image. [METADATA_PROOF.md](METADATA_PROOF.md) records measured fields and limits: native tag/label coupling, exact non-quarantine xattr/resource-fork preservation, and system-rewritten quarantine bytes. It does not implement production copying or moving.
+
 SQLite schema v1 includes folder configuration, settings, immutable rule revisions/heads, runs, operation journal, history, receipts and deadlines. Only folder/settings/internal rule snapshot operations are implemented; journal tables are provisioned for the subsequent durable-executor work. Migrations are transactional, newer schemas are inspected read-only and rejected, and backups use SQLite's online backup API to capture WAL contents before publishing a standalone no-replace file. The backup API is internal, with its user-facing export flow pending. SQLite 3 is bundled through pinned rusqlite 0.41.1 rather than relying on the installed system version.
 
 Native enrollment validates directory/package/link/local-volume eligibility and stores an ordinary Foundation bookmark, not a TCC bypass. Reconnect, revoked access and cloud placeholder handling remain task 1.6/5.1 gates. Native filesystem URL helpers preserve raw bytes; this host's test volume rejects creating invalid UTF-8 names with EILSEQ, so physical enrollment of such a directory is explicitly skipped while byte-level URL/bridge roundtrips pass. Motion preferences still use AppStorage in this foundation and are disabled when workspace ownership is unavailable; full Settings persistence/export acceptance remains pending.
 
 Local signing is ad hoc. Xcode reports that hardened runtime is disabled for this ad-hoc debug build. This does not satisfy the signed hardened/notarized release gate. The Cargo build phase's Xcode script sandbox is disabled so it can use the installed toolchain and build output directories; this is a build setting, not the runtime script-service isolation mechanism. The actual restricted script service is a separate pending task.
+
+## Native Quit and isolated development data
+
+Quit waits asynchronously for in-flight configuration commands, then prompts Save / Discard Changes / Cancel for a dirty real folder draft. Failed saves keep the app open with its draft and error. New workspace commands are disabled during preparation. The native Cancel and Save paths were exercised using a generated folder and isolated app database; this does not prove future file-effect shutdown or menu persistence after window close.
+
+Debug builds alone accept `FOLDER_MASTER_TEST_DATA_ROOT` to isolate native UI checks from the normal Application Support store. It is a development harness input, not a product setting; Release ignores the environment variable. Each UI fixture must use a fresh private temporary directory, preserve its generated input bytes, and be cleaned up after the app exits.
 
 ## Bridge contract v1
 
@@ -77,4 +86,4 @@ Rust exports contain unwinding panics. A worker panic marks the worker failed an
 
 ## Evidence boundaries
 
-Rust tests exercise worker/FFI contracts, persistence, immutable snapshots, migrations/rollback, consistent backup, private data boundaries and same/cross-process ownership including forced process death. Native XCTest covers motion/state plus native bookmark/path helpers. Bridge, presentation and persistence smoke targets compile/link real Swift and Rust; presentation covers dirty navigation, pending-save guards and initialization retry, while persistence covers folder setup, revisions, reopen, pause, ownership and settings-only removal with original bytes retained. Queued post-submit cancellation through Swift is not deterministically exercised end to end yet; Rust unit tests exercise the queued cancel state. Native UI inspection covers the storyboard and real folder chooser/setup/cancel states; it does not prove file safety, OCR, script isolation, full accessibility or lifecycle behavior. See PROGRESS.md for actual outcomes and unfinished gates.
+Rust tests exercise worker/FFI contracts, persistence, immutable snapshots, migrations/rollback, consistent backup, private data boundaries and same/cross-process ownership including forced process death. Native XCTest covers motion/state plus native bookmark/path helpers. Bridge, presentation and persistence smoke targets compile/link real Swift and Rust; presentation covers dirty navigation, pending-save guards, initialization retry and Quit Save/Discard/Cancel including failed saves and pending-update draining, while persistence covers folder setup, revisions, reopen, pause, ownership and settings-only removal with original bytes retained. Queued post-submit cancellation through Swift is not deterministically exercised end to end yet; Rust unit tests exercise the queued cancel state. Native UI inspection covers the storyboard and real folder chooser/setup/cancel states; it does not prove file safety, OCR, script isolation, full accessibility or lifecycle behavior. See PROGRESS.md for actual outcomes and unfinished gates.

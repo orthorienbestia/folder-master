@@ -47,7 +47,53 @@ struct AppModelSmoke {
             await model.shutdown()
             try FileManager.default.removeItem(at: root)
         } catch { fail("Initialization retry test failed: \(error)") }
-        print("Native presentation smoke passed: dirty-draft navigation, pending-save guards and already-open store retry")
+        for (decision, stale) in [(QuitDecision.cancel, false), (.discard, false), (.save, false), (.save, true)] {
+            let root = FileManager.default.temporaryDirectory.appendingPathComponent("folder-master-quit-\(UUID().uuidString)", isDirectory: true)
+            do {
+                try FileManager.default.createDirectory(at: root, withIntermediateDirectories: false, attributes: [.posixPermissions:0o700])
+                let inbox = root.appendingPathComponent("Inbox", isDirectory: true)
+                try FileManager.default.createDirectory(at: inbox, withIntermediateDirectories: false)
+                let model = AppModel()
+                _ = try await model.engine.openStore(at: root.appendingPathComponent("data", isDirectory: true))
+                await model.connect()
+                model.folderCandidate = try NativeFolderAccess.candidate(for: inbox)
+                guard await model.addLiveFolder(name: "Original") else { fail("Could not enroll quit fixture") }
+                model.liveDraft?.display_name = "Edited before quit"
+                if stale {
+                    var newer = try await model.engine.listFolders()[0]
+                    newer.display_name = "Changed elsewhere"
+                    _ = try await model.engine.updateFolder(newer)
+                }
+                var prompted = false
+                let ready = await model.prepareForQuit { prompted = true; return decision }
+                guard prompted else { fail("Quit discarded dirty folder configuration without prompting") }
+                guard ready == (decision != .cancel && !stale), model.quitPending == ready else { fail("Quit choice did not control termination state") }
+                let saved = try await model.engine.listFolders()
+                let expected = stale ? "Changed elsewhere" : decision == .save ? "Edited before quit" : "Original"
+                guard saved.first?.display_name == expected else { fail("Quit Save/Discard did not persist the chosen configuration") }
+                if stale { guard model.liveDirty && model.error != nil else { fail("Failed Quit Save lost draft or error") } }
+                if decision == .cancel { guard model.liveDirty else { fail("Cancel Quit discarded the draft") } }
+                if decision == .cancel {
+                    let selected = model.selectedLiveFolderID
+                    model.folderPending = true
+                    let release = Task { @MainActor in
+                        guard model.quitPending else { fail("Quit did not wait for pending update") }
+                        model.folderPending = false
+                        model.selectLiveFolder(nil); model.exploreDemo(); model.setPaused(false)
+                        guard model.selectedLiveFolderID == selected, !model.demo, !model.showLiveUnsaved, !model.enginePending else { fail("New commands entered during quit preparation") }
+                    }
+                    let second = await model.prepareForQuit {
+                        guard !model.folderPending else { fail("Quit prompted before pending update settled") }
+                        return .cancel
+                    }
+                    await release.value
+                    guard !second && !model.quitPending else { fail("Cancel did not release drained quit state") }
+                }
+                await model.shutdown()
+                try FileManager.default.removeItem(at: root)
+            } catch { fail("Quit workflow test failed: \(error)") }
+        }
+        print("Native presentation smoke passed: draft navigation, retry, Quit choices, failed save and pending-update drain")
     }
     static func fail(_ message: String) -> Never {
         FileHandle.standardError.write(Data((message + "\n").utf8))

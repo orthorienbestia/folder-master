@@ -1,6 +1,6 @@
 # Folder Master — Progress and evidence
 
-Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 6/65 engineering tasks complete**. Real folder setup persists locally and the native content/OCR adapter passes synthetic offline cases, but the app is not yet a working file organizer. Full script isolation remains a failing gate.
+Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 7/65 engineering tasks complete**. Real folder setup persists locally and the native content/OCR adapter passes synthetic offline cases, but the app is not yet a working file organizer. Full script isolation remains a failing gate.
 
 ## Objective and constraints
 
@@ -19,8 +19,8 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Primary-source research | Done for planning | Apple native UI/OCR/filesystem/security docs and Context7 Notify lookup; see RESEARCH.md |
 | Local Git initialization | Done | Planning baseline a211aec on main; implementation branch feat/native-foundation; no remote |
 | PRD / TDD / options / flows / UI-UX-motion | Planning baseline delivered | Independent planning review completed; apply started after the goal continuation request |
-| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.4, 1.8, 1.9 and 1.10 complete, 59 tasks remain |
-| M1 platform/experience foundation | In progress | Builds, bridge, storage/ownership, basic script and native content/OCR proofs verified; full script IPC gate fails; lifecycle, full UX/motion, folder/TCC and metadata gates remain open |
+| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.4, 1.7, 1.8, 1.9 and 1.10 complete, 58 tasks remain |
+| M1 platform/experience foundation | In progress | Builds, bridge, storage/ownership, basic script, native content/OCR and APFS metadata proofs verified; full script IPC gate fails; lifecycle, full UX/motion and folder/TCC gates remain open |
 | M2 safe metadata automation | Not started | No runtime checks |
 | M3 complete content/actions | Integration pending | Native OCR feasibility passes; actual text rules/cache, full content coverage and advanced actions are pending; script privacy gate fails |
 | M4 native management | Early integration | Real folder setup and M1 synthetic screens exist; reconnect, full rules/actions, management and real execution UX are pending |
@@ -39,12 +39,12 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Rust foundation/storage suite | Passed | make test: 24 tests (3 unit, 8 bridge, 3 persistent bridge, 10 storage), no failures |
 | Native XCTest | Passed with explicit skip | make test: 15 passed, 0 failed, 1 skipped. Includes native content/coverage/cancellation contracts. Physical invalid-UTF-8 directory fixture unsupported by this volume; byte-level URL roundtrip passes |
 | Swift↔Rust smoke | Passed | Real linked actor/ABI: status, pause, concurrent correlation, raw path bytes, invalid command, pre-canceled request and shutdown |
-| Native presentation regression smoke | Passed | Dirty-New/reselect, pending folder-save navigation guards and reusing an already-open store during initialization; regressions reproduced before fixes |
+| Native presentation regression smoke | Passed | Dirty-New/reselect, pending-save navigation, already-open store retry, Quit Save/Discard/Cancel, stale-save failure and pending-update draining; initial regressions reproduced before fixes |
 | Native persistence regression smoke | Passed | Actual Swift/Rust/SQLite: enroll, revisioned settings save, restart, pause persistence, second-owner rejection/retry and settings-only removal; original fixture bytes unchanged |
 | Rust formatting/static checks | Passed | make check: cargo fmt and clippy --all-targets -D warnings |
 | Universal debug build | Passed | arm64 + x86_64 app slices, 14.0 minimum in app/debug dylib; native test binary minimum also 14.0 |
 | Native screen inspection | Partial | Prior synthetic journey plus new real empty workspace→native chooser→setup sheet→Cancel, returning to zero folders. Only a generated empty fixture selected; no user documents enrolled |
-| Lifecycle / full UX-motion / accessibility | Not fully verified | Close/menu reopening was inconclusive due UI tool refresh behavior; full motion/keyboard/VoiceOver/state matrix still open |
+| Lifecycle / full UX-motion / accessibility | Not fully verified | Native Quit Cancel/Save verified with isolated data; close/menu reopening remains inconclusive due UI tool refresh behavior; full motion/keyboard/VoiceOver/state matrix still open |
 | Foundation code review | Fixes verified | Read-only reviewer found cancellation forwarding and dirty-New intent defects; both reproduced and fixed; follow-up found no material issue in those changes |
 | Persistence/UI code review | Fixes verified | Read-only reviewer found pending-save navigation and initialization-retry defects; both reproduced, fixed and covered by the native model smoke; follow-up found no actionable issue in reviewed fixes/wiring |
 | Basic staged-script XPC proof | Passed | make script-proof: synthetic staged zsh, literal argv, original read/write denial, malformed/future messages, link/oversized output rejection, nonzero exit, bounded logs and ~1.01s timeout |
@@ -67,7 +67,7 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 
 ## Next gate
 
-Continue M1: finish lifecycle/storyboard acceptance, folder/TCC/placeholder and metadata proofs. Investigate a supported script-isolation mechanism that closes the failed IPC gate without narrowing compatibility; keep scripts off. Integrate the verified content adapter into later Rust planning/UI work and reuse storage/ownership for durable journaling before effects. Completing the foundation does not fulfill the full app goal.
+Continue M1: finish lifecycle/storyboard acceptance and folder/TCC/placeholder proofs. Investigate a supported script-isolation mechanism that closes the failed IPC gate without narrowing compatibility; keep scripts off. Integrate the verified content adapter into later Rust planning/UI work and reuse storage/ownership for durable journaling before effects. Completing the foundation does not fulfill the full app goal.
 
 ## Planning review decisions
 
@@ -114,3 +114,12 @@ Additional consistency fixes: regex requires complete text; started chains retai
 - Runtime language snapshot: 30 Accurate / 6 Fast choices; fixture recognition tested in English. Accurate automatic detection and Fast explicit en-US are verified. The option/spec contract now explains that Fast needs explicit supported languages rather than silent automatic fallback.
 - Test-first evidence: six extraction contracts failed against the unavailable stub, then passed; the OCR proof failed its missing image branch before implementation. Read-only review found a UTF-8 cancellation boundary gap. A warmed 75-MiB Unicode stress check missed 4/4 overlapping cancellations before correction and 0/4 afterward; the regression is now in XCTest. Final full suite has 24 Rust passed, 15 native passed and one existing filesystem skip.
 - The product compiles the adapter, but no watcher, text rule, Rust planner/cache bridge or OCR Settings flow calls it yet. Callers must use a worker queue and bounded bridge payloads. Full native-parser preemption/resource isolation, hostile/corrupt matrices, other-language quality, Intel/macOS-14 runtime and complete content/UI acceptance remain open; tasks 4.2–4.4 stay unchecked. UI/UX/motion requirements remain part of the full goal.
+
+## M1 Quit UX and native metadata checkpoint — 11 November 2026
+
+- Quit now protects unsaved real folder configuration with native Save / Discard Changes / Cancel. It asynchronously waits for pending configuration writes, prevents new workspace commands, and cancels termination when Save fails. A failing smoke first reproduced silent draft loss; the linked Swift/Rust regression now covers all choices, stale-revision Save failure, and pending-update ordering.
+- Native UI evidence: generated Inbox → save disabled folder → edit display name → Quit → Cancel retains draft → Quit → Save exits. Read-only inspection found the edited name at revision 2, and the generated input bytes stayed unchanged. The app exited normally; the isolated fixture was verified and removed. Debug-only isolated data-root injection prevents this walkthrough from using the normal app store; Release ignores that environment input.
+- Task 1.3 remains open: observing the app reactivated its window, making close/menu persistence inconclusive, and the system-menu UI target timed out. No menu persistence or full file-effect drain is claimed from the Quit test.
+- Task 1.7 is complete for its feasibility scope. `make metadata-proof` passed 8 native copy cases and 22 tag/label transitions across two distinct local APFS volumes at 2026-11-11T09:28:12Z. The runner detached/removed its owned image, and a separate attachment inventory found none left. [METADATA_PROOF.md](METADATA_PROOF.md) retains actual outcomes and limits, including system-rewritten quarantine and coupled Finder fields. No production action executor was added.
+- Read-only reviewers found no blocker in either scoped change. The metadata reviewer identified weak tag-replacement/removal assertions; both were strengthened and rerun. The Quit reviewer requested pending-write and failed-save coverage; both now pass.
+- Fresh checkpoint checks: `make test` passed 24 Rust tests and 15 native tests with one existing invalid-UTF-8 filesystem skip; `make presentation-smoke`, `make check` and `make universal` passed. Local Markdown checks passed across 23 documents with 65 unique task IDs and 7 complete. Both app/debug-dylib architecture slices report minimum macOS 14.0 and strict ad-hoc signature verification passes. Intel/macOS 14 runtime, full UI/motion/accessibility, actual file effects and strict script isolation remain open.

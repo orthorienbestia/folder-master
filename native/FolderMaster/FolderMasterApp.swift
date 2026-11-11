@@ -37,10 +37,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard !terminating else { return .terminateLater }
         terminating = true
         Task {
+            if let model, !(await model.prepareForQuit(confirm: { self.confirmFolderChanges(model) })) {
+                terminating = false
+                NSApp.reply(toApplicationShouldTerminate: false)
+                NSApp.activate(ignoringOtherApps: true)
+                NSApp.windows.first { $0.identifier?.rawValue == "main" }?.makeKeyAndOrderFront(nil)
+                return
+            }
             await model?.shutdown()
             NSApp.reply(toApplicationShouldTerminate: true)
         }
         return .terminateLater
+    }
+    private func confirmFolderChanges(_ model: AppModel) -> QuitDecision {
+        let alert = NSAlert()
+        alert.messageText = "Save folder changes before quitting?"
+        alert.informativeText = "Save keeps your folder settings. Discard Changes leaves the saved settings unchanged."
+        alert.addButton(withTitle: "Save").isEnabled = model.validLiveDraft
+        alert.addButton(withTitle: "Discard Changes")
+        alert.addButton(withTitle: "Cancel").keyEquivalent = "\u{1b}"
+        NSApp.activate(ignoringOtherApps: true)
+        switch alert.runModal() {
+        case .alertFirstButtonReturn: return .save
+        case .alertSecondButtonReturn: return .discard
+        default: return .cancel
+        }
     }
 }
 
@@ -51,11 +72,11 @@ struct StatusMenu: View {
         Text("Folder Master · Development")
         Text(model.engineStatus)
         Divider()
-        Button("Open Folder Master…") { openWindow(id: "main"); NSApp.activate(ignoringOtherApps: true) }
+        Button("Open Folder Master…") { openWindow(id: "main"); NSApp.activate(ignoringOtherApps: true) }.disabled(model.quitPending)
         Button(model.enginePaused ? "Resume engine (development)" : "Pause engine (development)") {
             model.setPaused(!model.enginePaused)
         }
-        .disabled(model.enginePending || !model.workspaceReady)
+        .disabled(model.enginePending || !model.workspaceReady || model.quitPending)
         Text("File automation is not enabled in this build")
         Divider()
         SettingsLink { Text("Settings…") }
