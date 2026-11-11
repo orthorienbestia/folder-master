@@ -6,7 +6,7 @@ macOS 14+ menu bar file organizer in development: a **Rust engine with native Sw
 
 Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 
-[Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy.
+[Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy. The [native storyboard evidence](docs/UI_STORYBOARD_EVIDENCE.md) records the current confirmed-preview, partial-result and sample-undo journey plus missing acceptance.
 
 ## Read the plan
 

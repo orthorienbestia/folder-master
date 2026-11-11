@@ -241,7 +241,7 @@ struct RuleEditorView: View {
                     if model.savedFeedback { Label("Saved to demo", systemImage: "checkmark.circle").font(.caption).foregroundStyle(.secondary) }
                     Spacer()
                     Button("Discard") { model.discardDraft() }.disabled(!model.dirty)
-                    Button("Test Preview…") { model.presentPreview() }
+                    Button("Test Draft…") { model.presentPreview(source: .draft) }.disabled(!model.validDraft)
                     Button("Save Demo Rule") { model.saveDraft() }.buttonStyle(.borderedProminent).disabled(!model.validDraft || !model.dirty)
                 }.padding(16)
             }

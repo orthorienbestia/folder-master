@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A1A646390D34A1886149BCD /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8836C077138EF801C58B606 /* HistoryView.swift */; };
 		38D015E409ECE8819C7994F8 /* ScriptProofProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */; };
 		3A4FF2AEDFFAC2E20ECEA06D /* IsolationProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */; };
 		403EFDD090C66FA172EE5B7D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E7ED223D5C9FDB750A8025 /* main.swift */; };
@@ -101,6 +102,7 @@
 		E3B3FC60BB0791EBDC686555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E451299DADF443BA6ADB481D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E641CADA13655005E1C91890 /* PersistentFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentFolder.swift; sourceTree = "<group>"; };
+		F8836C077138EF801C58B606 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		FB98276342FFF4F17EF38851 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -236,6 +238,7 @@
 			children = (
 				31517670DA6CA68194274708 /* AppModel.swift */,
 				B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */,
+				F8836C077138EF801C58B606 /* HistoryView.swift */,
 				E3B3FC60BB0791EBDC686555 /* Info.plist */,
 				7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */,
 				289303BF39EA3AB42C3B8E36 /* PreviewView.swift */,
@@ -476,6 +479,7 @@
 				5D574E2FFD232E84C44B7126 /* EngineClient.swift in Sources */,
 				6526D14DDE5FB256635E6BAF /* Experience.swift in Sources */,
 				E10631307C78997F4D5EBBE6 /* FolderMasterApp.swift in Sources */,
+				0A1A646390D34A1886149BCD /* HistoryView.swift in Sources */,
 				6E7D3E59369582A5E8934499 /* PersistentFolder.swift in Sources */,
 				A2530E86C18286448C6E24A1 /* PersistentWorkspaceView.swift in Sources */,
 				925E9310AB2507E793B82B84 /* PreviewView.swift in Sources */,

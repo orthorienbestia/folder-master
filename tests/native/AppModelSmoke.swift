@@ -3,6 +3,70 @@ import Foundation
 @main
 struct AppModelSmoke {
     @MainActor static func main() async {
+        let confirmation = AppModel()
+        confirmation.exploreDemo()
+        confirmation.presentPreview()
+        confirmation.simulateRun()
+        guard confirmation.previewPhase == .review, confirmation.activities.isEmpty else {
+            fail("Preview started a sample run without confirming its selected file chains")
+        }
+        confirmation.presentPreview(source: .draft)
+        confirmation.requestSimulation(); confirmation.simulateRun()
+        guard !confirmation.showRunConfirmation, confirmation.previewPhase == .review else { fail("Test Draft offered executable work") }
+        confirmation.presentPreview()
+        confirmation.requestSimulation()
+        guard confirmation.showRunConfirmation, confirmation.confirmationCount == 2 else { fail("Selected chains missing from run confirmation") }
+        confirmation.cancelRunConfirmation(); confirmation.simulateRun()
+        guard confirmation.previewPhase == .review else { fail("Cancel confirmation started a run") }
+        confirmation.requestSimulation()
+        confirmation.experience.selected.removeAll()
+        confirmation.simulateRun()
+        guard confirmation.previewPhase == .review else { fail("Changed selection reused stale run confirmation") }
+        await confirmation.shutdown()
+        let partial = AppModel()
+        partial.exploreDemo(); partial.presentPreview()
+        partial.runScenario = .partialFailure
+        partial.requestSimulation(); partial.simulateRun()
+        await settle(partial)
+        guard partial.previewPhase == .partial, partial.completedCount == 1, partial.partialCount == 1,
+              partial.processedCount == 2, partial.activities.filter({ $0.outcome == .partial }).count == 1 else {
+            fail("Partial sample failure was shown as a successful run or lost retained-step evidence")
+        }
+        partial.undoCandidate = partial.activities.first { $0.outcome == .partial }
+        partial.simulateUndo()
+        guard partial.activities.count == 2, let partialItem = partial.undoCandidate, partial.undoBlockReason(partialItem.id) != nil else { fail("Partial sample result offered an unchecked inverse") }
+        await partial.shutdown()
+        let failed = AppModel()
+        failed.exploreDemo(); failed.presentPreview(); failed.runScenario = .failure
+        failed.requestSimulation(); failed.simulateRun(); await settle(failed)
+        guard failed.previewPhase == .failed, failed.failedCount == 2, failed.completedCount == 0,
+              failed.activities.allSatisfy({ $0.outcome == .failed && $0.beforePath == $0.afterPath }) else { fail("Sample preflight denial fabricated completed effects") }
+        await failed.shutdown()
+        let paused = AppModel()
+        paused.exploreDemo(); paused.presentPreview()
+        paused.requestSimulation(); paused.simulateRun()
+        paused.runScenario = .failure // Changing the provider must not alter the confirmed run.
+        paused.pauseSimulation()
+        await settle(paused)
+        guard paused.previewPhase == .paused, paused.processedCount == 1, paused.completedCount == 1 else {
+            fail("Pause did not finish one current sample boundary and stop the next file")
+        }
+        paused.resumeSimulation(); await settle(paused)
+        guard paused.previewPhase == .finished, paused.processedCount == 2, paused.completedCount == 2 else { fail("Resuming sample work duplicated or changed confirmed chains") }
+        let original = paused.activities[0]
+        paused.undoCandidate = original
+        paused.simulateUndo()
+        guard paused.activities.count == 3, paused.activities.first?.outcome == .undone,
+              paused.activities.first?.originalActivityID == original.id,
+              paused.activities.first(where: { $0.id == original.id })?.undone == true else { fail("Sample inverse lost the original record or failed to append undo evidence") }
+        paused.undoCandidate = original // A stale open sheet must not undo twice.
+        paused.simulateUndo()
+        guard paused.activities.count == 3, paused.undoBlockReason(original.id) != nil else { fail("Sample inverse could run twice") }
+        paused.presentPreview(); paused.requestSimulation(); paused.simulateRun()
+        paused.cancelSimulation(); paused.presentPreview(source: .draft)
+        try? await Task.sleep(nanoseconds: 600_000_000)
+        guard paused.previewPhase == .review, paused.activities.count == 3 else { fail("Canceled sample completion overwrote a later preview") }
+        await paused.shutdown()
         for shouldSave in [true, false] {
             let model = AppModel()
             model.exploreDemo()
@@ -93,10 +157,17 @@ struct AppModelSmoke {
                 try FileManager.default.removeItem(at: root)
             } catch { fail("Quit workflow test failed: \(error)") }
         }
-        print("Native presentation smoke passed: draft navigation, retry, Quit choices, failed save and pending-update drain")
+        print("Native presentation smoke passed: confirmed preview, draft isolation, partial outcomes, pause, undo, cancellation, draft navigation and Quit")
     }
     static func fail(_ message: String) -> Never {
         FileHandle.standardError.write(Data((message + "\n").utf8))
         exit(1)
+    }
+    @MainActor static func settle(_ model: AppModel) async {
+        let deadline = Date().addingTimeInterval(6)
+        while model.previewPhase == .running || model.previewPhase == .pausing {
+            guard Date() < deadline else { fail("Sample run did not settle within its bounded fixture time") }
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
     }
 }

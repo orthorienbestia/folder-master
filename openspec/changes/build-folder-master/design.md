@@ -229,6 +229,8 @@ Use short explicit SwiftUI transactions for designated presentation changes. Qui
 
 Separate command lifecycle from animation: command enqueue → Pending → acknowledged engine state → visual result. Never delay permissions/cancel/focus for completion callbacks, never mark a file action successful because a checkmark animation ended, and never optimistically show destructive success. Pause can show pending feedback while a safe step drains. Cancel/interruption/new selection replaces motion from the currently presented state without stacking transitions. No confetti, blinking error badges, permanent menu-icon animation or automatic focus theft.
 
+Current partial storyboard evidence is recorded in [UI_STORYBOARD_EVIDENCE.md](../../../docs/UI_STORYBOARD_EVIDENCE.md): fixed samples distinguish draft testing from confirmed chains, pending pause, partial/failure/canceled outcomes and inverse previews. These are not rule evaluation, operational history or real undo. The complete M1 screen/state and motion gates remain open.
+
 Experience gates: review core screen states and flow storyboard in M1; perform keyboard, VoiceOver, reduced/off motion, large-list and interrupted-transition checks as components integrate; repeat full-flow acceptance in M4/M5 only when real engine behavior is wired. Track visual/usability evidence in progress alongside runtime correctness. Optional later visual prototyping may be used after the planning review; no prototype is claimed to exist yet.
 
 ## Verification strategy

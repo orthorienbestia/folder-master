@@ -1,7 +1,16 @@
 import SwiftUI
 
 enum WorkspaceDestination: Hashable { case folder(UUID), history }
-enum PreviewPhase { case review, running, finished, canceled }
+enum PreviewPhase {
+    case review, running, pausing, paused, finished, partial, failed, canceled
+    var isActive: Bool { self == .running || self == .pausing || self == .paused }
+}
+enum DemoPreviewSource { case savedRule, draft }
+enum DemoRunScenario: String, CaseIterable, Identifiable {
+    case success = "Successful run", partialFailure = "Partial move failure", failure = "Permission failure"
+    var id: String { rawValue }
+}
+enum DemoActivityOutcome: String { case completed = "Completed", partial = "Partial", failed = "Failed", undone = "Undo simulation" }
 enum QuitDecision { case save, discard, cancel }
 
 struct DemoActivity: Identifiable {
@@ -9,6 +18,19 @@ struct DemoActivity: Identifiable {
     let name: String
     let detail: String
     let time = Date()
+    var outcome: DemoActivityOutcome = .completed
+    var undone = false
+    var originalActivityID: UUID?
+    var beforePath = ""
+    var afterPath = ""
+    var steps: [String] {
+        switch outcome {
+        case .completed: return ["Rename completed", "Finance tag added", "Move completed"]
+        case .partial: return ["Rename completed", "Finance tag added", "Move failed: destination unavailable"]
+        case .failed: return ["Preflight failed: destination permission denied", "No actions started"]
+        case .undone: return ["Move back simulated", "Previous tag values restored in sample state", "Original name restored in sample state"]
+        }
+    }
 }
 
 @MainActor
@@ -21,9 +43,18 @@ final class AppModel: ObservableObject {
     @Published var draft: DemoRule?
     @Published var showUnsaved = false
     @Published var showPreview = false
+    @Published var showRunConfirmation = false
+    @Published private(set) var previewSource: DemoPreviewSource = .savedRule
+    @Published private(set) var previewRuleName = ""
     @Published var previewPhase: PreviewPhase = .review
     @Published var completedCount = 0
+    @Published var processedCount = 0
+    @Published var partialCount = 0
+    @Published var failedCount = 0
+    @Published var runScenario: DemoRunScenario = .success
+    @Published private(set) var runTotal = 0
     @Published var activities: [DemoActivity] = []
+    @Published var undoCandidate: DemoActivity?
     @Published var engineStatus = "Connecting local engine…"
     @Published var enginePaused = true
     @Published var enginePending = false
@@ -46,6 +77,11 @@ final class AppModel: ObservableObject {
     private var pendingEditorAction: PendingEditorAction?
     private var started = false
     private var simulation: Task<Void, Never>?
+    private var approvedRows: [DemoPreviewRow]?
+    private var approvedScenario = DemoRunScenario.success
+    private var activeRows: [DemoPreviewRow] = []
+    private var activeScenario = DemoRunScenario.success
+    private var simulationID = UUID()
     private let dataDirectory: URL?
     let engine = EngineClient()
 
@@ -258,31 +294,91 @@ final class AppModel: ObservableObject {
         experience.duplicateRule(id)
     }
 
-    func presentPreview() {
+    var confirmationCount: Int { approvedRows?.count ?? 0 }
+    func presentPreview(source: DemoPreviewSource = .savedRule) {
+        guard !previewPhase.isActive else { return }
+        simulation?.cancel(); simulationID = UUID()
+        approvedRows = nil; showRunConfirmation = false
+        previewSource = source
+        previewRuleName = source == .draft ? draft?.name ?? "Untitled draft" : experience.rules.first { $0.id == selectedRuleID }?.name ?? "Saved rules"
         experience.rows = DemoSamples.preview
         experience.selectReady()
         previewPhase = .review
         completedCount = 0
+        processedCount = 0; partialCount = 0; failedCount = 0; runTotal = 0
         showPreview = true
     }
 
+    func requestSimulation() {
+        guard demo, previewSource == .savedRule, previewPhase == .review, !experience.executableSelection.isEmpty else { return }
+        approvedRows = experience.executableSelection
+        approvedScenario = runScenario
+        showRunConfirmation = true
+    }
+    func cancelRunConfirmation() { approvedRows = nil; showRunConfirmation = false }
     func simulateRun() {
-        guard previewPhase == .review, !experience.executableSelection.isEmpty else { return }
-        let rows = experience.executableSelection
+        guard previewSource == .savedRule, previewPhase == .review, let rows = approvedRows,
+              !rows.isEmpty, rows == experience.executableSelection else { cancelRunConfirmation(); return }
+        activeRows = rows; activeScenario = approvedScenario; runTotal = rows.count
+        cancelRunConfirmation()
+        continueSimulation()
+    }
+
+    private func continueSimulation() {
+        let token = UUID(); simulationID = token
         previewPhase = .running
         simulation = Task {
-            for row in rows {
-                do { try await Task.sleep(nanoseconds: 500_000_000) }
-                catch { previewPhase = .canceled; return }
-                guard !Task.isCancelled else { previewPhase = .canceled; return }
-                completedCount += 1
-                activities.insert(DemoActivity(name: row.name, detail: "Simulated rename → tag → move. No file was read or changed."), at: 0)
+            for (index, row) in activeRows.enumerated().dropFirst(processedCount) {
+                do { try await Task.sleep(nanoseconds: 2_000_000_000) }
+                catch { if simulationID == token { previewPhase = .canceled }; return }
+                guard !Task.isCancelled, simulationID == token else { return }
+                let outcome: DemoActivityOutcome
+                let detail: String
+                if activeScenario == .failure {
+                    outcome = .failed; failedCount += 1
+                    detail = "Sample permission denial before the first step. No effects retained."
+                } else if activeScenario == .partialFailure && index == activeRows.count - 1 {
+                    outcome = .partial; partialCount += 1
+                    detail = "Sample rename and tag retained; move failed. Inspect before retrying."
+                } else {
+                    outcome = .completed; completedCount += 1
+                    detail = "Sample rename → tag → move completed. No real files changed."
+                }
+                let before = "/Sample/Downloads/\(row.name)"
+                let after = outcome == .failed ? before : outcome == .partial ? "/Sample/Downloads/2026-11-11-\(row.name)" : "/Sample/\(row.destination)2026-11-11-\(row.name)"
+                activities.insert(DemoActivity(name: row.name, detail: detail, outcome: outcome, beforePath: before, afterPath: after), at: 0)
+                processedCount += 1
+                if previewPhase == .pausing && processedCount < activeRows.count { previewPhase = .paused; return }
             }
-            previewPhase = .finished
+            previewPhase = partialCount > 0 || (failedCount > 0 && completedCount > 0) ? .partial : failedCount > 0 ? .failed : .finished
         }
     }
 
-    func cancelSimulation() { simulation?.cancel(); previewPhase = .canceled }
+    func cancelSimulation() {
+        guard previewPhase.isActive else { return }
+        simulation?.cancel(); simulationID = UUID(); previewPhase = .canceled
+    }
+    func pauseSimulation() { if previewPhase == .running { previewPhase = .pausing } }
+    func resumeSimulation() { if previewPhase == .paused { continueSimulation() } }
+    func undoBlockReason(_ id: UUID) -> String? {
+        guard let item = activities.first(where: { $0.id == id }) else { return "This sample record is no longer available." }
+        if previewPhase.isActive { return "Finish or cancel the sample run before previewing its inverse." }
+        if item.undone { return "This sample result already has an undo record. Redo is not supported." }
+        switch item.outcome {
+        case .completed: return nil
+        case .partial: return "The move failed after rename and tag steps. A real inverse must inspect the retained steps before it can be offered."
+        case .failed: return "No actions started, so there is nothing to undo."
+        case .undone: return "This is an undo record. Redo is not supported."
+        }
+    }
+    func simulateUndo() {
+        guard let candidate = undoCandidate, undoBlockReason(candidate.id) == nil,
+              let index = activities.firstIndex(where: { $0.id == candidate.id }) else { return }
+        let original = activities[index]
+        activities[index].undone = true
+        activities.insert(DemoActivity(name: original.name, detail: "Sample inverse appended; original evidence retained. No real files changed.", outcome: .undone, originalActivityID: original.id, beforePath: original.afterPath, afterPath: original.beforePath), at: 0)
+        undoCandidate = nil
+    }
     func prepareForQuit(confirm: @MainActor () async -> QuitDecision) async -> Bool {
         guard !quitPending else { return false }
         quitPending = true
