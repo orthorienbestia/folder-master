@@ -1,0 +1,35 @@
+# macOS and local editor state
+.DS_Store
+*.xcuserstate
+xcuserdata/
+.idea/
+.vscode/
+
+# Local agent tooling (pre-existing OpenSpec skills; preserved on disk)
+.agents/
+.codex/
+
+# Build artifacts and temporary app data
+target/
+build/
+DerivedData/
+*.dSYM/
+*.app/
+*.dmg
+*.xcarchive/
+*.profraw
+
+# Credentials and local runtime data; synthetic fixtures must be curated
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+*.mobileprovision
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+local-data/
