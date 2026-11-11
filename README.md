@@ -2,7 +2,7 @@
 
 macOS 14+ menu bar file organizer in development: a **Rust engine with native SwiftUI/AppKit UI**, planned local OCR and direct distribution. Documents and file processing stay on the Mac.
 
-**Current state: M1 development foundation.** The native app saves real folder configuration and pause state in a private local SQLite store with exclusive ownership. Folder setup starts disabled and never scans existing files. The separate sample rule/preview/history interface remains synthetic; watching, file actions, OCR, operational history and undo are not connected yet.
+**Current state: M1 development foundation.** The native app saves real folder configuration and pause state in a private local SQLite store with exclusive ownership. Folder setup starts disabled and never scans existing files. A native PDF/Vision text adapter passes local OCR fixtures under process-level network denial. The separate sample rule/preview/history interface remains synthetic; watching, file actions, OCR rule integration, operational history and undo are not connected yet.
 
 Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 
@@ -20,7 +20,7 @@ Build the development app with `make build`; see [development instructions and e
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 5/65 complete; M1 lifecycle/UX/platform gates remain open.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 6/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master
@@ -32,6 +32,8 @@ git log --oneline
 Planning is complete and the OpenSpec apply workflow is underway. Script isolation, native metadata preservation and target-OS runtime compatibility have explicit early feasibility gates. A plan passing validation is not proof of runtime behavior.
 
 The separate [staged script proof](docs/SCRIPT_PROOF.md) passes basic XPC execution, but its strict IPC isolation gate fails. Product scripts remain unavailable; no unrestricted fallback is connected.
+
+Run `make ocr-proof` for the separate [local content/OCR proof and its evidence limits](docs/OCR_PROOF.md). The native adapter is not yet a working text rule in the main app.
 
 ## Git tracking
 

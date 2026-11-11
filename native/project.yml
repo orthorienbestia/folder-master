@@ -17,7 +17,7 @@ targets:
   FolderMaster:
     type: application
     platform: macOS
-    sources: [FolderMaster]
+    sources: [FolderMaster, PlatformAdapters]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.app
@@ -43,7 +43,7 @@ targets:
   FolderMasterTests:
     type: bundle.unit-test
     platform: macOS
-    sources: [FolderMaster/Shared, Tests]
+    sources: [FolderMaster/Shared, PlatformAdapters, Tests, ../tests/native/content-fixtures]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.tests
@@ -107,7 +107,27 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.script-proof.probe
         CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
         SWIFT_OBJC_BRIDGING_HEADER: ../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h
+  OCRProofHost:
+    type: application
+    platform: macOS
+    sources: [../tests/native/ocr-proof, ../tests/native/content-fixtures, PlatformAdapters]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.ocr-proof
+        PRODUCT_NAME: OCRProofHost
+        CODE_SIGN_ENTITLEMENTS: ../tests/native/ocr-proof/OCRProof.entitlements
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+        ENABLE_APP_SANDBOX: YES
+    info:
+      path: ../tests/native/ocr-proof/Info.plist
+      properties:
+        LSBackgroundOnly: true
+        LSMinimumSystemVersion: "14.0"
 schemes:
+  OCRProof:
+    build:
+      targets:
+        OCRProofHost: all
   ScriptProof:
     build:
       targets:

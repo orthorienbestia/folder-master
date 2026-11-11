@@ -31,6 +31,6 @@ None. This is a greenfield workspace with no existing capability specifications 
 
 ## Impact
 
-Implementation adds a Rust workspace, a SwiftUI/AppKit macOS app, small Apple-framework adapters, local SQLite storage, and a signed sandboxed script XPC service. The Rust/native/storage foundation builds; a separate staged-script proof exists, with its full IPC-isolation gate still failing. Product adapters and script integration remain pending. Dependency pins and current evidence are in DEVELOPMENT.md/PROGRESS.md; the technical design retains platform feasibility gates.
+Implementation adds a Rust workspace, a SwiftUI/AppKit macOS app, small Apple-framework adapters, local SQLite storage, and a signed sandboxed script XPC service. The foundation and native content/OCR adapter build; a separate staged-script proof exists, with its full IPC-isolation gate still failing. Real rule/content/action integration remains pending. Dependency pins and current evidence are in DEVELOPMENT.md/PROGRESS.md; the technical design retains platform feasibility gates.
 
 Product scope and acceptance criteria: [PRD](../../../docs/PRD.md) and [updated goal](../../../docs/GOAL.md). Interaction contracts: [user flows](../../../docs/USER_FLOWS.md), [user options](../../../docs/USER_OPTIONS.md), and [UI/UX and motion](../../../docs/UI_UX_DESIGN.md). Architecture: [technical design](design.md). Research: [source notes](../../../docs/RESEARCH.md).

@@ -18,6 +18,8 @@ The app SHALL extract UTF-8 plain text and embedded PDF page text, and optionall
 ### Requirement: On-device OCR configuration
 OCR SHALL operate offline, use runtime-supported language choices, and expose Accurate/Fast, automatic/ordered languages and supported language correction. Embedded-then-OCR SHALL process PDF pages lacking usable embedded text; force OCR SHALL process all relevant pages/frames.
 
+Automatic language detection SHALL use Accurate recognition; Fast SHALL require explicit runtime-supported languages, with an explanation instead of silent substitution.
+
 #### Scenario: Mixed PDF
 - **WHEN** a PDF contains text-bearing pages and scanned-only pages
 - **THEN** embedded-then-OCR combines embedded extraction with local OCR for pages needing it

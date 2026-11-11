@@ -7,7 +7,7 @@
 - [ ] 1.5 Exercise script child processes, network/IPC denial, interpreter compatibility and timeout termination on supported OS versions; record proof or a blocking design revision, never enable unrestricted fallback.
 - [ ] 1.6 Prove folder identity/bookmark/TCC/local-placeholder handling on native adapters; verify moved roots, denied access and no intentional hydration.
 - [ ] 1.7 Prove native tags/label and byte/xattr/resource-fork/quarantine copy behavior on local and cross-volume fixtures; record preservation guarantees before committing action semantics.
-- [ ] 1.8 Prove local PDF text extraction, rasterization and Vision OCR with macOS-14 APIs; verify a synthetic scanned PDF/image with networking unavailable and record supported languages.
+- [x] 1.8 Prove local PDF text extraction, rasterization and Vision OCR with macOS-14 APIs; verify a synthetic scanned PDF/image with networking unavailable and record supported languages.
 - [x] 1.9 Add schema-v1 SQLite migrations, journal/settings/rules storage and consistent backup; verify reopen, failed migration and newer-schema non-mutating behavior.
 - [x] 1.10 Implement exclusive store ownership before recovery/writes; verify two app copies cannot mutate or recover the same journal and ownership recovers after process death.
 - [ ] 1.11 Build the M1 native UI/UX storyboard with clearly labeled synthetic state providers; review folder/rule/preview/results/history flows, visual hierarchy and all core screen states before expanding engine implementation.

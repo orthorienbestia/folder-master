@@ -2,7 +2,7 @@ HOST_ARCH := $(shell uname -m)
 PROJECT := native/FolderMaster.xcodeproj
 DERIVED := build/DerivedData
 
-.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke script-proof script-isolation-proof check
+.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke script-proof script-isolation-proof ocr-proof check
 
 generate:
 	xcodegen generate --spec native/project.yml
@@ -42,3 +42,7 @@ script-proof: generate
 # Keep the failure visible; do not treat the basic proof as full isolation.
 script-isolation-proof: script-proof
 	'$(DERIVED)/Build/Products/Debug/FolderMasterScriptProof.app/Contents/MacOS/FolderMasterScriptProof' --isolation
+
+ocr-proof: generate
+	xcodebuild -quiet -project $(PROJECT) -scheme OCRProof -configuration Debug -derivedDataPath $(DERIVED) -destination 'platform=macOS,arch=$(HOST_ARCH)' build
+	python3 scripts/run-ocr-proof.py '$(DERIVED)/Build/Products/Debug/OCRProofHost.app'

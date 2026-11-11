@@ -1,6 +1,6 @@
 # Folder Master — Progress and evidence
 
-Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 5/65 engineering tasks complete**. Real folder setup persists locally, but the app is not yet a working file organizer. The basic staged-script proof passes; full script isolation remains a failing gate.
+Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 6/65 engineering tasks complete**. Real folder setup persists locally and the native content/OCR adapter passes synthetic offline cases, but the app is not yet a working file organizer. Full script isolation remains a failing gate.
 
 ## Objective and constraints
 
@@ -19,10 +19,10 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Primary-source research | Done for planning | Apple native UI/OCR/filesystem/security docs and Context7 Notify lookup; see RESEARCH.md |
 | Local Git initialization | Done | Planning baseline a211aec on main; implementation branch feat/native-foundation; no remote |
 | PRD / TDD / options / flows / UI-UX-motion | Planning baseline delivered | Independent planning review completed; apply started after the goal continuation request |
-| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.4, 1.9 and 1.10 complete, 60 tasks remain |
-| M1 platform/experience foundation | In progress | Builds, bridge, storage/ownership and basic staged-script XPC proof verified; full script IPC-isolation gate fails; lifecycle, full UX/motion and metadata/OCR gates remain open |
+| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.4, 1.8, 1.9 and 1.10 complete, 59 tasks remain |
+| M1 platform/experience foundation | In progress | Builds, bridge, storage/ownership, basic script and native content/OCR proofs verified; full script IPC gate fails; lifecycle, full UX/motion, folder/TCC and metadata gates remain open |
 | M2 safe metadata automation | Not started | No runtime checks |
-| M3 complete content/actions | Not started | Script isolation/metadata/OCR remain unproven |
+| M3 complete content/actions | Integration pending | Native OCR feasibility passes; actual text rules/cache, full content coverage and advanced actions are pending; script privacy gate fails |
 | M4 native management | Early integration | Real folder setup and M1 synthetic screens exist; reconnect, full rules/actions, management and real execution UX are pending |
 | M5 release candidate | Not started | Performance, OS/architecture/signing/notarization evidence absent |
 
@@ -37,7 +37,7 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Independent builder questions | Passed after revisions | Reviewer confirmed previous gaps resolved; nothing material left in reviewed planning scope |
 | Final Git diff / whitespace | Passed after correction | Authored scope reviewed; one trailing-space finding corrected before baseline commit |
 | Rust foundation/storage suite | Passed | make test: 24 tests (3 unit, 8 bridge, 3 persistent bridge, 10 storage), no failures |
-| Native XCTest | Passed with explicit skip | make test: 6 passed, 0 failed, 1 skipped. Physical invalid-UTF-8 directory fixture unsupported by this test volume; byte-level URL roundtrip passes |
+| Native XCTest | Passed with explicit skip | make test: 15 passed, 0 failed, 1 skipped. Includes native content/coverage/cancellation contracts. Physical invalid-UTF-8 directory fixture unsupported by this volume; byte-level URL roundtrip passes |
 | Swift↔Rust smoke | Passed | Real linked actor/ABI: status, pause, concurrent correlation, raw path bytes, invalid command, pre-canceled request and shutdown |
 | Native presentation regression smoke | Passed | Dirty-New/reselect, pending folder-save navigation guards and reusing an already-open store during initialization; regressions reproduced before fixes |
 | Native persistence regression smoke | Passed | Actual Swift/Rust/SQLite: enroll, revisioned settings save, restart, pause persistence, second-owner rejection/retry and settings-only removal; original fixture bytes unchanged |
@@ -51,8 +51,11 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Strict script-isolation acceptance | Failed — scripts unavailable | Exact unentitled probe: host socket/Mach lookup succeed; script child socket fails EPERM but Launch Services lookup succeeds. No brokered launch/upload message sent; see SCRIPT_PROOF.md |
 | Script proof review | Corrected test validated | Reviewer identified confounded sandbox-entitled child; replaced with the same unentitled binary inside/outside sandbox. Follow-up found no new material issue in corrected scope |
 | Script proof universal build/signature | Passed | Host, XPC helper and unentitled probe each contain arm64/x86_64 with minos 14.0; nested codesign --verify --deep --strict passes. This is not Intel/macOS-14 runtime evidence |
+| Local content/OCR proof | Passed | make ocr-proof: direct-network-denied process recognizes PNG/JPEG/HEIC/TIFF and scanned/mixed/forced PDF fixtures; reduced raster budget, settings rejection, partial deadlines and active cancellation verified; see OCR_PROOF.md |
+| Content adapter review | Fix verified | Reviewer found missing UTF-8 post-copy interruption check; 4/4 misses reproduced, then 0/4 after fix; permanent XCTest added; follow-up found no remaining basic 1.8 blocker |
+| Content universal build/signature | Passed | Product and OCR proof app/debug dylibs built for arm64/x86_64 with minos 14.0; app signatures verify. OCR proof entitlement is App Sandbox only; Intel/macOS-14 runtime remains Not run |
 | Queued post-submit cancellation through Swift | Not deterministically verified | Pre-canceled native mutation proved rejected; queued worker cancellation separately tested in Rust; current commands are atomic/fast |
-| OCR / script sandbox / Finder / volume validation | Partial / gates open | Basic script sandbox proof and folder adapters exist. Full script privacy/authentication, denied TCC, cloud placeholders, disconnected/remote volumes, metadata actions and OCR remain unproven |
+| OCR / script sandbox / Finder / volume validation | Partial / gates open | Native OCR and basic script/folder proofs exist. Full script privacy/authentication, denied TCC, cloud placeholders, disconnected/remote volumes, metadata actions and full content integration/matrix remain unproven |
 | Benchmarks / macOS runtime matrix / release signing | Not run | Targets and gates only |
 
 ## Git operating rules
@@ -64,7 +67,7 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 
 ## Next gate
 
-Continue M1: finish lifecycle/storyboard acceptance and folder/TCC/placeholder, metadata and OCR adapters. Investigate a supported script-isolation mechanism that closes the failed IPC gate without narrowing compatibility; keep scripts off. Reuse storage/ownership for durable journaling before real file effects. Completing the foundation does not fulfill the full app goal.
+Continue M1: finish lifecycle/storyboard acceptance, folder/TCC/placeholder and metadata proofs. Investigate a supported script-isolation mechanism that closes the failed IPC gate without narrowing compatibility; keep scripts off. Integrate the verified content adapter into later Rust planning/UI work and reuse storage/ownership for durable journaling before effects. Completing the foundation does not fulfill the full app goal.
 
 ## Planning review decisions
 
@@ -103,3 +106,11 @@ Additional consistency fixes: regex requires complete text; started chains retai
 - Static review caught the first probe's confounded executable entitlement. The corrected exact-binary comparison reproduces the finding and the reviewer found no additional material defect in that corrected scope. No product target, rule command, script enable control or unrestricted fallback was added.
 - Ad-hoc helper authentication checks UID and bundle ID only; release Team-ID anchoring remains unproven. Host-static-resource/live-process inspection is denied by the helper sandbox; no filesystem exception was added to bypass this. Full external quotas, escaped-session descendants, custom interpreters, macOS 14/Intel runtime checks and public release signing remain open.
 - This changes the next script engineering step: investigate and revise the isolation mechanism while preserving the offline and compatibility requirements. Work on independent M1 native/UX/OCR gates can continue; the overall app goal remains active.
+
+## M1 native content and local OCR checkpoint — 11 November 2026
+
+- Task 1.8: native worker adapter for UTF-8/PDF text, Core Graphics PDF rasterization, ImageIO frames and revision-3 Vision text recognition. Structured complete/partial/unavailable/canceled results, page origins, source modes, runtime languages and resource settings are available to later integration. No source URL read, rewrite or persistent text cache is implemented in this component.
+- Evidence: [OCR_PROOF.md](OCR_PROOF.md). The separate sandboxed proof's socket attempt is denied with EPERM while its host control listener is reachable. PNG/JPEG/HEIC/TIFF, scanned/mixed/force-OCR PDFs, 120k-pixel raster tests, one-second partial deadlines retaining earlier text, and in-flight cancellation pass. The Mac's network remains enabled; no system-wide or every-service egress claim is made.
+- Runtime language snapshot: 30 Accurate / 6 Fast choices; fixture recognition tested in English. Accurate automatic detection and Fast explicit en-US are verified. The option/spec contract now explains that Fast needs explicit supported languages rather than silent automatic fallback.
+- Test-first evidence: six extraction contracts failed against the unavailable stub, then passed; the OCR proof failed its missing image branch before implementation. Read-only review found a UTF-8 cancellation boundary gap. A warmed 75-MiB Unicode stress check missed 4/4 overlapping cancellations before correction and 0/4 afterward; the regression is now in XCTest. Final full suite has 24 Rust passed, 15 native passed and one existing filesystem skip.
+- The product compiles the adapter, but no watcher, text rule, Rust planner/cache bridge or OCR Settings flow calls it yet. Callers must use a worker queue and bounded bridge payloads. Full native-parser preemption/resource isolation, hostile/corrupt matrices, other-language quality, Intel/macOS-14 runtime and complete content/UI acceptance remain open; tasks 4.2–4.4 stay unchecked. UI/UX/motion requirements remain part of the full goal.

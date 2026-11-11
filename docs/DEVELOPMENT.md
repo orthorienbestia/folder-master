@@ -1,6 +1,6 @@
 # Development foundation
 
-The app builds a native SwiftUI interface connected to a local Rust worker. Real folder configuration and pause state persist in SQLite; a separate **explicitly synthetic storyboard** demonstrates future rule/preview/history screens. Watching, file effects, OCR, durable operation execution and supported undo are not connected yet. Do not use this build to organize actual files.
+The app builds a native SwiftUI interface connected to a local Rust worker. Real folder configuration and pause state persist in SQLite; a separate **explicitly synthetic storyboard** demonstrates future rule/preview/history screens. A native PDF/Vision adapter now passes local OCR fixtures. Watching, file effects, OCR rule integration, durable operation execution and supported undo are not connected yet. Do not use this build to organize actual files.
 
 ## Toolchain
 
@@ -26,6 +26,7 @@ make bridge-smoke
 make presentation-smoke
 make persistence-smoke
 make script-proof
+make ocr-proof
 make check
 make universal
 ```
@@ -37,6 +38,8 @@ Local build: build/DerivedData/Build/Products/Debug/Folder Master.app. Launch ex
 The app owns `~/Library/Application Support/Folder Master` with user-only permissions. The Rust store retains a kernel `flock` lease on `store.lock` before opening the database; another instance receives a typed ownership error and cannot write folder or pause state. Retry can resume initialization after a canceled startup that already opened the store. The lease file is retained, and its descriptor closes after SQLite during shutdown; kernel ownership releases on process death. No user-file recovery/effects exist yet.
 
 `make script-proof` builds a separate `ScriptProof` scheme and runs only generated synthetic cases. These proof targets are not dependencies of the product. `make script-isolation-proof` is a stricter acceptance gate and currently **fails** because Launch Services Mach lookup remains available to a script child, even though direct socket access is denied. See [exact evidence and coverage limits](SCRIPT_PROOF.md). Do not interpret the basic proof or the normal unit suite as full script isolation or expose it as a rule action. The proof uses ad-hoc signing; release client authentication and full quotas/runtime coverage are pending.
+
+`make ocr-proof` builds the separate `OCRProof` scheme and runs a sandboxed, direct-network-denied synthetic content suite. The reusable adapter source is native/PlatformAdapters/DocumentText.swift; it takes Data/options, exposes structured coverage/issues and performs no source URL access or persistence. Dispatch it off the UI actor. Complete extraction refers to the selected source, not guaranteed recognition accuracy. Fast requires explicit supported languages; Accurate supports automatic detection. See [format, deadline, language and network evidence](OCR_PROOF.md). Rust request/response integration must respect the bridge's bounded envelopes rather than placing a multi-megabyte text result in one JSON message.
 
 SQLite schema v1 includes folder configuration, settings, immutable rule revisions/heads, runs, operation journal, history, receipts and deadlines. Only folder/settings/internal rule snapshot operations are implemented; journal tables are provisioned for the subsequent durable-executor work. Migrations are transactional, newer schemas are inspected read-only and rejected, and backups use SQLite's online backup API to capture WAL contents before publishing a standalone no-replace file. The backup API is internal, with its user-facing export flow pending. SQLite 3 is bundled through pinned rusqlite 0.41.1 rather than relying on the installed system version.
 

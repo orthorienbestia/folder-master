@@ -92,6 +92,8 @@ Script inputs: staged working-file path as an argv entry, metadata manifest path
 
 Image OCR 1.0: PNG, JPEG, TIFF and HEIC if locally decodable; multipage TIFF processes all frames within page limits. PDFKit handles PDFs. Embedded extraction: UTF-8 plain text and PDF page text only; Office documents, arbitrary binary formats, UTF-16, and rich document parsing are outside 1.0. A successful complete extraction of a supported empty file differs from unsupported/failed extraction. Maximum raster size is 20 megapixels per image/page, downsampled locally; OCR accuracy is not guaranteed. No source rewriting, sidecar files, or searchable-PDF export.
 
+Automatic language detection uses Accurate recognition. Fast requires an explicit ordered selection from its runtime-supported languages; the interface must explain this dependency rather than silently default to another language. Language correction remains subject to language/OS support.
+
 ## 6. Preview and Run Now
 
 | Control | Behavior |
