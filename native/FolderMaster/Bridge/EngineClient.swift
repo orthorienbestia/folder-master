@@ -6,6 +6,12 @@ struct EnginePayload: Decodable {
     var automation_available: Bool?
     var path_bytes_base64: String?
     var code: String?
+    var message: String?
+    var store_open: Bool?
+    var folder_count: Int?
+    var folders: [StoredFolder]?
+    var folder: StoredFolder?
+    var next_offset: Int?
 }
 
 struct EngineReply: Decodable {
@@ -17,6 +23,7 @@ struct EngineReply: Decodable {
 
 enum EngineClientError: LocalizedError {
     case status(UInt32), protocolMismatch, stopped, timedOut
+    case operation(code: String, message: String)
     var errorDescription: String? {
         switch self {
         case .status(let code):
@@ -32,6 +39,7 @@ enum EngineClientError: LocalizedError {
         case .protocolMismatch: return "The local engine returned an unsupported response."
         case .stopped: return "The local engine has stopped."
         case .timedOut: return "The local engine did not respond in time."
+        case .operation(_, let message): return message
         }
     }
 }
@@ -42,7 +50,46 @@ actor EngineClient {
     private var pump: Task<Void, Never>?
     private var stopped = false
 
+    func openStore(at url: URL) async throws -> EngineReply {
+        try await requestCommand(["op":"open_store", "path_bytes_base64":try NativeFolderAccess.pathData(for: url).base64EncodedString()])
+    }
+    func listFolders() async throws -> [StoredFolder] {
+        var result: [StoredFolder] = []
+        var offset = 0
+        while true {
+            let reply = try await requestCommand(["op":"list_folders", "offset":offset])
+            guard let folders = reply.payload.folders else { throw EngineClientError.protocolMismatch }
+            result.append(contentsOf: folders)
+            guard let next = reply.payload.next_offset else { return result }
+            guard next > offset else { throw EngineClientError.protocolMismatch }
+            offset = next
+        }
+    }
+    func addFolder(_ candidate: FolderCandidate, name: String) async throws -> StoredFolder {
+        let reply = try await requestCommand(["op":"add_folder", "id":UUID().uuidString, "name":name,
+                                              "path_bytes_base64":candidate.path.base64EncodedString(),
+                                              "bookmark_base64":candidate.bookmark.base64EncodedString()])
+        guard let folder = reply.payload.folder else { throw EngineClientError.protocolMismatch }
+        return folder
+    }
+    func updateFolder(_ folder: StoredFolder) async throws -> StoredFolder {
+        let object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(folder))
+        let reply = try await requestCommand(["op":"update_folder", "folder":object])
+        guard let saved = reply.payload.folder else { throw EngineClientError.protocolMismatch }
+        return saved
+    }
+    func removeFolder(_ folder: StoredFolder) async throws {
+        _ = try await requestCommand(["op":"remove_folder", "id":folder.id, "revision":folder.revision])
+    }
+
     func request(op: String, paused: Bool? = nil, path: Data? = nil) async throws -> EngineReply {
+        var command: [String: Any] = ["op": op]
+        if let paused { command["paused"] = paused }
+        if let path { command["path_bytes_base64"] = path.base64EncodedString() }
+        return try await requestCommand(command)
+    }
+
+    private func requestCommand(_ command: [String: Any]) async throws -> EngineReply {
         try Task.checkCancellation()
         if stopped { throw EngineClientError.stopped }
         if handle == 0 {
@@ -50,9 +97,6 @@ actor EngineClient {
             guard created.status == FM_OK else { throw EngineClientError.status(created.status.rawValue) }
             handle = created.handle
         }
-        var command: [String: Any] = ["op": op]
-        if let paused { command["paused"] = paused }
-        if let path { command["path_bytes_base64"] = path.base64EncodedString() }
         let id = UUID().uuidString
         let data = try JSONSerialization.data(withJSONObject: ["version": 1, "request_id": id, "command": command])
         return try await withTaskCancellationHandler {
@@ -100,7 +144,12 @@ actor EngineClient {
                     let reply = try JSONDecoder().decode(EngineReply.self, from: data)
                     guard reply.version == 1 else { throw EngineClientError.protocolMismatch }
                     guard let continuation = pending.removeValue(forKey: reply.request_id) else { continue }
-                    continuation.resume(returning: reply)
+                    switch reply.type {
+                    case "completed": continuation.resume(returning: reply)
+                    case "canceled": continuation.resume(throwing: CancellationError())
+                    case "error": continuation.resume(throwing: EngineClientError.operation(code: reply.payload.code ?? "engine_error", message: reply.payload.message ?? "The local engine could not finish this request."))
+                    default: continuation.resume(throwing: EngineClientError.protocolMismatch)
+                    }
                 } catch { failAll(error) }
             } else if result.status != FM_EMPTY {
                 failAll(EngineClientError.status(result.status.rawValue))

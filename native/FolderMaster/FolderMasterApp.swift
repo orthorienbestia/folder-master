@@ -24,7 +24,7 @@ struct FolderMasterApp: App {
         }
         .menuBarExtraStyle(.menu)
 
-        Settings { AppSettingsView().frame(width: 480, height: 320) }
+        Settings { AppSettingsView(model: model).frame(width: 480, height: 320) }
     }
 }
 
@@ -55,7 +55,7 @@ struct StatusMenu: View {
         Button(model.enginePaused ? "Resume engine (development)" : "Pause engine (development)") {
             model.setPaused(!model.enginePaused)
         }
-        .disabled(model.enginePending)
+        .disabled(model.enginePending || !model.workspaceReady)
         Text("File automation is not enabled in this build")
         Divider()
         SettingsLink { Text("Settings…") }

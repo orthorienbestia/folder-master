@@ -1,3 +1,4 @@
+use crate::worker::{Command, WorkerState};
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use serde::Deserialize;
 use serde_json::{json, Value};
@@ -67,14 +68,6 @@ struct Envelope {
     command: Command,
 }
 
-#[derive(Deserialize)]
-#[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
-enum Command {
-    Status,
-    SetPaused { paused: bool },
-    EchoPath { path_bytes_base64: String },
-}
-
 struct Job {
     envelope: Envelope,
     state: Arc<AtomicU8>,
@@ -127,7 +120,7 @@ fn terminal(id: String, kind: &str, payload: Value) -> Event {
     Event { id, bytes }
 }
 
-fn execute(job: Job, paused: &mut bool, failed: &AtomicBool) -> Event {
+fn execute(job: Job, worker: &mut WorkerState, failed: &AtomicBool) -> Event {
     let id = job.envelope.request_id;
     if job
         .state
@@ -140,19 +133,15 @@ fn execute(job: Job, paused: &mut bool, failed: &AtomicBool) -> Event {
         job.state.store(COMPLETE, Ordering::SeqCst);
         return terminal(id, "error", json!({"code":"engine_failed"}));
     }
-    let result = catch_unwind(AssertUnwindSafe(|| match job.envelope.command {
-        Command::Status => {
-            json!({"engine_version":env!("CARGO_PKG_VERSION"),"paused":*paused,"automation_available":false})
-        }
-        Command::SetPaused { paused: value } => {
-            *paused = value;
-            json!({"paused":*paused,"automation_available":false})
-        }
-        Command::EchoPath { path_bytes_base64 } => json!({"path_bytes_base64":path_bytes_base64}),
-    }));
+    let result = catch_unwind(AssertUnwindSafe(|| worker.perform(job.envelope.command)));
     job.state.store(COMPLETE, Ordering::SeqCst);
     match result {
-        Ok(payload) => terminal(id, "completed", payload),
+        Ok(Ok(payload)) => terminal(id, "completed", payload),
+        Ok(Err(error)) => terminal(
+            id,
+            "error",
+            json!({"code":error.code,"message":error.message}),
+        ),
         Err(_) => {
             failed.store(true, Ordering::SeqCst);
             terminal(id, "error", json!({"code":"engine_panicked"}))
@@ -169,9 +158,9 @@ impl Engine {
         let worker = thread::Builder::new()
             .name("folder-master-engine".into())
             .spawn(move || {
-                let mut paused = true;
+                let mut worker = WorkerState::default();
                 for job in commands {
-                    let event = execute(job, &mut paused, &worker_failed);
+                    let event = execute(job, &mut worker, &worker_failed);
                     if events.send(event).is_err() {
                         break;
                     }
@@ -387,7 +376,7 @@ mod tests {
 
     #[test]
     fn canceled_queued_work_does_not_change_engine_state() {
-        let mut paused = true;
+        let mut worker = WorkerState::default();
         let failed = AtomicBool::new(false);
         let job = Job {
             envelope: Envelope {
@@ -397,15 +386,15 @@ mod tests {
             },
             state: Arc::new(AtomicU8::new(CANCELED)),
         };
-        let event = execute(job, &mut paused, &failed);
+        let event = execute(job, &mut worker, &failed);
         let value: Value = serde_json::from_slice(&event.bytes).unwrap();
         assert_eq!(value["type"], "canceled");
-        assert!(paused);
+        assert!(worker.paused);
     }
 
     #[test]
     fn failed_engine_cannot_apply_later_work() {
-        let mut paused = true;
+        let mut worker = WorkerState::default();
         let failed = AtomicBool::new(true);
         let job = Job {
             envelope: Envelope {
@@ -415,9 +404,9 @@ mod tests {
             },
             state: Arc::new(AtomicU8::new(QUEUED)),
         };
-        let event = execute(job, &mut paused, &failed);
+        let event = execute(job, &mut worker, &failed);
         let value: Value = serde_json::from_slice(&event.bytes).unwrap();
         assert_eq!(value["payload"]["code"], "engine_failed");
-        assert!(paused);
+        assert!(worker.paused);
     }
 }

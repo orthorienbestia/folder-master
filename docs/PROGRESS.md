@@ -1,6 +1,6 @@
 # Folder Master — Progress and evidence
 
-Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 2/65 engineering tasks complete**. The app builds, but it is not yet a working file organizer.
+Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 4/65 engineering tasks complete**. Real folder setup persists locally, but the app is not yet a working file organizer.
 
 ## Objective and constraints
 
@@ -19,11 +19,11 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Primary-source research | Done for planning | Apple native UI/OCR/filesystem/security docs and Context7 Notify lookup; see RESEARCH.md |
 | Local Git initialization | Done | Planning baseline a211aec on main; implementation branch feat/native-foundation; no remote |
 | PRD / TDD / options / flows / UI-UX-motion | Planning baseline delivered | Independent planning review completed; apply started after the goal continuation request |
-| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1 and 1.2 complete, 63 tasks remain |
-| M1 platform/experience foundation | In progress | Pinned Rust/native builds and C bridge verified; synthetic storyboard inspected; lifecycle, full UX/motion, script/metadata/OCR/storage gates remain open |
+| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.9 and 1.10 complete, 61 tasks remain |
+| M1 platform/experience foundation | In progress | Builds, bridge, schema-v1 persistence/backup and exclusive ownership verified; real folder setup plus synthetic storyboard exist; lifecycle, full UX/motion and script/metadata/OCR gates remain open |
 | M2 safe metadata automation | Not started | No runtime checks |
 | M3 complete content/actions | Not started | Script isolation/metadata/OCR remain unproven |
-| M4 native management | Not started | Early M1 synthetic screens exist; complete native management and real engine UX are pending |
+| M4 native management | Early integration | Real folder setup and M1 synthetic screens exist; reconnect, full rules/actions, management and real execution UX are pending |
 | M5 release candidate | Not started | Performance, OS/architecture/signing/notarization evidence absent |
 
 ## Verification ledger
@@ -33,20 +33,22 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | OpenSpec context and empty initial capability inventory | Passed | CLI resolved this workspace; no existing capabilities/changes before proposal |
 | OpenSpec artifact status | Passed | CLI reports 4/4 planning artifacts complete |
 | Strict OpenSpec validation | Passed | openspec validate build-folder-master --strict |
-| Local Markdown links / capability-task consistency | Passed | 20 Markdown files, zero broken local links; eight specs; 65 unique task IDs, two completed |
+| Local Markdown links / capability-task consistency | Passed at planning baseline | 20 Markdown files, zero broken local links; eight specs; 65 unique task IDs. Checkpoint verification recorded below |
 | Independent builder questions | Passed after revisions | Reviewer confirmed previous gaps resolved; nothing material left in reviewed planning scope |
 | Final Git diff / whitespace | Passed after correction | Authored scope reviewed; one trailing-space finding corrected before baseline commit |
-| Rust foundation suite | Passed | make test: 11 tests (3 worker/guard unit tests, 8 real bridge contract tests), no failures |
-| Native XCTest | Passed | make test: 3 tests for motion restriction, safe selection and independent disabled duplication, no failures |
+| Rust foundation/storage suite | Passed | make test: 24 tests (3 unit, 8 bridge, 3 persistent bridge, 10 storage), no failures |
+| Native XCTest | Passed with explicit skip | make test: 6 passed, 0 failed, 1 skipped. Physical invalid-UTF-8 directory fixture unsupported by this test volume; byte-level URL roundtrip passes |
 | Swift↔Rust smoke | Passed | Real linked actor/ABI: status, pause, concurrent correlation, raw path bytes, invalid command, pre-canceled request and shutdown |
-| Native presentation regression smoke | Passed | Dirty-New Save/Discard navigation and same-rule reselect preserve edits; failures reproduced before fixes |
+| Native presentation regression smoke | Passed | Dirty-New/reselect, pending folder-save navigation guards and reusing an already-open store during initialization; regressions reproduced before fixes |
+| Native persistence regression smoke | Passed | Actual Swift/Rust/SQLite: enroll, revisioned settings save, restart, pause persistence, second-owner rejection/retry and settings-only removal; original fixture bytes unchanged |
 | Rust formatting/static checks | Passed | make check: cargo fmt and clippy --all-targets -D warnings |
 | Universal debug build | Passed | arm64 + x86_64 app slices, 14.0 minimum in app/debug dylib; native test binary minimum also 14.0 |
-| Native storyboard inspection | Partial | CUA verified welcome→rule editor→synthetic preview/progress/result→history and ready-only row selection; no real files used |
+| Native screen inspection | Partial | Prior synthetic journey plus new real empty workspace→native chooser→setup sheet→Cancel, returning to zero folders. Only a generated empty fixture selected; no user documents enrolled |
 | Lifecycle / full UX-motion / accessibility | Not fully verified | Close/menu reopening was inconclusive due UI tool refresh behavior; full motion/keyboard/VoiceOver/state matrix still open |
 | Foundation code review | Fixes verified | Read-only reviewer found cancellation forwarding and dirty-New intent defects; both reproduced and fixed; follow-up found no material issue in those changes |
+| Persistence/UI code review | Fixes verified | Read-only reviewer found pending-save navigation and initialization-retry defects; both reproduced, fixed and covered by the native model smoke; follow-up found no actionable issue in reviewed fixes/wiring |
 | Queued post-submit cancellation through Swift | Not deterministically verified | Pre-canceled native mutation proved rejected; queued worker cancellation separately tested in Rust; current commands are atomic/fast |
-| OCR / script sandbox / Finder / volume validation | Not run | No adapters or sandbox service implemented yet |
+| OCR / script sandbox / Finder / volume validation | Mostly not run | Native local-volume/package/link/bookmark checks exist; denied TCC, cloud placeholders, disconnected/remote volumes, metadata actions and sandbox service remain unproven |
 | Benchmarks / macOS runtime matrix / release signing | Not run | Targets and gates only |
 
 ## Git operating rules
@@ -58,7 +60,7 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 
 ## Next gate
 
-Continue M1: finish lifecycle and storyboard acceptance; build the signed restricted script-service feasibility proof, native folder/metadata/OCR adapters, schema-v1 storage and exclusive writer ownership. Real file effects must wait for durable journaling/safety work; completing the foundation does not fulfill the full app goal.
+Continue M1: finish lifecycle and storyboard acceptance; build the signed restricted script-service feasibility proof and complete folder/TCC/placeholder, metadata and OCR adapters. Reuse the verified storage/ownership foundation for durable journaling before real file effects. Completing the foundation does not fulfill the full app goal.
 
 ## Planning review decisions
 
@@ -71,6 +73,15 @@ Additional consistency fixes: regex requires complete text; started chains retai
 - Actual tools: Xcode 26.0.1 (17A400), SDK 26.0, Swift 6.2, Rust/Cargo 1.89.0, XcodeGen 2.46.0; host arm64 macOS 26.6.2. Rust toolchain/dependencies locked; x86_64 standard library installed for cross-compilation.
 - Product source: engine/ holds the static library; native/ holds the C header, actor wrapper, SwiftUI app and tests; scripts/ and Makefile provide repeatable offline builds. See DEVELOPMENT.md for exact commands and ABI lifetime rules.
 - Real implemented behavior: bounded worker protocol, owned buffer release, correlated replies, cancellation boundary, panic guards, local engine pause acknowledgements and shutdown.
-- Presentation: native main window/status menu/settings, editable sample rules, synthetic preview/result/history and motion policy. No watcher, user-file read, action execution, actual OCR, durable history or undo is claimed. Sample rule syntax remains free text; all folders currently share the same illustrative rule list, and nested groups/typed editors/full state matrix are future work.
+- Presentation at this first checkpoint: native main window/status menu/settings, editable sample rules, synthetic preview/result/history and motion policy. No watcher, action execution, actual OCR, durable history or undo is claimed. Sample rule syntax remains free text; sample folders share an illustrative rule list, and nested groups/typed editors/full state matrix are future work.
 - Red/green evidence: seven initial Rust contracts failed against the stub then passed; three native state tests failed against stubs then passed. Review regressions failed for pre-canceled mutation dispatch and dirty-New navigation before fixes. An additional failing same-rule-reselect test exposed discarded edits and was corrected.
 - Checks remain separate: universal compilation is not Intel/macOS-14 runtime proof; ad-hoc code signature is not hardened/notarized release readiness; inspecting the storyboard is not completed UI/UX acceptance.
+
+## M1 persistence and real folder setup checkpoint — 11 November 2026
+
+- Tasks 1.9/1.10: schema-v1 tables, transactional migration, private local WAL/FULL SQLite, immutable internal rule snapshots/settings, WAL-safe consistent backup and exclusive kernel lease before opening the database. Journal/history/receipt/deadline tables are provisioned; operational APIs, effects/recovery and user-facing backup/restore remain subsequent tasks.
+- Real native setup: choose an eligible directory, review its path/name, save disabled configuration, edit scope/preferences with revision checks, guard unsaved navigation, and remove configuration without removing files. New scopes reject duplicates/nesting/app-data overlap. Folder records and pause state survive engine restart. Watching, rule evaluation and Run Now remain unavailable; the sample interface is separate and labeled.
+- Native adapter evidence: directory/link/package checks, ordinary bookmark resolving after rename, raw-byte CFURL roundtrip. Physical invalid-UTF-8 directory creation fails with EILSEQ on this volume, including an outside-sandbox probe; XCTest reports that fixture skipped. No claim of denied-TCC, remote/disconnected volume, reconnect or cloud hydration acceptance; tasks 1.6/5.1 remain unchecked.
+- Safety evidence: a failed migration after earlier DDL preserves sentinel data and leaves schema version unchanged; a future database version leaves database bytes unchanged; online backup includes uncheckpointed WAL and refuses replacement; second owners cannot issue configuration/pause writes; process kill releases ownership without replacing the lock inode.
+- UI/UX remains part of the goal. The real setup reuses native controls, explicit loading/error/retry and pending/saved feedback, and motion policy. Review found save/navigation and initialization retry races; failing regressions were reproduced and corrected. CUA inspected the empty workspace, native chooser, setup sheet and cancellation. Full keyboard/VoiceOver, normal/reduced/off transitions, minimum-window and flow acceptance remain open.
+- Motion settings still use AppStorage in this foundation, guarded by store availability; full Rust-owned settings/export/retention acceptance is pending M4. Generic rule snapshots are not a completed typed rule editor. No document contents are stored/uploaded by setup; other sync software is outside the app's control.

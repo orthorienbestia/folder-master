@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40C5AD2C1CCD4320841E3578 /* FolderAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F7981D34975B2592B253B7 /* FolderAccessTests.swift */; };
 		5D574E2FFD232E84C44B7126 /* EngineClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EAA19FB6586742DEFB6AEB /* EngineClient.swift */; };
+		6197B9F141B2DECCE256E107 /* PersistentFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E641CADA13655005E1C91890 /* PersistentFolder.swift */; };
 		6526D14DDE5FB256635E6BAF /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E771DAF4FE03AA8560E11 /* Experience.swift */; };
+		6E7D3E59369582A5E8934499 /* PersistentFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E641CADA13655005E1C91890 /* PersistentFolder.swift */; };
 		833D66EA944631513A143261 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31517670DA6CA68194274708 /* AppModel.swift */; };
 		925E9310AB2507E793B82B84 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289303BF39EA3AB42C3B8E36 /* PreviewView.swift */; };
 		9C9D1FA24D99F9F1F766C6AB /* ExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261F002A6275003F2D62387A /* ExperienceTests.swift */; };
 		A015B6300C4C884FD8E1179E /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F1639C92AA7F9E906787E /* WorkspaceView.swift */; };
+		A2530E86C18286448C6E24A1 /* PersistentWorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */; };
 		E10631307C78997F4D5EBBE6 /* FolderMasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */; };
 		E33325A492D0B3B29B95DEE3 /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E771DAF4FE03AA8560E11 /* Experience.swift */; };
 /* End PBXBuildFile section */
@@ -23,11 +27,14 @@
 		261F002A6275003F2D62387A /* ExperienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceTests.swift; sourceTree = "<group>"; };
 		289303BF39EA3AB42C3B8E36 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		31517670DA6CA68194274708 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		64F7981D34975B2592B253B7 /* FolderAccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAccessTests.swift; sourceTree = "<group>"; };
+		7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentWorkspaceView.swift; sourceTree = "<group>"; };
 		8C6F5F6D67835899C988E3EE /* FolderMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FolderMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMasterApp.swift; sourceTree = "<group>"; };
 		C63E6C967B049E4ACB9CA5C6 /* FolderMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FolderMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92F1639C92AA7F9E906787E /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
 		E3B3FC60BB0791EBDC686555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E641CADA13655005E1C91890 /* PersistentFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentFolder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -52,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				261F002A6275003F2D62387A /* ExperienceTests.swift */,
+				64F7981D34975B2592B253B7 /* FolderAccessTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -69,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				200E771DAF4FE03AA8560E11 /* Experience.swift */,
+				E641CADA13655005E1C91890 /* PersistentFolder.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -79,6 +88,7 @@
 				31517670DA6CA68194274708 /* AppModel.swift */,
 				B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */,
 				E3B3FC60BB0791EBDC686555 /* Info.plist */,
+				7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */,
 				289303BF39EA3AB42C3B8E36 /* PreviewView.swift */,
 				C92F1639C92AA7F9E906787E /* WorkspaceView.swift */,
 				7361784126FD6074725BD03E /* Bridge */,
@@ -181,7 +191,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\nset -euo pipefail\nif [ -n \"${PROJECT_DIR:-}\" ]; then\n    TASK_ROOT=\"$(cd \"$PROJECT_DIR/..\" && pwd)\"\nelse\n    TASK_ROOT=\"$(cd \"$(dirname \"$0\")/..\" && pwd)\"\nfi\nexport PATH=\"$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\"\nexport MACOSX_DEPLOYMENT_TARGET=14.0\nCONFIG=\"${CONFIGURATION:-Debug}\"\nOUTPUT=\"$TASK_ROOT/build/rust/$CONFIG\"\nmkdir -p \"$OUTPUT\"\nLIBRARIES=()\nfor ARCH in ${ARCHS:-$(uname -m)}; do\n    case \"$ARCH\" in\n        arm64) RUST_TARGET=aarch64-apple-darwin ;;\n        x86_64) RUST_TARGET=x86_64-apple-darwin ;;\n        *) echo \"Unsupported macOS architecture: $ARCH\" >&2; exit 1 ;;\n    esac\n    FLAGS=(--locked --offline)\n    PROFILE=debug\n    if [ \"$CONFIG\" = Release ]; then FLAGS+=(--release); PROFILE=release; fi\n    cargo build --manifest-path \"$TASK_ROOT/Cargo.toml\" --target \"$RUST_TARGET\" \"${FLAGS[@]}\"\n    LIBRARIES+=(\"$TASK_ROOT/target/$RUST_TARGET/$PROFILE/libfolder_master_engine.a\")\ndone\n/usr/bin/lipo -create \"${LIBRARIES[@]}\" -output \"$OUTPUT/libfolder_master_engine.a\"\n";
+			shellScript = "#!/bin/bash\nset -euo pipefail\nif [ -n \"${PROJECT_DIR:-}\" ]; then\n    TASK_ROOT=\"$(cd \"$PROJECT_DIR/..\" && pwd)\"\nelse\n    TASK_ROOT=\"$(cd \"$(dirname \"$0\")/..\" && pwd)\"\nfi\nexport PATH=\"$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\"\nexport MACOSX_DEPLOYMENT_TARGET=14.0\nCONFIG=\"${CONFIGURATION:-Debug}\"\nOUTPUT=\"$TASK_ROOT/build/rust/$CONFIG\"\nmkdir -p \"$OUTPUT\"\nLIBRARIES=()\nfor ARCH in ${ARCHS:-$(uname -m)}; do\n    case \"$ARCH\" in\n        arm64) RUST_TARGET=aarch64-apple-darwin ;;\n        x86_64) RUST_TARGET=x86_64-apple-darwin ;;\n        *) echo \"Unsupported macOS architecture: $ARCH\" >&2; exit 1 ;;\n    esac\n    FLAGS=(--locked --offline)\n    PROFILE=debug\n    if [ \"$CONFIG\" = Release ]; then FLAGS+=(--release); PROFILE=release; fi\n    cargo build --lib --manifest-path \"$TASK_ROOT/Cargo.toml\" --target \"$RUST_TARGET\" \"${FLAGS[@]}\"\n    LIBRARIES+=(\"$TASK_ROOT/target/$RUST_TARGET/$PROFILE/libfolder_master_engine.a\")\ndone\n/usr/bin/lipo -create \"${LIBRARIES[@]}\" -output \"$OUTPUT/libfolder_master_engine.a\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -192,6 +202,8 @@
 			files = (
 				E33325A492D0B3B29B95DEE3 /* Experience.swift in Sources */,
 				9C9D1FA24D99F9F1F766C6AB /* ExperienceTests.swift in Sources */,
+				40C5AD2C1CCD4320841E3578 /* FolderAccessTests.swift in Sources */,
+				6197B9F141B2DECCE256E107 /* PersistentFolder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +215,8 @@
 				5D574E2FFD232E84C44B7126 /* EngineClient.swift in Sources */,
 				6526D14DDE5FB256635E6BAF /* Experience.swift in Sources */,
 				E10631307C78997F4D5EBBE6 /* FolderMasterApp.swift in Sources */,
+				6E7D3E59369582A5E8934499 /* PersistentFolder.swift in Sources */,
+				A2530E86C18286448C6E24A1 /* PersistentWorkspaceView.swift in Sources */,
 				925E9310AB2507E793B82B84 /* PreviewView.swift in Sources */,
 				A015B6300C4C884FD8E1179E /* WorkspaceView.swift in Sources */,
 			);

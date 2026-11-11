@@ -2,9 +2,9 @@
 
 macOS 14+ menu bar file organizer in development: a **Rust engine with native SwiftUI/AppKit UI**, planned local OCR and direct distribution. Documents and file processing stay on the Mac.
 
-**Current state: M1 development foundation.** The native app builds and connects to the Rust worker. The interactive folder/rule/preview/history screens currently use clearly labeled synthetic examples; real folder automation, file actions, OCR, history storage and undo are not connected yet.
+**Current state: M1 development foundation.** The native app saves real folder configuration and pause state in a private local SQLite store with exclusive ownership. Folder setup starts disabled and never scans existing files. The separate sample rule/preview/history interface remains synthetic; watching, file actions, OCR, operational history and undo are not connected yet.
 
-Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make check` and `make universal` verify the foundation.
+Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 
 [Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy.
 
@@ -20,7 +20,7 @@ Build the development app with `make build`; see [development instructions and e
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 2/65 complete; M1 lifecycle/UX/platform gates remain open.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 4/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master

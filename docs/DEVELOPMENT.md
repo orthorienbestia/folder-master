@@ -1,6 +1,6 @@
 # Development foundation
 
-The app currently builds and connects a native SwiftUI shell to a local Rust worker. Its folder/rule/preview/history screens are an **explicitly synthetic storyboard**. Real file watching/actions, OCR, journal storage and supported undo are not connected yet. Do not use this build to organize actual files.
+The app builds a native SwiftUI interface connected to a local Rust worker. Real folder configuration and pause state persist in SQLite; a separate **explicitly synthetic storyboard** demonstrates future rule/preview/history screens. Watching, file effects, OCR, durable operation execution and supported undo are not connected yet. Do not use this build to organize actual files.
 
 ## Toolchain
 
@@ -22,13 +22,20 @@ make build
 make test
 make bridge-smoke
 make presentation-smoke
+make persistence-smoke
 make check
 make universal
 ```
 
 Install Xcode/Xcode command-line components and XcodeGen 2.46.0 first. XcodeGen's source spec is native/project.yml; the generated Xcode project and shared scheme are tracked. Regenerate after adding source files. The Rust build phase handles Xcode's temporary script location and the macOS system Bash. Build artifacts and test results stay under ignored build/ and target/.
 
-Local build: build/DerivedData/Build/Products/Debug/Folder Master.app. Launch explicitly with Finder or `open 'build/DerivedData/Build/Products/Debug/Folder Master.app'`. Explore Interactive Preview loads in-memory synthetic examples; the banner and results disclose no files are read or changed. Settings exposes Follow System/Reduced/Off motion. Only the engine connection and pause acknowledgements are real; engine status explicitly reports automation unavailable.
+Local build: build/DerivedData/Build/Products/Debug/Folder Master.app. Launch explicitly with Finder or `open 'build/DerivedData/Build/Products/Debug/Folder Master.app'`. Add Folder opens the native directory chooser and saves a disabled configuration without enumerating children. Display name, subfolder/hidden scope, exclusions and automatic/polling preferences are saved setup only. Explore Sample Interface opens the separate in-memory storyboard. Engine status explicitly reports automation unavailable.
+
+The app owns `~/Library/Application Support/Folder Master` with user-only permissions. The Rust store retains a kernel `flock` lease on `store.lock` before opening the database; another instance receives a typed ownership error and cannot write folder or pause state. Retry can resume initialization after a canceled startup that already opened the store. The lease file is retained, and its descriptor closes after SQLite during shutdown; kernel ownership releases on process death. No user-file recovery/effects exist yet.
+
+SQLite schema v1 includes folder configuration, settings, immutable rule revisions/heads, runs, operation journal, history, receipts and deadlines. Only folder/settings/internal rule snapshot operations are implemented; journal tables are provisioned for the subsequent durable-executor work. Migrations are transactional, newer schemas are inspected read-only and rejected, and backups use SQLite's online backup API to capture WAL contents before publishing a standalone no-replace file. The backup API is internal, with its user-facing export flow pending. SQLite 3 is bundled through pinned rusqlite 0.41.1 rather than relying on the installed system version.
+
+Native enrollment validates directory/package/link/local-volume eligibility and stores an ordinary Foundation bookmark, not a TCC bypass. Reconnect, revoked access and cloud placeholder handling remain task 1.6/5.1 gates. Native filesystem URL helpers preserve raw bytes; this host's test volume rejects creating invalid UTF-8 names with EILSEQ, so physical enrollment of such a directory is explicitly skipped while byte-level URL/bridge roundtrips pass. Motion preferences still use AppStorage in this foundation and are disabled when workspace ownership is unavailable; full Settings persistence/export acceptance remains pending.
 
 Local signing is ad hoc. Xcode reports that hardened runtime is disabled for this ad-hoc debug build. This does not satisfy the signed hardened/notarized release gate. The Cargo build phase's Xcode script sandbox is disabled so it can use the installed toolchain and build output directories; this is a build setting, not the runtime script-service isolation mechanism. The actual restricted script service is a separate pending task.
 
@@ -42,9 +49,11 @@ Supported foundation commands:
 {"version":1,"request_id":"unique-id","command":{"op":"status"}}
 {"version":1,"request_id":"unique-id-2","command":{"op":"set_paused","paused":true}}
 {"version":1,"request_id":"unique-id-3","command":{"op":"echo_path","path_bytes_base64":"L3RtcC//LnBkZg=="}}
+{"version":1,"request_id":"unique-id-4","command":{"op":"open_store","path_bytes_base64":"L3RtcC9mb2xkZXItbWFzdGVyLWRhdGE="}}
+{"version":1,"request_id":"unique-id-5","command":{"op":"list_folders","offset":0}}
 ```
 
-echo_path is a non-I/O protocol check preserving raw path bytes, including non-UTF-8 filenames; it does not open a file. Delete/scripts/other unimplemented operations are rejected. Maximum envelope is 1 MiB, outstanding requests per engine 64, engines 16, outstanding returned buffers 128. Backpressure returns a typed status instead of dropping terminal results.
+echo_path is a non-I/O protocol check preserving raw path bytes, including non-UTF-8 filenames; it does not open a file. open_store requires an absolute path to a private local data directory; it creates schema v1 when new. list_folders pages ten records at a time with next_offset. add_folder, update_folder and remove_folder accept versioned configuration only, not file operations; see engine/src/worker.rs for typed fields. Stale revisions reject updates/removal. Delete/scripts/other unimplemented operations are rejected. Maximum envelope is 1 MiB, outstanding requests per engine 64, engines 16, outstanding returned buffers 128. Backpressure returns a typed status instead of dropping terminal results.
 
 Request IDs are unique among outstanding requests, retained until their event is polled. The native actor rejects already-canceled Tasks before dispatch and forwards later Task cancellation through the correlated ID. Cancellation can cancel queued work before it begins; a started/committed atomic foundation command returns TooLate. The native client still waits for the true terminal event, so cancel does not claim rollback. Successful cancellation produces one correlated canceled terminal event. Destroy cancels queued work, closes the channel and joins the worker; do it off the main actor. Returned buffers remain caller-owned until released even after an engine is destroyed. Releasing an allocation twice returns NotFound without freeing again.
 
@@ -60,4 +69,4 @@ Rust exports contain unwinding panics. A worker panic marks the worker failed an
 
 ## Evidence boundaries
 
-Rust tests exercise the real worker/FFI plus cancellation and panic guards. Native XCTest covers motion restriction, ready-row selection and disabled independent rule duplication. The standalone Swift bridge smoke test compiles/links the real C ABI, exercises concurrent request correlation/raw path bytes, rejects pre-canceled mutations and closes the actor. A separate presentation smoke test checks dirty-New Save/Discard navigation and reselecting a rule without losing edits. Queued post-submit cancellation through Swift is not deterministically exercised end to end yet; Rust unit tests exercise the queued cancel state. Native UI inspection covers the visible storyboard flow; it does not prove file safety, OCR, script isolation, full accessibility or lifecycle behavior. See PROGRESS.md for actual outcomes and unfinished gates.
+Rust tests exercise worker/FFI contracts, persistence, immutable snapshots, migrations/rollback, consistent backup, private data boundaries and same/cross-process ownership including forced process death. Native XCTest covers motion/state plus native bookmark/path helpers. Bridge, presentation and persistence smoke targets compile/link real Swift and Rust; presentation covers dirty navigation, pending-save guards and initialization retry, while persistence covers folder setup, revisions, reopen, pause, ownership and settings-only removal with original bytes retained. Queued post-submit cancellation through Swift is not deterministically exercised end to end yet; Rust unit tests exercise the queued cancel state. Native UI inspection covers the storyboard and real folder chooser/setup/cancel states; it does not prove file safety, OCR, script isolation, full accessibility or lifecycle behavior. See PROGRESS.md for actual outcomes and unfinished gates.

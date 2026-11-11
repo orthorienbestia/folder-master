@@ -20,7 +20,7 @@ for ARCH in ${ARCHS:-$(uname -m)}; do
     FLAGS=(--locked --offline)
     PROFILE=debug
     if [ "$CONFIG" = Release ]; then FLAGS+=(--release); PROFILE=release; fi
-    cargo build --manifest-path "$TASK_ROOT/Cargo.toml" --target "$RUST_TARGET" "${FLAGS[@]}"
+    cargo build --lib --manifest-path "$TASK_ROOT/Cargo.toml" --target "$RUST_TARGET" "${FLAGS[@]}"
     LIBRARIES+=("$TASK_ROOT/target/$RUST_TARGET/$PROFILE/libfolder_master_engine.a")
 done
 /usr/bin/lipo -create "${LIBRARIES[@]}" -output "$OUTPUT/libfolder_master_engine.a"

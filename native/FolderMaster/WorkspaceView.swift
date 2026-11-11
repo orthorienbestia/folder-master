@@ -2,6 +2,14 @@ import SwiftUI
 
 struct WorkspaceView: View {
     @ObservedObject var model: AppModel
+    var body: some View {
+        if model.demo { DemoWorkspaceView(model: model) }
+        else { PersistentWorkspaceView(model: model) }
+    }
+}
+
+struct DemoWorkspaceView: View {
+    @ObservedObject var model: AppModel
     @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var systemReduced
     private var animation: Animation? {
@@ -80,6 +88,8 @@ struct WorkspaceView: View {
             Text("Interactive experience preview").fontWeight(.medium)
             Text("Synthetic folders and files. Nothing is read or changed.").foregroundStyle(.secondary)
             Spacer(minLength: 0)
+            Button("Leave Demo") { model.demo = false }
+                .help("Return to your saved folders; the sample session does not change their configuration")
         }
         .font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
         .background(.tint.opacity(0.08))

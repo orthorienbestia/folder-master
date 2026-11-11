@@ -28,6 +28,18 @@ final class AppModel: ObservableObject {
     @Published var enginePending = false
     @Published var error: String?
     @Published var savedFeedback = false
+    @Published var storedFolders: [StoredFolder] = []
+    @Published var workspaceReady = false
+    @Published var workspaceConnecting = false
+    @Published var folderPending = false
+    @Published var selectedLiveFolderID: String?
+    @Published var liveDraft: StoredFolder?
+    @Published var showAddFolder = false
+    @Published var folderCandidate: FolderCandidate?
+    @Published var showLiveUnsaved = false
+    @Published var folderSavedFeedback = false
+    private enum PendingLiveAction { case select(String?), demo }
+    private var pendingLiveAction: PendingLiveAction?
     private enum PendingEditorAction { case select(UUID?), create }
     private var pendingEditorAction: PendingEditorAction?
     private var started = false
@@ -39,20 +51,42 @@ final class AppModel: ObservableObject {
         guard let draft else { return false }
         return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !draft.conditions.isEmpty && !draft.actions.isEmpty
     }
+    var liveDirty: Bool { liveDraft != storedFolders.first { $0.id == selectedLiveFolderID } }
+    var validLiveDraft: Bool {
+        guard let liveDraft else { return false }
+        return !liveDraft.display_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && liveDraft.display_name.count <= 200
+    }
 
     func connect() async {
-        guard !started else { return }
+        guard !started, !workspaceConnecting else { return }
         started = true
+        workspaceConnecting = true
+        defer { workspaceConnecting = false }
         do {
-            let reply = try await engine.request(op: "status")
-            guard reply.type == "completed" else { throw EngineClientError.protocolMismatch }
+            let current = try await engine.request(op: "status")
+            let reply: EngineReply
+            if current.payload.store_open == true { reply = current }
+            else {
+                let parent = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                reply = try await engine.openStore(at: parent.appendingPathComponent("Folder Master", isDirectory: true))
+            }
+            guard reply.payload.store_open == true else { throw EngineClientError.protocolMismatch }
             enginePaused = reply.payload.paused ?? true
-            engineStatus = "Rust \(reply.payload.engine_version ?? "") connected"
-        } catch { self.error = error.localizedDescription; engineStatus = "Engine unavailable" }
+            storedFolders = try await engine.listFolders()
+            workspaceReady = true
+            engineStatus = "Local workspace connected · Rust \(reply.payload.engine_version ?? "")"
+            if selectedLiveFolderID == nil { loadLiveFolder(storedFolders.first?.id) }
+        } catch { self.error = error.localizedDescription; engineStatus = "Local storage unavailable"; workspaceReady = false }
+    }
+
+    func retryStorage() async {
+        guard !workspaceReady, !workspaceConnecting else { return }
+        error = nil; started = false
+        await connect()
     }
 
     func setPaused(_ paused: Bool) {
-        guard !enginePending else { return }
+        guard !enginePending, workspaceReady else { return }
         enginePending = true
         Task {
             defer { enginePending = false }
@@ -65,12 +99,94 @@ final class AppModel: ObservableObject {
     }
 
     func exploreDemo() {
+        guard !folderPending else { return }
+        if liveDirty { pendingLiveAction = .demo; showLiveUnsaved = true; return }
+        enterDemo()
+    }
+    private func enterDemo() {
         guard !demo else { return }
         demo = true
         folders = DemoSamples.folders
         experience.rules = DemoSamples.rules
         destination = .folder(folders[0].id)
         selectRule(experience.rules[0].id)
+    }
+
+    func selectLiveFolder(_ id: String?) {
+        guard !folderPending else { return }
+        guard selectedLiveFolderID != id else { return }
+        if liveDirty { pendingLiveAction = .select(id); showLiveUnsaved = true; return }
+        loadLiveFolder(id)
+    }
+    private func loadLiveFolder(_ id: String?) {
+        selectedLiveFolderID = id
+        liveDraft = storedFolders.first { $0.id == id }
+        folderSavedFeedback = false
+    }
+    func discardLiveDraft() { loadLiveFolder(selectedLiveFolderID) }
+    func resolveLiveUnsaved(save: Bool) async {
+        guard !folderPending else { return }
+        if save, !(await saveLiveFolder()) { return }
+        let action = pendingLiveAction; pendingLiveAction = nil
+        discardLiveDraft()
+        switch action {
+        case .select(let id): loadLiveFolder(id)
+        case .demo: enterDemo()
+        case nil: break
+        }
+    }
+    func saveLiveFolder() async -> Bool {
+        guard let draft = liveDraft, validLiveDraft, workspaceReady, !folderPending else { return false }
+        folderPending = true; error = nil
+        defer { folderPending = false }
+        do {
+            let saved = try await engine.updateFolder(draft)
+            if let index = storedFolders.firstIndex(where: { $0.id == saved.id }) { storedFolders[index] = saved }
+            liveDraft = saved; folderSavedFeedback = true
+            return true
+        } catch { self.error = error.localizedDescription; return false }
+    }
+    func chooseFolder() {
+        guard workspaceReady, !folderPending else { return }
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true; panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false; panel.resolvesAliases = false
+        panel.prompt = "Choose Folder"
+        panel.message = "Choose a local folder to configure. This build will not scan or organize its files."
+        panel.begin { [weak self] response in
+            guard response == .OK, let url = panel.url else { return }
+            Task { @MainActor in
+                do {
+                    let candidate = try await Task.detached(priority: .userInitiated) { try NativeFolderAccess.candidate(for: url) }.value
+                    self?.folderCandidate = candidate; self?.error = nil; self?.showAddFolder = true
+                } catch { self?.error = error.localizedDescription }
+            }
+        }
+    }
+    func addLiveFolder(name: String) async -> Bool {
+        guard let candidate = folderCandidate, workspaceReady, !folderPending else { return false }
+        folderPending = true; error = nil
+        defer { folderPending = false }
+        do {
+            let saved = try await engine.addFolder(candidate, name: name)
+            storedFolders.append(saved)
+            // Preserve any unsaved edits in the current folder; selecting the
+            // new folder goes through the same navigation guard as the sidebar.
+            if liveDirty { pendingLiveAction = .select(saved.id); showLiveUnsaved = true }
+            else { loadLiveFolder(saved.id) }
+            showAddFolder = false; folderCandidate = nil
+            return true
+        } catch { self.error = error.localizedDescription; return false }
+    }
+    func removeLiveFolder(_ folder: StoredFolder) async {
+        guard workspaceReady, !folderPending else { return }
+        folderPending = true; error = nil
+        defer { folderPending = false }
+        do {
+            try await engine.removeFolder(folder)
+            storedFolders.removeAll { $0.id == folder.id }
+            loadLiveFolder(storedFolders.first?.id)
+        } catch { self.error = error.localizedDescription }
     }
 
     func selectRule(_ id: UUID?) {

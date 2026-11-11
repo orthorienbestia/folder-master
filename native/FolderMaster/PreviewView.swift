@@ -146,6 +146,7 @@ struct HistoryView: View {
 }
 
 struct AppSettingsView: View {
+    @ObservedObject var model: AppModel
     @AppStorage("motionChoice") private var choice = MotionChoice.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var systemReduced
     var body: some View {
@@ -160,9 +161,9 @@ struct AppSettingsView: View {
             }
             Section("Development foundation") {
                 Label("Rust engine · native SwiftUI interface", systemImage: "cpu")
-                Text("Interactive previews use synthetic data. Folder monitoring, OCR, file actions, history storage and undo are still being implemented.")
+                Text("Folder configuration and pause settings are saved locally. Sample rule previews use synthetic data. Watching, OCR, file actions, history execution and undo are still being implemented.")
                     .font(.caption).foregroundStyle(.secondary)
             }
-        }.formStyle(.grouped).padding(8)
+        }.formStyle(.grouped).padding(8).disabled(!model.workspaceReady)
     }
 }
