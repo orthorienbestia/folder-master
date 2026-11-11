@@ -8,6 +8,8 @@ Verified development host on 11 November 2026: macOS 26.6.2 (25G83), arm64; Xcod
 
 Every app/test target and Rust build sets macOS deployment target **14.0**. Compilation with a 14.0 minimum is not runtime proof on macOS 14. The Intel Rust target is installed for cross-compilation; Intel hardware/runtime validation remains a separate release gate.
 
+VS Code uses the toolchain-matched rust-analyzer component listed in rust-toolchain.toml. If the editor was already open before installing components, run **rust-analyzer: Restart server**. On this host the newer bundled extension server could not analyze Rust 1.89 correctly; the matched `rust-analyzer 1.89.0` completed its diagnostic scan and VS Code's **Show RA Version** confirmed that binary. The installed extension 0.3.3113 sends the newer `inlayHints.implicitDrops.enable` string setting, which the older server warns about and ignores; this is a non-blocking editor configuration compatibility warning, not a Rust build failure. No global editor settings, extension downgrade or compiler upgrade was applied.
+
 ## Build and test
 
 Run from the repository root:
