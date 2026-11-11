@@ -32,6 +32,10 @@ Documentation lookup used the requested Context7 CLI outside the default sandbox
 
 No unrestricted host-process script fallback is acceptable under the chosen privacy contract. Input staging and restricted outputs are product decisions to make that contract concrete.
 
+During the M1 proof, Context7 resolved official Apple Foundation documentation and returned `NSXPCConnection.setCodeSigningRequirement` guidance. The installed SDK header confirms macOS 13 availability and warns that listener-wide requirements work only with anonymous/Mach-service listeners; the embedded service therefore applies the requirement to each accepted connection. The host pins the helper's designated requirement, while the ad-hoc helper's host bundle-ID check remains an explicit development limitation. [Connection signing requirement](https://developer.apple.com/documentation/foundation/nsxpcconnection/setcodesigningrequirement(_:)), [listener requirement](https://developer.apple.com/documentation/foundation/nsxpclistener/setconnectioncodesigningrequirement(_:))
+
+The [executable proof](SCRIPT_PROOF.md) changes the next engineering action: basic staged zsh/original-file isolation works, but the exact-binary child probe can still look up Launch Services. App Sandbox without network entitlements is therefore insufficient evidence for the entire no-egress/unsafe-IPC contract. A lookup is not itself an upload or application launch; no brokered message was sent. Stronger isolation needs investigation before product script integration, with no silent reduction of script compatibility.
+
 ## Direct distribution
 
 - Apple describes Developer ID signing/notarization for direct macOS distribution. Plan a hardened, signed app and a stapled notarization ticket; this is a developer release operation, not a runtime document upload. [Notarizing macOS software before distribution](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution)

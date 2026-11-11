@@ -1,6 +1,6 @@
 # Folder Master — Progress and evidence
 
-Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 4/65 engineering tasks complete**. Real folder setup persists locally, but the app is not yet a working file organizer.
+Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 5/65 engineering tasks complete**. Real folder setup persists locally, but the app is not yet a working file organizer. The basic staged-script proof passes; full script isolation remains a failing gate.
 
 ## Objective and constraints
 
@@ -19,8 +19,8 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Primary-source research | Done for planning | Apple native UI/OCR/filesystem/security docs and Context7 Notify lookup; see RESEARCH.md |
 | Local Git initialization | Done | Planning baseline a211aec on main; implementation branch feat/native-foundation; no remote |
 | PRD / TDD / options / flows / UI-UX-motion | Planning baseline delivered | Independent planning review completed; apply started after the goal continuation request |
-| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.9 and 1.10 complete, 61 tasks remain |
-| M1 platform/experience foundation | In progress | Builds, bridge, schema-v1 persistence/backup and exclusive ownership verified; real folder setup plus synthetic storyboard exist; lifecycle, full UX/motion and script/metadata/OCR gates remain open |
+| OpenSpec proposal/specs/tasks | Apply in progress | Eight capabilities, 46 requirements, 86 scenarios; tasks 1.1, 1.2, 1.4, 1.9 and 1.10 complete, 60 tasks remain |
+| M1 platform/experience foundation | In progress | Builds, bridge, storage/ownership and basic staged-script XPC proof verified; full script IPC-isolation gate fails; lifecycle, full UX/motion and metadata/OCR gates remain open |
 | M2 safe metadata automation | Not started | No runtime checks |
 | M3 complete content/actions | Not started | Script isolation/metadata/OCR remain unproven |
 | M4 native management | Early integration | Real folder setup and M1 synthetic screens exist; reconnect, full rules/actions, management and real execution UX are pending |
@@ -47,8 +47,12 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 | Lifecycle / full UX-motion / accessibility | Not fully verified | Close/menu reopening was inconclusive due UI tool refresh behavior; full motion/keyboard/VoiceOver/state matrix still open |
 | Foundation code review | Fixes verified | Read-only reviewer found cancellation forwarding and dirty-New intent defects; both reproduced and fixed; follow-up found no material issue in those changes |
 | Persistence/UI code review | Fixes verified | Read-only reviewer found pending-save navigation and initialization-retry defects; both reproduced, fixed and covered by the native model smoke; follow-up found no actionable issue in reviewed fixes/wiring |
+| Basic staged-script XPC proof | Passed | make script-proof: synthetic staged zsh, literal argv, original read/write denial, malformed/future messages, link/oversized output rejection, nonzero exit, bounded logs and ~1.01s timeout |
+| Strict script-isolation acceptance | Failed — scripts unavailable | Exact unentitled probe: host socket/Mach lookup succeed; script child socket fails EPERM but Launch Services lookup succeeds. No brokered launch/upload message sent; see SCRIPT_PROOF.md |
+| Script proof review | Corrected test validated | Reviewer identified confounded sandbox-entitled child; replaced with the same unentitled binary inside/outside sandbox. Follow-up found no new material issue in corrected scope |
+| Script proof universal build/signature | Passed | Host, XPC helper and unentitled probe each contain arm64/x86_64 with minos 14.0; nested codesign --verify --deep --strict passes. This is not Intel/macOS-14 runtime evidence |
 | Queued post-submit cancellation through Swift | Not deterministically verified | Pre-canceled native mutation proved rejected; queued worker cancellation separately tested in Rust; current commands are atomic/fast |
-| OCR / script sandbox / Finder / volume validation | Mostly not run | Native local-volume/package/link/bookmark checks exist; denied TCC, cloud placeholders, disconnected/remote volumes, metadata actions and sandbox service remain unproven |
+| OCR / script sandbox / Finder / volume validation | Partial / gates open | Basic script sandbox proof and folder adapters exist. Full script privacy/authentication, denied TCC, cloud placeholders, disconnected/remote volumes, metadata actions and OCR remain unproven |
 | Benchmarks / macOS runtime matrix / release signing | Not run | Targets and gates only |
 
 ## Git operating rules
@@ -60,7 +64,7 @@ Current OpenSpec change: [build-folder-master](../openspec/changes/build-folder-
 
 ## Next gate
 
-Continue M1: finish lifecycle and storyboard acceptance; build the signed restricted script-service feasibility proof and complete folder/TCC/placeholder, metadata and OCR adapters. Reuse the verified storage/ownership foundation for durable journaling before real file effects. Completing the foundation does not fulfill the full app goal.
+Continue M1: finish lifecycle/storyboard acceptance and folder/TCC/placeholder, metadata and OCR adapters. Investigate a supported script-isolation mechanism that closes the failed IPC gate without narrowing compatibility; keep scripts off. Reuse storage/ownership for durable journaling before real file effects. Completing the foundation does not fulfill the full app goal.
 
 ## Planning review decisions
 
@@ -91,3 +95,11 @@ Additional consistency fixes: regex requires complete text; started chains retai
 - User reported the extension's blocking old-toolchain dialog. The pinned toolchain omitted rust-analyzer, and `rustup run 1.89.0 rust-analyzer --version` failed because the component was absent.
 - Added rust-analyzer alongside rustfmt/Clippy in rust-toolchain.toml and installed the official matching component. Rust compiler remains 1.89.0. `cargo check --offline --locked --workspace --all-targets` and the matched analyzer's complete diagnostic scan pass (normal inactive-test-code hints remain).
 - Restarted the server in the actual VS Code workspace; **Show RA Version** reports 1.89.0 from the pinned toolchain. The original blocking dialog is resolved. Extension 0.3.3113 still emits a non-blocking `implicitDrops` configuration warning because its current string default is newer than this server's boolean schema; it does not prevent analysis. No unrelated Gemini/Todo Tree extension notifications were changed.
+
+## M1 staged-script feasibility checkpoint — 11 November 2026
+
+- Task 1.4: separate locally signed `ScriptProof` host/XPC helper with App Sandbox, fixed synthetic input, no filesystem/network callback to the host, staged zsh/literal argv, descriptor-based output validation and negative cases. The initially unavailable runner produced a failing integration test before implementation. Detailed scope and commands: [SCRIPT_PROOF.md](SCRIPT_PROOF.md).
+- Task 1.5 remains unchecked. A separately built probe with no sandbox entitlement reaches a local listener and Launch Services outside the helper; the same binary as a zsh child is denied direct networking (errno 1) but still obtains the Launch Services Mach port. The strict acceptance command fails; port lookup is not proof of brokered egress, and the test sends no message to another application.
+- Static review caught the first probe's confounded executable entitlement. The corrected exact-binary comparison reproduces the finding and the reviewer found no additional material defect in that corrected scope. No product target, rule command, script enable control or unrestricted fallback was added.
+- Ad-hoc helper authentication checks UID and bundle ID only; release Team-ID anchoring remains unproven. Host-static-resource/live-process inspection is denied by the helper sandbox; no filesystem exception was added to bypass this. Full external quotas, escaped-session descendants, custom interpreters, macOS 14/Intel runtime checks and public release signing remain open.
+- This changes the next script engineering step: investigate and revise the isolation mechanism while preserving the offline and compatibility requirements. Work on independent M1 native/UX/OCR gates can continue; the overall app goal remains active.

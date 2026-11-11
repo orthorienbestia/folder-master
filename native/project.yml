@@ -50,7 +50,68 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: ""
         BUNDLE_LOADER: ""
+  ScriptProofHost:
+    type: application
+    platform: macOS
+    sources: [../tests/native/script-proof/Host, ../tests/native/script-proof/Shared]
+    dependencies:
+      - target: ScriptProofService
+        embed: true
+        codeSign: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.script-proof
+        PRODUCT_NAME: FolderMasterScriptProof
+        SWIFT_OBJC_BRIDGING_HEADER: ../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h
+    info:
+      path: ../tests/native/script-proof/Host/Info.plist
+      properties:
+        LSBackgroundOnly: true
+        LSMinimumSystemVersion: "14.0"
+  ScriptProofService:
+    type: xpc-service
+    platform: macOS
+    sources: [../tests/native/script-proof/Service, ../tests/native/script-proof/Shared]
+    dependencies:
+      - target: ScriptIsolationProbe
+        link: false
+        embed: false
+    postBuildScripts:
+      - name: Embed unentitled isolation probe
+        script: |
+          set -eu
+          mkdir -p "$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Helpers"
+          cp "$BUILT_PRODUCTS_DIR/ScriptIsolationProbe" "$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Helpers/ScriptIsolationProbe"
+        inputFiles: ["$(BUILT_PRODUCTS_DIR)/ScriptIsolationProbe"]
+        outputFiles: ["$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Helpers/ScriptIsolationProbe"]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.script-proof.service
+        PRODUCT_NAME: ScriptProofService
+        SWIFT_OBJC_BRIDGING_HEADER: ../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h
+        CODE_SIGN_ENTITLEMENTS: ../tests/native/script-proof/Service/ScriptProofService.entitlements
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+        ENABLE_APP_SANDBOX: YES
+    info:
+      path: ../tests/native/script-proof/Service/Info.plist
+      properties:
+        LSMinimumSystemVersion: "14.0"
+        XPCService:
+          ServiceType: Application
+  ScriptIsolationProbe:
+    type: tool
+    platform: macOS
+    sources: [../tests/native/script-proof/Probe, ../tests/native/script-proof/Shared/IsolationProbe.swift]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: local.foldermaster.script-proof.probe
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+        SWIFT_OBJC_BRIDGING_HEADER: ../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h
 schemes:
+  ScriptProof:
+    build:
+      targets:
+        ScriptProofHost: all
   FolderMaster:
     build:
       targets:

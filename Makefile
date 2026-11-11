@@ -2,7 +2,7 @@ HOST_ARCH := $(shell uname -m)
 PROJECT := native/FolderMaster.xcodeproj
 DERIVED := build/DerivedData
 
-.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke check
+.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke script-proof script-isolation-proof check
 
 generate:
 	xcodegen generate --spec native/project.yml
@@ -33,3 +33,12 @@ check:
 	cargo fmt --all --check
 	cargo clippy --offline --locked --workspace --all-targets -- -D warnings
 	openspec validate build-folder-master --strict
+
+script-proof: generate
+	xcodebuild -quiet -project $(PROJECT) -scheme ScriptProof -configuration Debug -derivedDataPath $(DERIVED) -destination 'platform=macOS,arch=$(HOST_ARCH)' build
+	'$(DERIVED)/Build/Products/Debug/FolderMasterScriptProof.app/Contents/MacOS/FolderMasterScriptProof'
+
+# Acceptance gate, currently fails on permitted Launch Services Mach lookup.
+# Keep the failure visible; do not treat the basic proof as full isolation.
+script-isolation-proof: script-proof
+	'$(DERIVED)/Build/Products/Debug/FolderMasterScriptProof.app/Contents/MacOS/FolderMasterScriptProof' --isolation

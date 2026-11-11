@@ -7,41 +7,117 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38D015E409ECE8819C7994F8 /* ScriptProofProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */; };
+		3A4FF2AEDFFAC2E20ECEA06D /* IsolationProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */; };
 		40C5AD2C1CCD4320841E3578 /* FolderAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F7981D34975B2592B253B7 /* FolderAccessTests.swift */; };
+		5AA7407773F9E85DBC5379B1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DC1C168B7086DC849F5E45A /* main.swift */; };
 		5D574E2FFD232E84C44B7126 /* EngineClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EAA19FB6586742DEFB6AEB /* EngineClient.swift */; };
 		6197B9F141B2DECCE256E107 /* PersistentFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E641CADA13655005E1C91890 /* PersistentFolder.swift */; };
 		6526D14DDE5FB256635E6BAF /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E771DAF4FE03AA8560E11 /* Experience.swift */; };
 		6E7D3E59369582A5E8934499 /* PersistentFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E641CADA13655005E1C91890 /* PersistentFolder.swift */; };
+		7F1D32FF37FC9258D7B380D6 /* IsolationProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */; };
 		833D66EA944631513A143261 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31517670DA6CA68194274708 /* AppModel.swift */; };
 		925E9310AB2507E793B82B84 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289303BF39EA3AB42C3B8E36 /* PreviewView.swift */; };
 		9C9D1FA24D99F9F1F766C6AB /* ExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261F002A6275003F2D62387A /* ExperienceTests.swift */; };
 		A015B6300C4C884FD8E1179E /* WorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92F1639C92AA7F9E906787E /* WorkspaceView.swift */; };
 		A2530E86C18286448C6E24A1 /* PersistentWorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */; };
+		A7D1E3B2EAF31E1909587FCC /* IsolationProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */; };
+		B17641990080586D0B1C7B0B /* ScriptProofProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */; };
+		BD6FAFBB08C45153713B9B23 /* StagedRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3FEB5E817B485FC759307 /* StagedRunner.swift */; };
+		DB19DF7B00DAAB7D9AA1B4F3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3C1CF6D9C2EA093F5EEA8 /* main.swift */; };
 		E10631307C78997F4D5EBBE6 /* FolderMasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */; };
 		E33325A492D0B3B29B95DEE3 /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E771DAF4FE03AA8560E11 /* Experience.swift */; };
+		F007BD7930293875CCBCA725 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205776964702B52AFB52FAD8 /* main.swift */; };
+		FE85674EBAFE329A4DC53229 /* ScriptProofService.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A535CFBDE250483952CE767 /* ScriptProofService.xpc */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		24E1B86E6334122C4E76E98E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68FDBE44E633E51CCEAA0194 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 445BE08BAF4496B33E9C7CBC;
+			remoteInfo = ScriptIsolationProbe;
+		};
+		935736BDACBE9391C9C00BD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68FDBE44E633E51CCEAA0194 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B573A0AC03086381A08A180;
+			remoteInfo = ScriptProofService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3F05FD8A961F0451E302442A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+				FE85674EBAFE329A4DC53229 /* ScriptProofService.xpc in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		14A3C1CF6D9C2EA093F5EEA8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1D9737BC7BCDD342570B2E73 /* ScriptProofService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScriptProofService.entitlements; sourceTree = "<group>"; };
+		1DC1C168B7086DC849F5E45A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		200E771DAF4FE03AA8560E11 /* Experience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Experience.swift; sourceTree = "<group>"; };
+		205776964702B52AFB52FAD8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		23EAA19FB6586742DEFB6AEB /* EngineClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineClient.swift; sourceTree = "<group>"; };
 		261F002A6275003F2D62387A /* ExperienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceTests.swift; sourceTree = "<group>"; };
 		289303BF39EA3AB42C3B8E36 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		31517670DA6CA68194274708 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		34CCF079A21CCBEC28DAE2A6 /* ScriptProofHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScriptProofHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptProofProtocol.swift; sourceTree = "<group>"; };
+		3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsolationProbe.swift; sourceTree = "<group>"; };
 		64F7981D34975B2592B253B7 /* FolderAccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAccessTests.swift; sourceTree = "<group>"; };
 		7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentWorkspaceView.swift; sourceTree = "<group>"; };
+		8A535CFBDE250483952CE767 /* ScriptProofService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = ScriptProofService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C6F5F6D67835899C988E3EE /* FolderMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FolderMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B2B3FEB5E817B485FC759307 /* StagedRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StagedRunner.swift; sourceTree = "<group>"; };
 		B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMasterApp.swift; sourceTree = "<group>"; };
 		C63E6C967B049E4ACB9CA5C6 /* FolderMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FolderMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92F1639C92AA7F9E906787E /* WorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceView.swift; sourceTree = "<group>"; };
+		CDFDA777BCE479EAAA30A532 /* ScriptIsolationProbe */ = {isa = PBXFileReference; includeInIndex = 0; path = ScriptIsolationProbe; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF8E6A042171897AC828F103 /* ScriptProof-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScriptProof-Bridging-Header.h"; sourceTree = "<group>"; };
 		E3B3FC60BB0791EBDC686555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E451299DADF443BA6ADB481D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E641CADA13655005E1C91890 /* PersistentFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentFolder.swift; sourceTree = "<group>"; };
+		FB98276342FFF4F17EF38851 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		3C92273D82955560ACB7D0C3 /* Probe */ = {
+			isa = PBXGroup;
+			children = (
+				1DC1C168B7086DC849F5E45A /* main.swift */,
+			);
+			name = Probe;
+			path = "../tests/native/script-proof/Probe";
+			sourceTree = "<group>";
+		};
+		51843202193344E424F27B0A /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				FB98276342FFF4F17EF38851 /* Info.plist */,
+				205776964702B52AFB52FAD8 /* main.swift */,
+			);
+			name = Host;
+			path = "../tests/native/script-proof/Host";
+			sourceTree = "<group>";
+		};
 		706E2D9ADE4629EECF48477A = {
 			isa = PBXGroup;
 			children = (
 				FCC0FF79F410778B92BDDC47 /* FolderMaster */,
+				51843202193344E424F27B0A /* Host */,
+				3C92273D82955560ACB7D0C3 /* Probe */,
+				B1758AABEE4F386CE4BC9135 /* Service */,
+				C712575B13DB66DD732C304D /* Shared */,
 				83DCAA9A6A27943966B784E7 /* Tests */,
 				8AB70EBC2145AD2BE61F876C /* Products */,
 			);
@@ -69,6 +145,9 @@
 			children = (
 				C63E6C967B049E4ACB9CA5C6 /* FolderMaster.app */,
 				8C6F5F6D67835899C988E3EE /* FolderMasterTests.xctest */,
+				CDFDA777BCE479EAAA30A532 /* ScriptIsolationProbe */,
+				34CCF079A21CCBEC28DAE2A6 /* ScriptProofHost.app */,
+				8A535CFBDE250483952CE767 /* ScriptProofService.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -80,6 +159,29 @@
 				E641CADA13655005E1C91890 /* PersistentFolder.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		B1758AABEE4F386CE4BC9135 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				E451299DADF443BA6ADB481D /* Info.plist */,
+				14A3C1CF6D9C2EA093F5EEA8 /* main.swift */,
+				1D9737BC7BCDD342570B2E73 /* ScriptProofService.entitlements */,
+				B2B3FEB5E817B485FC759307 /* StagedRunner.swift */,
+			);
+			name = Service;
+			path = "../tests/native/script-proof/Service";
+			sourceTree = "<group>";
+		};
+		C712575B13DB66DD732C304D /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */,
+				DF8E6A042171897AC828F103 /* ScriptProof-Bridging-Header.h */,
+				3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */,
+			);
+			name = Shared;
+			path = "../tests/native/script-proof/Shared";
 			sourceTree = "<group>";
 		};
 		FCC0FF79F410778B92BDDC47 /* FolderMaster */ = {
@@ -100,6 +202,42 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2B573A0AC03086381A08A180 /* ScriptProofService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C7D93DD0CDA1E1B90D7BD84 /* Build configuration list for PBXNativeTarget "ScriptProofService" */;
+			buildPhases = (
+				98573E16BC2DAF0104A09ABB /* Sources */,
+				4AF29CD5E043A1F91894B956 /* Embed unentitled isolation probe */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FFB8E2B88CB3462DA162ED74 /* PBXTargetDependency */,
+			);
+			name = ScriptProofService;
+			packageProductDependencies = (
+			);
+			productName = ScriptProofService;
+			productReference = 8A535CFBDE250483952CE767 /* ScriptProofService.xpc */;
+			productType = "com.apple.product-type.xpc-service";
+		};
+		445BE08BAF4496B33E9C7CBC /* ScriptIsolationProbe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD0039331ED30BDFE4187994 /* Build configuration list for PBXNativeTarget "ScriptIsolationProbe" */;
+			buildPhases = (
+				6DC65DC3F70DA613B11143FD /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScriptIsolationProbe;
+			packageProductDependencies = (
+			);
+			productName = ScriptIsolationProbe;
+			productReference = CDFDA777BCE479EAAA30A532 /* ScriptIsolationProbe */;
+			productType = "com.apple.product-type.tool";
+		};
 		83734A7E044AE00F01FE7DF9 /* FolderMaster */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E1672EA47C98B2AF508FEED /* Build configuration list for PBXNativeTarget "FolderMaster" */;
@@ -135,6 +273,25 @@
 			productReference = 8C6F5F6D67835899C988E3EE /* FolderMasterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		FBA5AE885ABA9ECAB82E4581 /* ScriptProofHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D8B16E559F52E16540FFE93 /* Build configuration list for PBXNativeTarget "ScriptProofHost" */;
+			buildPhases = (
+				A2493717A0CD8F8C34BF8768 /* Sources */,
+				3F05FD8A961F0451E302442A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1321DAB0885CD531AFA5C4B3 /* PBXTargetDependency */,
+			);
+			name = ScriptProofHost;
+			packageProductDependencies = (
+			);
+			productName = ScriptProofHost;
+			productReference = 34CCF079A21CCBEC28DAE2A6 /* ScriptProofHost.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -144,10 +301,19 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					2B573A0AC03086381A08A180 = {
+						DevelopmentTeam = "";
+					};
+					445BE08BAF4496B33E9C7CBC = {
+						DevelopmentTeam = "";
+					};
 					83734A7E044AE00F01FE7DF9 = {
 						DevelopmentTeam = "";
 					};
 					878DE22773D2877AA2C80CD4 = {
+						DevelopmentTeam = "";
+					};
+					FBA5AE885ABA9ECAB82E4581 = {
 						DevelopmentTeam = "";
 					};
 				};
@@ -168,11 +334,34 @@
 			targets = (
 				83734A7E044AE00F01FE7DF9 /* FolderMaster */,
 				878DE22773D2877AA2C80CD4 /* FolderMasterTests */,
+				FBA5AE885ABA9ECAB82E4581 /* ScriptProofHost */,
+				2B573A0AC03086381A08A180 /* ScriptProofService */,
+				445BE08BAF4496B33E9C7CBC /* ScriptIsolationProbe */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4AF29CD5E043A1F91894B956 /* Embed unentitled isolation probe */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/ScriptIsolationProbe",
+			);
+			name = "Embed unentitled isolation probe";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Helpers/ScriptIsolationProbe",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\nmkdir -p \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Helpers\"\ncp \"$BUILT_PRODUCTS_DIR/ScriptIsolationProbe\" \"$TARGET_BUILD_DIR/$CONTENTS_FOLDER_PATH/Helpers/ScriptIsolationProbe\"\n";
+		};
 		629FC821239131F232915742 /* Build pinned Rust engine */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -222,9 +411,67 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6DC65DC3F70DA613B11143FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7D1E3B2EAF31E1909587FCC /* IsolationProbe.swift in Sources */,
+				5AA7407773F9E85DBC5379B1 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		98573E16BC2DAF0104A09ABB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A4FF2AEDFFAC2E20ECEA06D /* IsolationProbe.swift in Sources */,
+				38D015E409ECE8819C7994F8 /* ScriptProofProtocol.swift in Sources */,
+				BD6FAFBB08C45153713B9B23 /* StagedRunner.swift in Sources */,
+				DB19DF7B00DAAB7D9AA1B4F3 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A2493717A0CD8F8C34BF8768 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F1D32FF37FC9258D7B380D6 /* IsolationProbe.swift in Sources */,
+				B17641990080586D0B1C7B0B /* ScriptProofProtocol.swift in Sources */,
+				F007BD7930293875CCBCA725 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1321DAB0885CD531AFA5C4B3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B573A0AC03086381A08A180 /* ScriptProofService */;
+			targetProxy = 935736BDACBE9391C9C00BD5 /* PBXContainerItemProxy */;
+		};
+		FFB8E2B88CB3462DA162ED74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 445BE08BAF4496B33E9C7CBC /* ScriptIsolationProbe */;
+			targetProxy = 24E1B86E6334122C4E76E98E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0206328EBEE414408B622A28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "local.foldermaster.script-proof.probe";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h";
+			};
+			name = Debug;
+		};
 		0DA012822EA2BD54FB133670 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -239,6 +486,23 @@
 				PRODUCT_BUNDLE_IDENTIFIER = local.foldermaster.tests;
 				SDKROOT = macosx;
 				TEST_HOST = "";
+			};
+			name = Release;
+		};
+		10594137C35E0A6C98E1DD07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "../tests/native/script-proof/Host/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "local.foldermaster.script-proof";
+				PRODUCT_NAME = FolderMasterScriptProof;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -374,6 +638,21 @@
 			};
 			name = Release;
 		};
+		646B56824D43A888E4373BA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "local.foldermaster.script-proof.probe";
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h";
+			};
+			name = Release;
+		};
 		6DB8512E917BC556E443EF47 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -442,6 +721,61 @@
 			};
 			name = Debug;
 		};
+		7713EE9C09192EB0BB46DD43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "../tests/native/script-proof/Service/ScriptProofService.entitlements";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				INFOPLIST_FILE = "../tests/native/script-proof/Service/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "local.foldermaster.script-proof.service";
+				PRODUCT_NAME = ScriptProofService;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		9ABBDC549FC36AD20B01CB71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "../tests/native/script-proof/Service/ScriptProofService.entitlements";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				INFOPLIST_FILE = "../tests/native/script-proof/Service/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "local.foldermaster.script-proof.service";
+				PRODUCT_NAME = ScriptProofService;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		C1DF89886A704AF8851516A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "../tests/native/script-proof/Host/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "local.foldermaster.script-proof";
+				PRODUCT_NAME = FolderMasterScriptProof;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "../tests/native/script-proof/Shared/ScriptProof-Bridging-Header.h";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -450,6 +784,15 @@
 			buildConfigurations = (
 				1D5F502C09B2950ACF59F7D0 /* Debug */,
 				0DA012822EA2BD54FB133670 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1C7D93DD0CDA1E1B90D7BD84 /* Build configuration list for PBXNativeTarget "ScriptProofService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7713EE9C09192EB0BB46DD43 /* Debug */,
+				9ABBDC549FC36AD20B01CB71 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -463,11 +806,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		2D8B16E559F52E16540FFE93 /* Build configuration list for PBXNativeTarget "ScriptProofHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1DF89886A704AF8851516A8 /* Debug */,
+				10594137C35E0A6C98E1DD07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		8E7D252A23B9F378D411DAD1 /* Build configuration list for PBXProject "FolderMaster" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6DB8512E917BC556E443EF47 /* Debug */,
 				4A4B171EDDAEE2B29BEAC9BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DD0039331ED30BDFE4187994 /* Build configuration list for PBXNativeTarget "ScriptIsolationProbe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0206328EBEE414408B622A28 /* Debug */,
+				646B56824D43A888E4373BA0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

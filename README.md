@@ -20,7 +20,7 @@ Build the development app with `make build`; see [development instructions and e
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 4/65 complete; M1 lifecycle/UX/platform gates remain open.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 5/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master
@@ -30,6 +30,8 @@ git log --oneline
 ```
 
 Planning is complete and the OpenSpec apply workflow is underway. Script isolation, native metadata preservation and target-OS runtime compatibility have explicit early feasibility gates. A plan passing validation is not proof of runtime behavior.
+
+The separate [staged script proof](docs/SCRIPT_PROOF.md) passes basic XPC execution, but its strict IPC isolation gate fails. Product scripts remain unavailable; no unrestricted fallback is connected.
 
 ## Git tracking
 

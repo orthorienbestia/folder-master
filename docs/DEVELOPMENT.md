@@ -25,6 +25,7 @@ make test
 make bridge-smoke
 make presentation-smoke
 make persistence-smoke
+make script-proof
 make check
 make universal
 ```
@@ -34,6 +35,8 @@ Install Xcode/Xcode command-line components and XcodeGen 2.46.0 first. XcodeGen'
 Local build: build/DerivedData/Build/Products/Debug/Folder Master.app. Launch explicitly with Finder or `open 'build/DerivedData/Build/Products/Debug/Folder Master.app'`. Add Folder opens the native directory chooser and saves a disabled configuration without enumerating children. Display name, subfolder/hidden scope, exclusions and automatic/polling preferences are saved setup only. Explore Sample Interface opens the separate in-memory storyboard. Engine status explicitly reports automation unavailable.
 
 The app owns `~/Library/Application Support/Folder Master` with user-only permissions. The Rust store retains a kernel `flock` lease on `store.lock` before opening the database; another instance receives a typed ownership error and cannot write folder or pause state. Retry can resume initialization after a canceled startup that already opened the store. The lease file is retained, and its descriptor closes after SQLite during shutdown; kernel ownership releases on process death. No user-file recovery/effects exist yet.
+
+`make script-proof` builds a separate `ScriptProof` scheme and runs only generated synthetic cases. These proof targets are not dependencies of the product. `make script-isolation-proof` is a stricter acceptance gate and currently **fails** because Launch Services Mach lookup remains available to a script child, even though direct socket access is denied. See [exact evidence and coverage limits](SCRIPT_PROOF.md). Do not interpret the basic proof or the normal unit suite as full script isolation or expose it as a rule action. The proof uses ad-hoc signing; release client authentication and full quotas/runtime coverage are pending.
 
 SQLite schema v1 includes folder configuration, settings, immutable rule revisions/heads, runs, operation journal, history, receipts and deadlines. Only folder/settings/internal rule snapshot operations are implemented; journal tables are provisioned for the subsequent durable-executor work. Migrations are transactional, newer schemas are inspected read-only and rejected, and backups use SQLite's online backup API to capture WAL contents before publishing a standalone no-replace file. The backup API is internal, with its user-facing export flow pending. SQLite 3 is bundled through pinned rusqlite 0.41.1 rather than relying on the installed system version.
 
