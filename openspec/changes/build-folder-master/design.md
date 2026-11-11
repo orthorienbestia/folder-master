@@ -1,10 +1,10 @@
 # Folder Master — Technical Design Document (TDD)
 
-Version 0.1 · 11 November 2026 · Status: proposed architecture; implementation and platform proofs not yet run.
+Version 0.1 · 11 November 2026 · Status: architecture baseline; M1 foundation implemented in part. See progress for current build/runtime evidence.
 
 ## Context
 
-See [proposal](proposal.md) for motivation, [PRD](../../../docs/PRD.md) for product requirements, [flows](../../../docs/USER_FLOWS.md), [options](../../../docs/USER_OPTIONS.md), and [UI/UX design](../../../docs/UI_UX_DESIGN.md) for the experience contract. The [updated goal](../../../docs/GOAL.md) explicitly prioritizes UI, UX, animations and transitions. Inspection found an initialized OpenSpec spec-driven workspace with no app source, build targets, tests, dependencies or existing capability specs. Git was initialized at the user's request. There is no behavior to migrate or existing utility to reuse.
+See [proposal](proposal.md) for motivation, [PRD](../../../docs/PRD.md) for product requirements, [flows](../../../docs/USER_FLOWS.md), [options](../../../docs/USER_OPTIONS.md), and [UI/UX design](../../../docs/UI_UX_DESIGN.md) for the experience contract. The [updated goal](../../../docs/GOAL.md) explicitly prioritizes UI, UX, animations and transitions. At initial design inspection, the workspace had OpenSpec scaffolding but no app source, build targets, tests, dependencies or existing capability specs. The current M1 foundation adds a Rust static library, native app/test targets and a synthetic storyboard; [progress](../../../docs/PROGRESS.md) distinguishes this from completed product behavior. No existing product behavior needs migration.
 
 Confirmed architecture boundary: Rust engine, SwiftUI/AppKit UI, macOS 14+ deployment target, direct distribution. Apple APIs and Rust watcher evidence are linked in [RESEARCH.md](../../../docs/RESEARCH.md). Proposed module/API names below describe future code, not current files or verified SDK integration.
 

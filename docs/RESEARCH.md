@@ -1,6 +1,6 @@
 # Platform research and evidence
 
-Checked 11 November 2026. Primary documentation was read online for planning; no API was compiled or exercised. The user selected Rust engine + SwiftUI/AppKit UI and direct distribution. Recommendations below are inferences from documented capabilities, not performance or platform proof.
+Checked 11 November 2026. Primary documentation initially supported planning; the Rust/native foundation now has build and limited runtime evidence recorded in PROGRESS.md. The user selected Rust engine + SwiftUI/AppKit UI and direct distribution. Unimplemented platform recommendations below remain design inferences rather than runtime proof.
 
 ## Native UI and lifecycle
 
@@ -44,4 +44,10 @@ No unrestricted host-process script fallback is acceptable under the chosen priv
 
 ## What remains unverified
 
-Rust/native linking, actual SDK availability for chosen implementation symbols, signed XPC script compatibility, metadata/ZIP preservation, TCC/cloud-provider behavior, OCR corpus accuracy, runtime memory/latency, x86_64 hardware, macOS 14 runtime coverage and release signing have no execution evidence yet. The [TDD](../openspec/changes/build-folder-master/design.md) and task list make these checks explicit release gates.
+Rust/native linking, the foundation SwiftUI symbols, universal compilation, bridge request/buffer contracts and a limited synthetic UI journey now have execution evidence. Signed XPC script compatibility, metadata/ZIP preservation, TCC/cloud-provider behavior, OCR accuracy, memory/latency, x86_64 hardware, macOS 14 runtime coverage and public release signing remain unverified. The [TDD](../openspec/changes/build-folder-master/design.md) and task list keep these gates open.
+
+## Foundation implementation references
+
+The Context7 CLI resolved official SwiftUI documentation and retrieved Window/openWindow plus Settings/menu scene guidance before implementation. The app uses the macOS-14-compatible scene APIs and stable view identity; native window-close persistence is still an explicit runtime check. [Window](https://developer.apple.com/documentation/swiftui/window)
+
+The bridge follows explicit C ABI ownership and panic containment, with owned buffers and unsafe pointer contracts tested at the boundary. XcodeGen 2.46.0 source documentation was used for target settings/build scripts; its generated project is tracked. Serde JSON's typed input support is used with pinned 1.0.149, verified by compilation/tests. [Rust FFI guidance](https://doc.rust-lang.org/nomicon/ffi.html), [XcodeGen 2.46.0 project specification](https://github.com/yonaskolb/XcodeGen/blob/2.46.0/Docs/ProjectSpec.md), [Serde JSON documentation](https://docs.rs/serde_json/1.0.149/serde_json/)

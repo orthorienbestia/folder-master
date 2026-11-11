@@ -1,8 +1,10 @@
 # Folder Master
 
-Planned macOS 14+ menu bar file organizer: a **Rust engine with native SwiftUI/AppKit UI**, local OCR and direct distribution. Documents and file processing stay on the Mac.
+macOS 14+ menu bar file organizer in development: a **Rust engine with native SwiftUI/AppKit UI**, planned local OCR and direct distribution. Documents and file processing stay on the Mac.
 
-**Current state: planning baseline. No app code or runnable build yet.**
+**Current state: M1 development foundation.** The native app builds and connects to the Rust worker. The interactive folder/rule/preview/history screens currently use clearly labeled synthetic examples; real folder automation, file actions, OCR, history storage and undo are not connected yet.
+
+Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make check` and `make universal` verify the foundation.
 
 [Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy.
 
@@ -18,7 +20,7 @@ Planned macOS 14+ menu bar file organizer: a **Rust engine with native SwiftUI/A
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are unchecked until implemented and verified.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 2/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master
@@ -27,8 +29,8 @@ git status --short
 git log --oneline
 ```
 
-Review the planning package before starting the OpenSpec apply workflow. Script isolation, native metadata preservation and target-OS compatibility have explicit early feasibility gates. A plan passing validation is not proof of runtime behavior.
+Planning is complete and the OpenSpec apply workflow is underway. Script isolation, native metadata preservation and target-OS runtime compatibility have explicit early feasibility gates. A plan passing validation is not proof of runtime behavior.
 
 ## Git tracking
 
-Local Git repository on `main`; no remote configured or publishing requested. Planning is the first focused commit. Future implementation uses focused feature branches, commits linked to task numbers and evidence updates in [PROGRESS.md](docs/PROGRESS.md). Generated builds, real documents, credentials and local tool state do not belong in commits. Installed `.agents` skills remain local workspace tooling.
+Planning baseline is on `main`; implementation is on `feat/native-foundation`. No remote or publishing requested. Implementation uses focused branches, commits linked to task numbers and evidence updates in [PROGRESS.md](docs/PROGRESS.md). Generated builds, real documents, credentials and local tool state do not belong in commits. Installed `.agents` skills remain local workspace tooling.

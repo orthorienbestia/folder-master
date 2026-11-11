@@ -1,7 +1,7 @@
 ## 1. M1 — Build and platform feasibility
 
-- [ ] 1.1 Record actual Xcode/SDK/Rust versions, pin compatible tools/dependencies and initialize minimal Rust/native build targets; verify clean debug builds and deployment target 14.0 for every target.
-- [ ] 1.2 Implement the small versioned C bridge with ownership/error/cancel contracts; verify Swift→Rust→Swift roundtrip, malformed envelopes, buffer release, non-UTF-8 paths and contained panic handling.
+- [x] 1.1 Record actual Xcode/SDK/Rust versions, pin compatible tools/dependencies and initialize minimal Rust/native build targets; verify clean debug builds and deployment target 14.0 for every target.
+- [x] 1.2 Implement the small versioned C bridge with ownership/error/cancel contracts; verify Swift→Rust→Swift roundtrip, malformed envelopes, buffer release, non-UTF-8 paths and contained panic handling.
 - [ ] 1.3 Add native window/menu/settings lifecycle shell; verify menu persists after window close, Open focuses window and Quit shuts down safely.
 - [ ] 1.4 Build and locally sign the restricted script XPC proof; verify a staged zsh script can run and return only validated output without access to originals.
 - [ ] 1.5 Exercise script child processes, network/IPC denial, interpreter compatibility and timeout termination on supported OS versions; record proof or a blocking design revision, never enable unrestricted fallback.

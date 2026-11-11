@@ -1,8 +1,8 @@
 # Folder Master — Product Requirements Document
 
-Version 0.1 · 11 November 2026 · Status: proposed, ready for review after validation.
+Version 0.1 · 11 November 2026 · Status: product baseline; M1 implementation underway.
 
-This document defines the product before implementation. TDD means **Technical Design Document** in this project; the [TDD](../openspec/changes/build-folder-master/design.md) includes verification strategy. No app has been implemented or benchmarked.
+This document defined the product before implementation. TDD means **Technical Design Document** in this project; the [TDD](../openspec/changes/build-folder-master/design.md) includes verification strategy. A native/Rust foundation and synthetic UI storyboard now build; full product behavior and benchmarks remain unfinished. See [progress](PROGRESS.md) for current evidence.
 
 ## 1. Product and intended outcome
 

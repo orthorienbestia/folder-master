@@ -10,7 +10,7 @@ People repeatedly sort downloads, scans, and working documents by hand and need 
 - Add a main management window, persistent menu bar controls, pause/resume, dry-run previews, manual runs, history, and conditional undo.
 - Treat UI/UX as an early workstream, with native visual hierarchy, complete screen states, deliberate animations/transitions and reduced/off motion accessibility.
 - Define explicit conflict handling, incomplete-file deferral, loop suppression, recovery, script isolation, and privacy boundaries before implementation.
-- Track the design and subsequent implementation in local Git and an evidence-based OpenSpec task checklist. This change currently creates planning artifacts only.
+- Track the design and subsequent implementation in local Git and an evidence-based OpenSpec task checklist. Planning was completed before starting apply; current implementation evidence is recorded in PROGRESS.md.
 
 ## Capabilities
 
@@ -31,6 +31,6 @@ None. This is a greenfield workspace with no existing capability specifications 
 
 ## Impact
 
-Future implementation will add a Rust workspace, a SwiftUI/AppKit macOS app, small Apple-framework adapters, local SQLite storage, and a signed sandboxed script XPC service. Candidate dependencies and platform feasibility gates are documented in the technical design; no dependencies or product targets are installed in this proposal.
+Implementation adds a Rust workspace, a SwiftUI/AppKit macOS app, small Apple-framework adapters, local SQLite storage, and a signed sandboxed script XPC service. The Rust/native foundation now builds; adapters, storage and script service remain pending. Dependency pins and current evidence are in DEVELOPMENT.md/PROGRESS.md; the technical design retains platform feasibility gates.
 
 Product scope and acceptance criteria: [PRD](../../../docs/PRD.md) and [updated goal](../../../docs/GOAL.md). Interaction contracts: [user flows](../../../docs/USER_FLOWS.md), [user options](../../../docs/USER_OPTIONS.md), and [UI/UX and motion](../../../docs/UI_UX_DESIGN.md). Architecture: [technical design](design.md). Research: [source notes](../../../docs/RESEARCH.md).

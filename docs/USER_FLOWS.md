@@ -1,6 +1,6 @@
 # Folder Master — User flows and screen contract
 
-Status: proposed · 11 November 2026. [Option catalog](USER_OPTIONS.md) contains every configurable value/default; [PRD](PRD.md) contains scope and acceptance criteria. [UI/UX design](UI_UX_DESIGN.md) adds visual hierarchy, screen states and motion contracts. Diagrams describe proposed behavior, not a working prototype.
+Status: behavior contract · 11 November 2026. [Option catalog](USER_OPTIONS.md) contains every configurable value/default; [PRD](PRD.md) contains scope and acceptance criteria. [UI/UX design](UI_UX_DESIGN.md) adds visual hierarchy, screen states and motion contracts. Diagrams describe required final behavior; the current synthetic storyboard covers only part of these flows. See PROGRESS.md for evidence.
 
 ## 1. Navigation and main window
 

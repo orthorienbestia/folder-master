@@ -1,6 +1,6 @@
 # Folder Master — UI, UX, animations and transitions
 
-Version 0.1 · 11 November 2026 · Proposed experience contract. UI/UX and motion are explicit user priorities, not an end-stage styling task. This is a design document; no interactive prototype or native screen has been built.
+Version 0.1 · 11 November 2026 · Experience contract. UI/UX and motion are explicit user priorities, not an end-stage styling task. The first synthetic native storyboard now builds and has been inspected through the preview/results/history flow; complete state, motion, accessibility and real-engine UX acceptance remain open in PROGRESS.md.
 
 Related: [goal](GOAL.md), [PRD](PRD.md), [flows](USER_FLOWS.md), [control catalog](USER_OPTIONS.md), [technical design](../openspec/changes/build-folder-master/design.md).
 
