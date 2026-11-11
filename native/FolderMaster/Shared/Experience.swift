@@ -25,6 +25,10 @@ struct DemoPreviewRow: Identifiable, Equatable {
     var name: String
     var readiness: PreviewReadiness
     var destination = "Receipts/2026/"
+    var sourceFolderName = "Downloads"
+    var sourcePath: String { "/Sample/\(sourceFolderName)/\(name)" }
+    var renamedSourcePath: String { "/Sample/\(sourceFolderName)/2026-11-11-\(name)" }
+    var destinationPath: String { "/Sample/\(destination)2026-11-11-\(name)" }
     var explanation: String {
         switch readiness {
         case .ready: return "PDF extension and invoice text match. Would rename, tag, then move."
@@ -50,18 +54,21 @@ struct ExperienceState {
     }
 }
 
+enum DemoFolderAvailability: Hashable { case available, unavailable }
 struct DemoFolder: Identifiable, Hashable {
     var id = UUID()
     var name: String
     var symbol: String
     var detail: String
+    var enabled = false
+    var availability = DemoFolderAvailability.available
 }
 
 enum DemoSamples {
     static let folders = [
-        DemoFolder(name: "Downloads", symbol: "arrow.down.circle", detail: "Sample folder · local only"),
-        DemoFolder(name: "Scans", symbol: "doc.viewfinder", detail: "Sample folder · paused"),
-        DemoFolder(name: "Projects", symbol: "folder", detail: "Sample folder · no rules"),
+        DemoFolder(name: "Downloads", symbol: "arrow.down.circle", detail: "Available · sample On", enabled: true),
+        DemoFolder(name: "Scans", symbol: "doc.viewfinder", detail: "Unavailable · sample Off", availability: .unavailable),
+        DemoFolder(name: "Projects", symbol: "folder", detail: "Available · sample Off"),
     ]
     static let rules = [
         DemoRule(name: "File invoices", enabled: true, conditions: ["Extension is one of pdf", "Text contains invoice"], actions: ["Rename using {created:yyyy-MM-dd}-{stem}", "Add tag Finance", "Move to Receipts/2026"]),
@@ -74,4 +81,7 @@ enum DemoSamples {
         DemoPreviewRow(name: "scan-locked.pdf", readiness: .unknown),
         DemoPreviewRow(name: "invoice-copy.pdf", readiness: .conflict),
     ] }
+    static func preview(in folder: DemoFolder) -> [DemoPreviewRow] {
+        preview.map { row in var scoped = row; scoped.sourceFolderName = folder.name; return scoped }
+    }
 }

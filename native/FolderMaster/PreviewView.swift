@@ -12,7 +12,7 @@ struct PreviewView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(model.previewSource == .draft ? "Test Draft" : "See what would change").font(.title2.weight(.semibold))
-                    Text("\(model.previewRuleName) · Synthetic invoice plan").foregroundStyle(.secondary)
+                    Text("\(model.previewFolderName) · \(model.previewRuleName) · Synthetic invoice plan").foregroundStyle(.secondary)
                     Text("Fixed storyboard examples; your rule is not evaluated and no files are read.").font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -39,52 +39,55 @@ struct PreviewView: View {
             Button("Simulate Selected Chains") { model.simulateRun() }.keyboardShortcut(.defaultAction)
             Button("Cancel", role: .cancel) { model.cancelRunConfirmation() }
         } message: {
-            Text("Each selected sample file includes its whole rename → tag → move chain. Outcome: \(model.runScenario.rawValue). This changes session-only sample history, never your files or automation pause setting.")
+            Text("Each selected sample file includes its whole rename → tag → move chain. Outcome: \(model.runScenario.rawValue). This changes session-only sample history, never your files or automation pause setting.\(model.previewFolderEnabled ? "" : " The sample folder is Off; this simulation runs once without enabling it.")")
         }
-        .onDisappear { model.cancelRunConfirmation() }
     }
 
     private func count(_ readiness: PreviewReadiness) -> Int { model.experience.rows.filter { $0.readiness == readiness }.count }
     private var review: some View {
         VStack(spacing: 0) {
-            List(selection: $inspected) {
-                ForEach(model.experience.rows) { row in
-                    HStack(spacing: 12) {
-                        if model.previewSource == .savedRule {
-                            Toggle("Select whole chain for \(row.name)", isOn: Binding(get: { model.experience.selected.contains(row.id) }, set: { value in
-                                if value && row.readiness == .ready { model.experience.selected.insert(row.id) }
-                                else { model.experience.selected.remove(row.id) }
-                            })).labelsHidden().toggleStyle(.checkbox).disabled(row.readiness != .ready)
-                        }
-                        Image(systemName: "doc.richtext").foregroundStyle(.secondary)
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(row.name).fontWeight(.medium)
-                            Text(row.readiness == .ready ? "Rename → Tag Finance → Move to \(row.destination)" : row.explanation)
-                                .font(.caption).foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Text(row.readiness == .ready ? "Ready" : row.readiness == .unknown ? "Unknown" : "Needs review")
-                            .font(.caption.weight(.medium)).foregroundStyle(.secondary)
-                    }.padding(.vertical, 8).tag(row.id)
-                }
-            }
-            if let row = model.experience.rows.first(where: { $0.id == inspected }) {
-                Divider()
-                VStack(alignment: .leading, spacing: 6) {
-                    Label("Why this result?", systemImage: "text.magnifyingglass").font(.headline)
-                    Text(row.explanation).font(.callout).foregroundStyle(.secondary)
-                    if row.readiness == .ready {
-                        Text("Before: /Sample/Downloads/\(row.name)")
-                        Text("After: /Sample/\(row.destination)2026-11-11-\(row.name)")
-                        Text("Undo would require unchanged outputs, available original paths and valid dependencies.").foregroundStyle(.secondary)
+            if model.experience.rows.isEmpty {
+                ContentUnavailableView("No enabled sample rules", systemImage: "slider.horizontal.3", description: Text("Enable a saved sample rule, or use Test Draft to explore without enabling it."))
+            } else {
+                List(selection: $inspected) {
+                    ForEach(model.experience.rows) { row in
+                        HStack(spacing: 12) {
+                            if model.previewSource == .savedRule {
+                                Toggle("Select whole chain for \(row.name)", isOn: Binding(get: { model.experience.selected.contains(row.id) }, set: { value in
+                                    if value && row.readiness == .ready { model.experience.selected.insert(row.id) }
+                                    else { model.experience.selected.remove(row.id) }
+                                })).labelsHidden().toggleStyle(.checkbox).disabled(row.readiness != .ready)
+                            }
+                            Image(systemName: "doc.richtext").foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(row.name).fontWeight(.medium)
+                                Text(row.readiness == .ready ? "Rename → Tag Finance → Move to \(row.destination)" : row.explanation)
+                                    .font(.caption).foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            Text(row.readiness == .ready ? "Ready" : row.readiness == .unknown ? "Unknown" : "Needs review")
+                                .font(.caption.weight(.medium)).foregroundStyle(.secondary)
+                        }.padding(.vertical, 8).tag(row.id)
                     }
-                }.font(.caption).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding(16)
-            }
-            if model.previewSource == .savedRule {
-                Divider()
-                Picker("Sample outcome", selection: $model.runScenario) {
-                    ForEach(DemoRunScenario.allCases) { scenario in Text(scenario.rawValue).tag(scenario) }
-                }.padding(.horizontal, 20).padding(.vertical, 12)
+                }
+                if let row = model.experience.rows.first(where: { $0.id == inspected }) {
+                    Divider()
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label("Why this result?", systemImage: "text.magnifyingglass").font(.headline)
+                        Text(row.explanation).font(.callout).foregroundStyle(.secondary)
+                        if row.readiness == .ready {
+                            Text("Before: \(row.sourcePath)")
+                            Text("After: \(row.destinationPath)")
+                            Text("Undo would require unchanged outputs, available original paths and valid dependencies.").foregroundStyle(.secondary)
+                        }
+                    }.font(.caption).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading).padding(16)
+                }
+                if model.previewSource == .savedRule {
+                    Divider()
+                    Picker("Sample outcome", selection: $model.runScenario) {
+                        ForEach(DemoRunScenario.allCases) { scenario in Text(scenario.rawValue).tag(scenario) }
+                    }.padding(.horizontal, 20).padding(.vertical, 12)
+                }
             }
         }
     }
@@ -117,7 +120,7 @@ struct PreviewView: View {
             HStack {
                 Text("Completed sample steps are retained in history.").font(.caption).foregroundStyle(.secondary)
                 Spacer()
-                Button("View Demo History") { model.destination = .history; dismiss() }
+                Button("View Demo History") { model.requestHistoryAfterPreview() }
                 Button("Done") { dismiss() }.buttonStyle(.borderedProminent).keyboardShortcut(.defaultAction)
             }
         }

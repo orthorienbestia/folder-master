@@ -1,6 +1,6 @@
 # Folder Master — UI, UX, animations and transitions
 
-Version 0.1 · 11 November 2026 · Experience contract. UI/UX and motion are explicit user priorities, not an end-stage styling task. The synthetic native storyboard now includes confirmed saved-plan samples, read-only draft testing, failed/partial outcomes, boundary pause/cancel, history inspection and inverse previews; [observed evidence](UI_STORYBOARD_EVIDENCE.md) distinguishes these from real execution. Complete state, motion, accessibility and real-engine UX acceptance remain open in PROGRESS.md.
+Version 0.1 · 11 November 2026 · Experience contract. UI/UX and motion are explicit user priorities, not an end-stage styling task. The synthetic native storyboard now includes folder-specific Off/empty/unavailable states, guarded dirty navigation, confirmed saved-plan samples, read-only draft testing, failed/partial outcomes, boundary pause/cancel, history inspection and inverse previews; [observed evidence](UI_STORYBOARD_EVIDENCE.md) distinguishes these from real execution. Complete state, motion, accessibility and real-engine UX acceptance remain open in PROGRESS.md.
 
 Related: [goal](GOAL.md), [PRD](PRD.md), [flows](USER_FLOWS.md), [control catalog](USER_OPTIONS.md), [technical design](../openspec/changes/build-folder-master/design.md).
 

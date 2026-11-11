@@ -46,6 +46,8 @@ final class AppModel: ObservableObject {
     @Published var showRunConfirmation = false
     @Published private(set) var previewSource: DemoPreviewSource = .savedRule
     @Published private(set) var previewRuleName = ""
+    @Published private(set) var previewFolderName = ""
+    @Published private(set) var previewFolderEnabled = false
     @Published var previewPhase: PreviewPhase = .review
     @Published var completedCount = 0
     @Published var processedCount = 0
@@ -55,6 +57,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var runTotal = 0
     @Published var activities: [DemoActivity] = []
     @Published var undoCandidate: DemoActivity?
+    @Published private(set) var demoReconnectID: UUID?
     @Published var engineStatus = "Connecting local engine…"
     @Published var enginePaused = true
     @Published var enginePending = false
@@ -73,7 +76,7 @@ final class AppModel: ObservableObject {
     @Published var quitPending = false
     private enum PendingLiveAction { case select(String?), demo }
     private var pendingLiveAction: PendingLiveAction?
-    private enum PendingEditorAction { case select(UUID?), create }
+    private enum PendingEditorAction { case select(UUID?), create, destination(WorkspaceDestination?), leave }
     private var pendingEditorAction: PendingEditorAction?
     private var started = false
     private var simulation: Task<Void, Never>?
@@ -82,6 +85,16 @@ final class AppModel: ObservableObject {
     private var activeRows: [DemoPreviewRow] = []
     private var activeScenario = DemoRunScenario.success
     private var simulationID = UUID()
+    private var demoInitialized = false
+    private var activeDemoFolderID: UUID?
+    private var demoRuleSets: [UUID: [DemoRule]] = [:]
+    private var demoRuleSelections: [UUID: UUID] = [:]
+    private var reconnectTask: Task<Void, Never>?
+    private var reconnectToken = UUID()
+    private var previewFolderID: UUID?
+    private var historyAfterPreview = false
+    private var newDemoRuleID: UUID?
+    private var previousDemoRuleID: UUID?
     private let dataDirectory: URL?
     let engine = EngineClient()
 
@@ -93,7 +106,9 @@ final class AppModel: ObservableObject {
         #endif
     }
 
-    var dirty: Bool { draft != experience.rules.first { $0.id == selectedRuleID } }
+    var dirty: Bool {
+        (newDemoRuleID != nil && selectedRuleID == newDemoRuleID) || draft != experience.rules.first { $0.id == selectedRuleID }
+    }
     var validDraft: Bool {
         guard let draft else { return false }
         return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !draft.conditions.isEmpty && !draft.actions.isEmpty
@@ -158,10 +173,14 @@ final class AppModel: ObservableObject {
     private func enterDemo() {
         guard !demo else { return }
         demo = true
-        folders = DemoSamples.folders
-        experience.rules = DemoSamples.rules
-        destination = .folder(folders[0].id)
-        selectRule(experience.rules[0].id)
+        if !demoInitialized {
+            folders = DemoSamples.folders
+            demoRuleSets[folders[0].id] = DemoSamples.rules
+            demoRuleSets[folders[1].id] = [DemoRule(name: "Tag scanned documents", conditions: ["Kind is PDF"], actions: ["Add tag Scanned"])]
+            demoRuleSets[folders[2].id] = []
+            demoInitialized = true
+            loadDemoDestination(.folder(folders[0].id))
+        }
     }
 
     func selectLiveFolder(_ id: String?) {
@@ -251,6 +270,61 @@ final class AppModel: ObservableObject {
         if dirty && selectedRuleID != id { pendingEditorAction = .select(id); showUnsaved = true; return }
         loadRule(id)
     }
+    var selectedDemoFolder: DemoFolder? {
+        guard case .folder(let id) = destination else { return nil }
+        return folders.first { $0.id == id }
+    }
+    var canPreviewDemo: Bool {
+        demo && !quitPending && !previewPhase.isActive && selectedDemoFolder?.availability == .available && demoReconnectID != selectedDemoFolder?.id
+    }
+    func selectDemoDestination(_ destination: WorkspaceDestination?) {
+        guard demo, !quitPending, !previewPhase.isActive, self.destination != destination else { return }
+        if dirty { pendingEditorAction = .destination(destination); showUnsaved = true; return }
+        storeDemoRules()
+        loadDemoDestination(destination)
+    }
+    private func storeDemoRules() {
+        guard let id = activeDemoFolderID else { return }
+        demoRuleSets[id] = experience.rules
+        demoRuleSelections[id] = selectedRuleID
+    }
+    private func loadDemoDestination(_ destination: WorkspaceDestination?) {
+        if case .folder(let id) = destination {
+            guard folders.contains(where: { $0.id == id }) else { return }
+            activeDemoFolderID = id
+            experience.rules = demoRuleSets[id] ?? []
+            let previous = experience.rules.first { $0.id == demoRuleSelections[id] }
+            loadRule(previous?.id ?? experience.rules.first?.id)
+        }
+        self.destination = destination
+    }
+    func leaveDemo() {
+        guard demo, !quitPending, !previewPhase.isActive else { return }
+        if dirty { pendingEditorAction = .leave; showUnsaved = true; return }
+        storeDemoRules()
+        reconnectTask?.cancel(); reconnectToken = UUID(); demoReconnectID = nil
+        demo = false
+    }
+    func keepEditingDemo() { pendingEditorAction = nil; showUnsaved = false }
+    func setDemoFolderEnabled(_ enabled: Bool) {
+        guard demo, !quitPending, let folder = selectedDemoFolder, folder.availability == .available,
+              let index = folders.firstIndex(where: { $0.id == folder.id }) else { return }
+        folders[index].enabled = enabled
+        folders[index].detail = enabled ? "Available · sample On" : "Available · sample Off"
+    }
+    func reconnectDemoFolder() {
+        guard demo, !quitPending, demoReconnectID == nil, let folder = selectedDemoFolder,
+              folder.availability == .unavailable else { return }
+        let token = UUID(); reconnectToken = token; demoReconnectID = folder.id
+        reconnectTask = Task {
+            defer { if reconnectToken == token { demoReconnectID = nil } }
+            do { try await Task.sleep(nanoseconds: 1_000_000_000) } catch { return }
+            guard !Task.isCancelled, reconnectToken == token, demo,
+                  let index = folders.firstIndex(where: { $0.id == folder.id }) else { return }
+            folders[index].availability = .available
+            folders[index].detail = folders[index].enabled ? "Available · sample On" : "Available · sample Off"
+        }
+    }
 
     private func loadRule(_ id: UUID?) {
         selectedRuleID = id
@@ -259,32 +333,46 @@ final class AppModel: ObservableObject {
     }
 
     func resolveUnsaved(save: Bool) {
-        if save { saveDraft() }
+        if save, !saveDraft() { return }
+        if !save { discardDraft() }
         let action = pendingEditorAction
         pendingEditorAction = nil
         showUnsaved = false
         switch action {
         case .select(let id): loadRule(id)
         case .create: createRule()
+        case .destination(let target): selectDemoDestination(target)
+        case .leave: leaveDemo()
         case nil: break
         }
     }
 
-    func saveDraft() {
-        guard validDraft, let draft, let index = experience.rules.firstIndex(where: { $0.id == draft.id }) else { return }
+    @discardableResult func saveDraft() -> Bool {
+        guard validDraft, let draft, let index = experience.rules.firstIndex(where: { $0.id == draft.id }) else { return false }
         experience.rules[index] = draft
+        newDemoRuleID = nil; previousDemoRuleID = nil
         savedFeedback = true
+        return true
     }
 
-    func discardDraft() { loadRule(selectedRuleID) }
+    func discardDraft() {
+        if let id = newDemoRuleID, selectedRuleID == id {
+            experience.rules.removeAll { $0.id == id }
+            let previous = experience.rules.first { $0.id == previousDemoRuleID }
+            newDemoRuleID = nil; previousDemoRuleID = nil
+            loadRule(previous?.id ?? experience.rules.first?.id)
+        } else { loadRule(selectedRuleID) }
+    }
 
     func addRule() {
+        guard demo, !quitPending, !previewPhase.isActive, selectedDemoFolder?.availability == .available else { return }
         guard !dirty else { pendingEditorAction = .create; showUnsaved = true; return }
         createRule()
     }
 
     private func createRule() {
         let rule = DemoRule(name: "Untitled Rule", conditions: ["Name contains "], actions: [])
+        previousDemoRuleID = selectedRuleID; newDemoRuleID = rule.id
         experience.rules.append(rule)
         loadRule(rule.id)
     }
@@ -296,28 +384,38 @@ final class AppModel: ObservableObject {
 
     var confirmationCount: Int { approvedRows?.count ?? 0 }
     func presentPreview(source: DemoPreviewSource = .savedRule) {
-        guard !previewPhase.isActive else { return }
+        guard canPreviewDemo, let folder = selectedDemoFolder, source != .draft || validDraft else { return }
         simulation?.cancel(); simulationID = UUID()
         approvedRows = nil; showRunConfirmation = false
         previewSource = source
-        previewRuleName = source == .draft ? draft?.name ?? "Untitled draft" : experience.rules.first { $0.id == selectedRuleID }?.name ?? "Saved rules"
-        experience.rows = DemoSamples.preview
+        previewFolderID = folder.id; previewFolderName = folder.name; previewFolderEnabled = folder.enabled
+        historyAfterPreview = false
+        previewRuleName = source == .draft ? draft?.name ?? "Untitled draft" : experience.rules.first { $0.id == selectedRuleID && $0.id != newDemoRuleID }?.name ?? "Saved rules"
+        experience.rows = source == .draft || experience.rules.contains(where: \.enabled) ? DemoSamples.preview(in: folder) : []
         experience.selectReady()
         previewPhase = .review
         completedCount = 0
         processedCount = 0; partialCount = 0; failedCount = 0; runTotal = 0
         showPreview = true
     }
+    func requestHistoryAfterPreview() {
+        guard showPreview, !previewPhase.isActive else { return }
+        historyAfterPreview = true; showPreview = false
+    }
+    func previewDidDismiss() {
+        cancelRunConfirmation()
+        if historyAfterPreview { historyAfterPreview = false; selectDemoDestination(.history) }
+    }
 
     func requestSimulation() {
-        guard demo, previewSource == .savedRule, previewPhase == .review, !experience.executableSelection.isEmpty else { return }
+        guard canPreviewDemo, previewFolderID == selectedDemoFolder?.id, previewSource == .savedRule, previewPhase == .review, !experience.executableSelection.isEmpty else { return }
         approvedRows = experience.executableSelection
         approvedScenario = runScenario
         showRunConfirmation = true
     }
     func cancelRunConfirmation() { approvedRows = nil; showRunConfirmation = false }
     func simulateRun() {
-        guard previewSource == .savedRule, previewPhase == .review, let rows = approvedRows,
+        guard canPreviewDemo, previewFolderID == selectedDemoFolder?.id, previewSource == .savedRule, previewPhase == .review, let rows = approvedRows,
               !rows.isEmpty, rows == experience.executableSelection else { cancelRunConfirmation(); return }
         activeRows = rows; activeScenario = approvedScenario; runTotal = rows.count
         cancelRunConfirmation()
@@ -344,8 +442,8 @@ final class AppModel: ObservableObject {
                     outcome = .completed; completedCount += 1
                     detail = "Sample rename → tag → move completed. No real files changed."
                 }
-                let before = "/Sample/Downloads/\(row.name)"
-                let after = outcome == .failed ? before : outcome == .partial ? "/Sample/Downloads/2026-11-11-\(row.name)" : "/Sample/\(row.destination)2026-11-11-\(row.name)"
+                let before = row.sourcePath
+                let after = outcome == .failed ? before : outcome == .partial ? row.renamedSourcePath : row.destinationPath
                 activities.insert(DemoActivity(name: row.name, detail: detail, outcome: outcome, beforePath: before, afterPath: after), at: 0)
                 processedCount += 1
                 if previewPhase == .pausing && processedCount < activeRows.count { previewPhase = .paused; return }
@@ -398,5 +496,5 @@ final class AppModel: ObservableObject {
         }
         return true
     }
-    func shutdown() async { simulation?.cancel(); await engine.shutdown() }
+    func shutdown() async { simulation?.cancel(); reconnectTask?.cancel(); reconnectToken = UUID(); demoReconnectID = nil; await engine.shutdown() }
 }

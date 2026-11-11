@@ -55,27 +55,33 @@ struct DemoWorkspaceView: View {
             if model.demo {
                 ToolbarItemGroup {
                     Button { model.presentPreview() } label: { Label("Preview", systemImage: "eye") }
-                        .help("Preview synthetic files; no folders are read")
+                        .help(model.canPreviewDemo ? "Preview synthetic files; no folders are read" : "Choose an available sample folder first")
+                        .disabled(!model.canPreviewDemo)
                     Button { model.presentPreview() } label: { Label("Simulate Run", systemImage: "play") }
+                        .disabled(!model.canPreviewDemo)
                 }
             }
         }
-        .sheet(isPresented: $model.showPreview) { PreviewView(model: model) }
+        .sheet(isPresented: $model.showPreview, onDismiss: model.previewDidDismiss) { PreviewView(model: model) }
         .confirmationDialog("Save changes to this demo rule?", isPresented: $model.showUnsaved, titleVisibility: .visible) {
             Button("Save") { model.resolveUnsaved(save: true) }.disabled(!model.validDraft)
             Button("Discard Changes", role: .destructive) { model.resolveUnsaved(save: false) }
-            Button("Keep Editing", role: .cancel) { }
+            Button("Keep Editing", role: .cancel) { model.keepEditingDemo() }
         } message: { Text("Changes are stored in this demo session only. Your files are never changed.") }
         .animation(animation, value: model.destination)
     }
 
     private var sidebar: some View {
         VStack(spacing: 0) {
-            List(selection: $model.destination) {
+            List(selection: Binding(get: { model.destination }, set: { model.selectDemoDestination($0) })) {
                 Section("Watched folders") {
                     if model.folders.isEmpty { Text("No folders yet").foregroundStyle(.secondary) }
                     ForEach(model.folders) { folder in
-                        Label(folder.name, systemImage: folder.symbol).tag(WorkspaceDestination.folder(folder.id))
+                        VStack(alignment: .leading, spacing: 4) {
+                            Label(folder.name, systemImage: folder.symbol)
+                            Text(model.demoReconnectID == folder.id ? "Reconnecting sample…" : folder.detail)
+                                .font(.caption).foregroundStyle(.secondary)
+                        }.padding(.vertical, 4).tag(WorkspaceDestination.folder(folder.id))
                     }
                 }
                 Section {
@@ -97,7 +103,7 @@ struct DemoWorkspaceView: View {
             Text("Interactive experience preview").fontWeight(.medium)
             Text("Synthetic folders and files. Nothing is read or changed.").foregroundStyle(.secondary)
             Spacer(minLength: 0)
-            Button("Leave Demo") { model.demo = false }
+            Button("Leave Demo") { model.leaveDemo() }
                 .help("Return to your saved folders; the sample session does not change their configuration")
         }
         .font(.caption).padding(.horizontal, 16).padding(.vertical, 10)
@@ -116,7 +122,9 @@ struct DemoWorkspaceView: View {
                 feature("eye", "See every change before it happens", "Understand matches and destinations in a dry-run preview.")
                 feature("arrow.uturn.backward", "Stay in control", "Pause from the menu bar. Inspect history and supported undo.")
             }.frame(width: 440)
-            Button("Explore Interactive Preview") { model.exploreDemo() }
+            Button("Select a Sample Folder") {
+                if let first = model.folders.first { model.selectDemoDestination(.folder(first.id)) }
+            }
                 .buttonStyle(.borderedProminent).controlSize(.large)
             Text("Development foundation — real folder automation is coming next.")
                 .font(.caption).foregroundStyle(.secondary)
@@ -134,6 +142,45 @@ struct DemoWorkspaceView: View {
     }
 
     private var folderContent: some View {
+        VStack(spacing: 0) {
+            if let folder = model.selectedDemoFolder {
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(folder.name).font(.title2.weight(.semibold))
+                        Text("/Sample/\(folder.name) · in-memory folder state").font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Toggle("On in sample", isOn: Binding(get: { folder.enabled }, set: model.setDemoFolderEnabled))
+                        .toggleStyle(.switch).controlSize(.small)
+                        .disabled(folder.availability != .available || model.demoReconnectID == folder.id)
+                        .help("Session-only status; no folder is watched or processed")
+                }.padding(20)
+                Divider()
+                if folder.availability == .unavailable {
+                    VStack(spacing: 16) {
+                        Image(systemName: "folder.badge.questionmark").font(.largeTitle).foregroundStyle(.secondary)
+                        Text("Sample folder unavailable").font(.title2.weight(.semibold))
+                        Text("This demonstrates a disconnected or inaccessible folder. Real reconnection and permission handling are not connected yet.")
+                            .foregroundStyle(.secondary).multilineTextAlignment(.center).frame(maxWidth: 420)
+                        if model.demoReconnectID == folder.id {
+                            ProgressView("Reconnecting sample…")
+                            Text("The sample folder will stay Off.").font(.caption).foregroundStyle(.secondary)
+                        } else {
+                            Button("Simulate Reconnect") { model.reconnectDemoFolder() }
+                                .buttonStyle(.borderedProminent).disabled(model.demoReconnectID != nil)
+                        }
+                    }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if model.experience.rules.isEmpty {
+                    VStack(spacing: 16) {
+                        ContentUnavailableView("No rules for \(folder.name) yet", systemImage: "slider.horizontal.3", description: Text("Create a disabled sample rule first. Existing files are never processed by this interface."))
+                        Button("New Sample Rule") { model.addRule() }.buttonStyle(.borderedProminent)
+                    }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else { ruleColumns }
+            }
+        }
+    }
+
+    private var ruleColumns: some View {
         HSplitView {
             VStack(spacing: 0) {
                 HStack {
@@ -155,7 +202,7 @@ struct DemoWorkspaceView: View {
                                 Text("\(rule.conditions.count) conditions · \(rule.actions.count) actions").font(.caption).foregroundStyle(.secondary)
                             }
                         }.padding(.vertical, 7).tag(rule.id)
-                        .contextMenu { Button("Duplicate as Disabled") { model.experience.duplicateRule(rule.id) } }
+                        .contextMenu { Button("Duplicate as Disabled") { model.experience.duplicateRule(rule.id) }.disabled(model.dirty) }
                     }
                 }
                 HStack { Text("First matching rule wins").font(.caption).foregroundStyle(.secondary); Spacer() }.padding(12)
@@ -195,9 +242,16 @@ struct RuleEditorView: View {
                             Text("Name").font(.subheadline.weight(.medium))
                             TextField("Rule name", text: Binding(get: { model.draft?.name ?? "" }, set: { value in edit { $0.name = value } }))
                                 .textFieldStyle(.roundedBorder)
+                                .accessibilityLabel("Sample rule name")
+                            if draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                Label("Enter a name before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
+                            }
                         }
                         VStack(alignment: .leading, spacing: 12) {
                             HStack { Text("Match all of these conditions").font(.headline); Spacer() }
+                            if draft.conditions.isEmpty {
+                                Label("Add at least one condition.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
+                            }
                             ForEach(Array(draft.conditions.enumerated()), id: \.offset) { index, condition in
                                 HStack {
                                     Image(systemName: "line.3.horizontal.decrease").foregroundStyle(.secondary)
@@ -217,6 +271,9 @@ struct RuleEditorView: View {
                         Divider()
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Then do these actions").font(.headline)
+                            if draft.actions.isEmpty {
+                                Label("Add at least one action before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
+                            }
                             ForEach(Array(draft.actions.enumerated()), id: \.offset) { index, action in
                                 HStack(alignment: .center, spacing: 10) {
                                     Text("\(index + 1)").font(.caption.monospacedDigit()).foregroundStyle(.secondary).frame(width: 20)

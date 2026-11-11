@@ -1,10 +1,10 @@
 # Native storyboard evidence — 11 November 2026
 
-This records partial M1 experience work under tasks 1.11/1.12. It is not acceptance of a working organizer. The app still has no connected watcher, rule evaluator, file action executor, operational history or real undo. Every result below is visibly synthetic, session-only, and based on a fixed invoice plan. Selecting or editing a rule does not evaluate it.
+This records partial M1 experience work under tasks 1.11/1.12. It is not acceptance of a working organizer. The app still has no connected watcher, rule evaluator, file action executor, operational history or real undo. Folder states and results below are visibly synthetic and session-only; file-result rows use a fixed invoice plan. Selecting or editing a rule does not evaluate it.
 
 ## Implemented presentation journey
 
-1. Choose **Explore Sample Interface** from the real workspace.
+1. Choose **Explore Sample Interface** from the real workspace. Downloads has three saved sample rules; Projects starts Off with no rules; Scans starts unavailable and Off. Each folder retains its own rule list and selection.
 2. **Test Draft** opens a read-only sample preview. No checkboxes, Apply or simulation-run control appears. Escape closes it.
 3. Toolbar **Preview** opens the saved-plan sample with Ready, Unknown and Needs review rows. Only complete Ready file chains can be selected. Inspecting a row shows its explanation and sample before/after paths.
 4. Choose **Successful run**, **Partial move failure** or **Permission failure**, then **Review Selected**. The native confirmation names the selected chain count and sample outcome. Cancel starts no run. Confirmation pins the selected rows and scenario.
@@ -31,10 +31,30 @@ This records partial M1 experience work under tasks 1.11/1.12. It is not accepta
 
 The UI used a fresh private debug data root and synthetic in-memory rows. No actual watched folder or document was enrolled. The test app exited normally. A read-only check found zero saved folders, runs, operation-journal rows and history rows in the isolated store; sample activity stayed in memory. The owned temporary store was then removed. Querying its AX state after Quit caused the UI tool to reopen the app, so exit cleanup used a running-app inventory without re-querying the closed target. This does not establish menu persistence or close/reopen correctness.
 
+## Folder scope and unsaved navigation follow-up
+
+The linked presentation smoke first reproduced shared rules leaking into Projects, then a new rule incorrectly appearing already saved. Folder rule/selection storage is now scoped by sample folder ID. A new disabled placeholder stays dirty; valid Save stores it in the session, while Discard removes it. Save/Discard/Keep Editing protects folder selection, history navigation and Leave Demo. An invalid Save does not dismiss the pending intent. Returning from Leave Demo preserves saved sample configuration until the app quits; nothing is written into the real folder/rule store.
+
+Projects shows a native empty state and New Sample Rule action; Command-N also creates the disabled draft. Name/condition/action presence errors have inline explanations, with Save disabled for missing fields. These are structural storyboard checks, not complete typed/operator/template validation. A saved-rule preview with no enabled sample rules shows zero rows; Test Draft remains read-only. Sample paths and preview context use the captured selected folder rather than always displaying Downloads. An Off-folder sample confirmation explains that a simulation runs once without enabling that folder.
+
+Scans demonstrates unavailable-folder guidance and **Simulate Reconnect**. The one-second asynchronous provider updates only that sample folder, leaves its enable state unchanged, and cannot steal selection from another folder. Token checks discard canceled reconnection completions. This performs no bookmark resolution, OS permission check, volume access or real reconnection.
+
+| Follow-up check | Observed result |
+| --- | --- |
+| Linked regression smoke | Isolated rule lists/selected IDs survive navigation; new placeholders are dirty and removed on discard; empty/unavailable previews are guarded; Save/Discard/Keep Editing and Leave Demo preserve the intended state |
+| Reconnect model checks | Pending state is explicit; navigating to Projects while it completes retains Projects selection and leaves Scans available but Off |
+| Native folder journey | Projects displayed Off/empty; Command-N created an unsaved disabled draft; switching folders prompted with disabled Save for the invalid draft; Keep Editing stayed on Projects; Discard removed the placeholder and completed the requested switch |
+| Native empty preview | Projects had 0 ready/unknown/review rows and disabled Review Selected; no invoice rows were invented for its empty saved-rule set |
+| Native unavailable/reconnect | Scans displayed unavailable guidance with disabled preview/run; Simulate Reconnect returned an available, Off folder with its own disabled rule. The brief pending render was not captured in this native walkthrough |
+| Deferred history navigation | An edited Downloads draft stayed separate from saved preview. View Demo History dismissed the preview first, then presented the unsaved dialog; Save opened history, and returning to Downloads showed the edited saved name |
+| Independent review | Read-only reviewer found no blocker in the scoped folder/model/view/test changes; this was static review, not runtime proof |
+
+The preview-to-history handoff uses the sheet's dismissal callback so it does not attempt to present a second modal while the preview is still open. The linked smoke also checks this sequencing. The follow-up native store contained zero folders/runs/operation-journal/history rows after normal app exit and was removed. These changes do not complete tasks 1.11/1.12; broader screen states, typed nested editing and experience verification remain below.
+
 ## Motion and remaining acceptance
 
 Result transitions reuse the existing Follow System/Reduced/Off policy and opacity-only context transition. Partial/error/cancel/pause feedback applies immediately. No animation completion controls sample execution or undo. Unit checks cover the policy values, but no timing/frame trace or comprehensive visual motion acceptance was performed in this checkpoint.
 
-Tasks **1.11 and 1.12 remain unchecked**. Remaining gates include per-folder empty/unavailable storyboard states; nested typed condition/group/action editing and inline validation; scan/empty/stale/permission preview states; complete settings/menu state coverage; minimum-size and dark-appearance captures; keyboard-only/VoiceOver journeys; reduced/off/interrupted-transition recordings and measurements. A first-time evaluator walkthrough has not run. Real execution, durable outcomes, dependency/fingerprint validation, all catalog controls and full app integration remain later implementation requirements, not substitutes for these sample screens.
+Tasks **1.11 and 1.12 remain unchecked**. Remaining gates include nested typed condition/group/action editing and inline validation; scan/empty/stale/permission preview states; complete settings/menu state coverage; minimum-size and dark-appearance captures; keyboard-only/VoiceOver journeys; reduced/off/interrupted-transition recordings and measurements. A first-time evaluator walkthrough has not run. Real execution, durable outcomes, dependency/fingerprint validation, all catalog controls and full app integration remain later implementation requirements, not substitutes for these sample screens.
 
 Build and model checks: `make build`, `make presentation-smoke`, `make test`, `make check`, `make universal`. Current checkpoint results are in [PROGRESS.md](PROGRESS.md). The experience contract remains [UI_UX_DESIGN.md](UI_UX_DESIGN.md).

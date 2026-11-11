@@ -3,6 +3,70 @@ import Foundation
 @main
 struct AppModelSmoke {
     @MainActor static func main() async {
+        let scoped = AppModel()
+        scoped.exploreDemo()
+        scoped.selectDemoDestination(.folder(scoped.folders[2].id))
+        guard scoped.experience.rules.isEmpty, scoped.draft == nil else { fail("Projects incorrectly inherited another folder's saved rules") }
+        scoped.presentPreview()
+        guard scoped.showPreview, scoped.experience.rows.isEmpty else { fail("Empty folder fabricated ready sample work") }
+        scoped.showPreview = false; scoped.previewDidDismiss()
+        scoped.addRule()
+        guard scoped.dirty, scoped.draft?.enabled == false else { fail("New sample rule was treated as already saved") }
+        scoped.draft?.name = "Project documents"
+        scoped.draft?.conditions = ["Name contains proposal"]
+        scoped.draft?.actions = ["Add tag Work"]
+        guard scoped.saveDraft() else { fail("Could not save valid project sample") }
+        let projectID = scoped.selectedRuleID
+        scoped.selectDemoDestination(.folder(scoped.folders[0].id))
+        guard scoped.experience.rules.count == 3, !scoped.experience.rules.contains(where: { $0.id == projectID }) else { fail("Project rules leaked into Downloads") }
+        scoped.selectDemoDestination(.folder(scoped.folders[2].id))
+        guard scoped.experience.rules.count == 1, scoped.selectedRuleID == projectID else { fail("Folder-specific saved rule or selection was lost") }
+        scoped.presentPreview(source: .draft)
+        guard scoped.experience.rows.count == 4, scoped.experience.rows.allSatisfy({ $0.sourcePath.hasPrefix("/Sample/Projects/") }) else { fail("Sample preview used another folder's paths") }
+        scoped.showPreview = false; scoped.previewDidDismiss()
+        scoped.selectDemoDestination(.folder(scoped.folders[1].id))
+        scoped.presentPreview()
+        guard !scoped.showPreview, scoped.selectedDemoFolder?.availability == .unavailable else { fail("Unavailable sample folder offered processing") }
+        scoped.reconnectDemoFolder()
+        guard scoped.demoReconnectID == scoped.folders[1].id else { fail("Reconnect skipped pending state") }
+        scoped.selectDemoDestination(.folder(scoped.folders[2].id))
+        let reconnectDeadline = Date().addingTimeInterval(3)
+        while scoped.demoReconnectID != nil {
+            guard Date() < reconnectDeadline else { fail("Sample reconnect did not settle") }
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        guard scoped.selectedDemoFolder?.id == scoped.folders[2].id, scoped.folders[1].availability == .available, !scoped.folders[1].enabled else { fail("Reconnect stole selection or enabled the unavailable sample") }
+        scoped.leaveDemo(); scoped.exploreDemo()
+        guard scoped.selectedRuleID == projectID, scoped.experience.rules.count == 1 else { fail("Returning to sample mode reset saved session configuration") }
+        await scoped.shutdown()
+        for save in [false, true] {
+            let nav = AppModel(); nav.exploreDemo()
+            let first = nav.destination
+            nav.draft?.name = "Edited before navigation"
+            nav.selectDemoDestination(.folder(nav.folders[2].id))
+            guard nav.showUnsaved, nav.destination == first, nav.draft?.name == "Edited before navigation" else { fail("Folder navigation lost dirty sample edits") }
+            nav.keepEditingDemo()
+            guard !nav.showUnsaved, nav.dirty, nav.destination == first else { fail("Keep Editing did not cancel pending navigation") }
+            nav.selectDemoDestination(.history); nav.resolveUnsaved(save: save)
+            guard nav.destination == .history, !nav.dirty else { fail("History navigation ignored Save/Discard") }
+            nav.selectDemoDestination(first)
+            guard nav.draft?.name == (save ? "Edited before navigation" : "File invoices") else { fail("Navigation saved the wrong folder draft") }
+            nav.addRule()
+            nav.selectDemoDestination(.folder(nav.folders[2].id))
+            nav.resolveUnsaved(save: true)
+            guard nav.destination == first, nav.showUnsaved, nav.dirty else { fail("Invalid Save discarded the new rule and navigated away") }
+            nav.resolveUnsaved(save: false)
+            nav.selectDemoDestination(first)
+            guard nav.experience.rules.count == 3 else { fail("Discarding a new rule retained an invalid saved placeholder") }
+            nav.draft?.name = "Leave mode edit"
+            nav.leaveDemo()
+            guard nav.demo, nav.showUnsaved else { fail("Leaving sample mode lost dirty edits without a prompt") }
+            nav.resolveUnsaved(save: save)
+            guard !nav.demo else { fail("Resolved Leave Demo intent was lost") }
+            nav.exploreDemo()
+            guard nav.draft?.name == (save ? "Leave mode edit" : "File invoices") else { fail("Leave Demo saved/discarded the wrong sample revision") }
+            await nav.shutdown()
+        }
         let confirmation = AppModel()
         confirmation.exploreDemo()
         confirmation.presentPreview()
@@ -62,6 +126,15 @@ struct AppModelSmoke {
         paused.undoCandidate = original // A stale open sheet must not undo twice.
         paused.simulateUndo()
         guard paused.activities.count == 3, paused.undoBlockReason(original.id) != nil else { fail("Sample inverse could run twice") }
+        let previousDestination = paused.destination
+        paused.draft?.name = "Dirty while viewing a result"
+        paused.requestHistoryAfterPreview()
+        guard !paused.showPreview, !paused.showUnsaved, paused.destination == previousDestination else { fail("History navigation tried to prompt before preview dismissal") }
+        paused.previewDidDismiss()
+        guard paused.showUnsaved, paused.destination == previousDestination else { fail("History navigation bypassed dirty-draft protection") }
+        paused.resolveUnsaved(save: false)
+        guard paused.destination == .history, !paused.dirty else { fail("Deferred history intent was lost") }
+        paused.selectDemoDestination(previousDestination)
         paused.presentPreview(); paused.requestSimulation(); paused.simulateRun()
         paused.cancelSimulation(); paused.presentPreview(source: .draft)
         try? await Task.sleep(nanoseconds: 600_000_000)
@@ -157,7 +230,7 @@ struct AppModelSmoke {
                 try FileManager.default.removeItem(at: root)
             } catch { fail("Quit workflow test failed: \(error)") }
         }
-        print("Native presentation smoke passed: confirmed preview, draft isolation, partial outcomes, pause, undo, cancellation, draft navigation and Quit")
+        print("Native presentation smoke passed: folder scope, empty/unavailable/reconnect, dirty navigation, confirmed preview, partial outcomes, pause, undo, cancellation and Quit")
     }
     static func fail(_ message: String) -> Never {
         FileHandle.standardError.write(Data((message + "\n").utf8))

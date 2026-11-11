@@ -16,7 +16,7 @@ struct FolderMasterApp: App {
             CommandGroup(after: .newItem) {
                 Button("New Demo Rule") { model.addRule() }
                     .keyboardShortcut("n")
-                    .disabled(!model.demo)
+                    .disabled(!model.demo || model.selectedDemoFolder?.availability != .available)
             }
         }
         MenuBarExtra("Folder Master", systemImage: "tray.2") {
