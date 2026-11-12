@@ -4,6 +4,8 @@ macOS 14+ menu bar file organizer in development: a **Rust engine with native Sw
 
 **Current state: M1 development foundation.** The native app saves real folder configuration and pause state in a private local SQLite store with exclusive ownership. Folder setup starts disabled and never scans existing files. A native PDF/Vision text adapter passes local OCR fixtures under process-level network denial. The separate sample interface now has grouped typed conditions and ordered action controls, but rule/preview/history behavior remains synthetic; watching, file actions, OCR rule integration, operational history and undo are not connected yet.
 
+The Rust backend now validates all eight condition and nine action families as typed configuration and stores immutable rule revisions. The native rule editor is not connected to that persistence API yet; see the [schema checkpoint](docs/implementation/RUST_RULE_SCHEMA.md).
+
 Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 
 [Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy. The [native storyboard evidence](docs/UI_STORYBOARD_EVIDENCE.md) records the current confirmed-preview, partial-result and sample-undo journey plus missing acceptance.

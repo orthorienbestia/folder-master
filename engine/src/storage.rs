@@ -1,3 +1,6 @@
+mod rule_store;
+pub use rule_store::{RulePage, RuleRecord, RuleSummary};
+
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use rusqlite::{backup::Backup, params, Connection, OpenFlags, OptionalExtension};
 use serde::{Deserialize, Serialize};

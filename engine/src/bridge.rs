@@ -65,6 +65,7 @@ impl PollResult {
 struct Envelope {
     version: u32,
     request_id: String,
+    #[serde(deserialize_with = "Command::deserialize_json")]
     command: Command,
 }
 
