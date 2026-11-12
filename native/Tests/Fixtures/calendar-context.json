@@ -1,0 +1,169 @@
+{
+  "cases" : [
+    {
+      "context" : {
+        "dates" : [
+          {
+            "date" : {
+              "day" : 1,
+              "month" : 1,
+              "year" : 1970
+            },
+            "window" : {
+              "end_ms" : 86400000,
+              "start_ms" : 0
+            }
+          }
+        ],
+        "now_ms" : 0,
+        "timezone_identifier" : "GMT",
+        "today" : {
+          "end_ms" : 86400000,
+          "start_ms" : 0
+        },
+        "yesterday" : {
+          "end_ms" : 0,
+          "start_ms" : -86400000
+        }
+      },
+      "name" : "UTC_epoch"
+    },
+    {
+      "context" : {
+        "dates" : [
+          {
+            "date" : {
+              "day" : 8,
+              "month" : 3,
+              "year" : 2026
+            },
+            "window" : {
+              "end_ms" : 1773014400000,
+              "start_ms" : 1772928000000
+            }
+          }
+        ],
+        "now_ms" : 1772971200000,
+        "timezone_identifier" : "GMT",
+        "today" : {
+          "end_ms" : 1773014400000,
+          "start_ms" : 1772928000000
+        },
+        "yesterday" : {
+          "end_ms" : 1772928000000,
+          "start_ms" : 1772841600000
+        }
+      },
+      "name" : "UTC_spring"
+    },
+    {
+      "context" : {
+        "dates" : [
+          {
+            "date" : {
+              "day" : 8,
+              "month" : 3,
+              "year" : 2026
+            },
+            "window" : {
+              "end_ms" : 1773039600000,
+              "start_ms" : 1772956800000
+            }
+          }
+        ],
+        "now_ms" : 1772971200000,
+        "timezone_identifier" : "America\/Los_Angeles",
+        "today" : {
+          "end_ms" : 1773039600000,
+          "start_ms" : 1772956800000
+        },
+        "yesterday" : {
+          "end_ms" : 1772956800000,
+          "start_ms" : 1772870400000
+        }
+      },
+      "name" : "LA_spring"
+    },
+    {
+      "context" : {
+        "dates" : [
+          {
+            "date" : {
+              "day" : 1,
+              "month" : 11,
+              "year" : 2026
+            },
+            "window" : {
+              "end_ms" : 1793606400000,
+              "start_ms" : 1793516400000
+            }
+          }
+        ],
+        "now_ms" : 1793534400000,
+        "timezone_identifier" : "America\/Los_Angeles",
+        "today" : {
+          "end_ms" : 1793606400000,
+          "start_ms" : 1793516400000
+        },
+        "yesterday" : {
+          "end_ms" : 1793516400000,
+          "start_ms" : 1793430000000
+        }
+      },
+      "name" : "LA_fall"
+    },
+    {
+      "context" : {
+        "dates" : [
+          {
+            "date" : {
+              "day" : 4,
+              "month" : 10,
+              "year" : 2026
+            },
+            "window" : {
+              "end_ms" : 1791118800000,
+              "start_ms" : 1791034200000
+            }
+          }
+        ],
+        "now_ms" : 1791115200000,
+        "timezone_identifier" : "Australia\/Lord_Howe",
+        "today" : {
+          "end_ms" : 1791118800000,
+          "start_ms" : 1791034200000
+        },
+        "yesterday" : {
+          "end_ms" : 1791034200000,
+          "start_ms" : 1790947800000
+        }
+      },
+      "name" : "Lord_Howe_spring"
+    },
+    {
+      "context" : {
+        "dates" : [
+          {
+            "date" : {
+              "day" : 30,
+              "month" : 12,
+              "year" : 2011
+            }
+          }
+        ],
+        "now_ms" : 1325332800000,
+        "timezone_identifier" : "Pacific\/Apia",
+        "today" : {
+          "end_ms" : 1325412000000,
+          "start_ms" : 1325325600000
+        },
+        "yesterday" : {
+          "end_ms" : 1325325600000,
+          "start_ms" : 1325239200000
+        }
+      },
+      "name" : "Apia_skipped"
+    }
+  ],
+  "source" : "Version 26.6.2 (Build 25G83) arm64 Foundation Calendar"
+}

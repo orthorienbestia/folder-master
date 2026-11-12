@@ -561,7 +561,7 @@ impl ConditionNode {
             | ConditionExpression::None { children } => children.iter().map(Self::leaf_count).sum(),
         }
     }
-    fn validate(
+    pub(crate) fn validate(
         &self,
         level: usize,
         path: &str,

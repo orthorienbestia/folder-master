@@ -1,14 +1,17 @@
 //! Pure evaluation of supplied metadata; this module never reads files.
 use crate::rules::{
-    EqualityOperator, ExtensionTest, KindValue, NameOperator, NameScope, Predicate, SizeTest,
+    DateSource, EqualityOperator, ExtensionTest, FinderLabel, KindValue, NameOperator, NameScope,
+    Predicate, SetOperator, SizeTest, TagTest,
 };
-use regex::{Regex, RegexBuilder};
+use regex::{Regex, RegexBuilder, RegexSet, RegexSetBuilder};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::os::unix::ffi::OsStrExt;
 use unicode_normalization::UnicodeNormalization;
 
 mod glob;
+pub mod time;
+pub mod tree;
 pub const MAX_PATTERN_BYTES: usize = 16_384;
 const COMPILED_REGEX_BYTES: usize = 1_048_576;
 
@@ -16,6 +19,11 @@ const COMPILED_REGEX_BYTES: usize = 1_048_576;
 pub enum Metadata<T> {
     Known(T),
     Unavailable(MetadataIssue),
+}
+impl<T> Default for Metadata<T> {
+    fn default() -> Self {
+        Self::Unavailable(MetadataIssue::Missing)
+    }
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MetadataIssue {
@@ -40,11 +48,21 @@ pub struct KindFacts {
     pub categories: BTreeSet<KindCategory>,
     pub custom_conformance: BTreeMap<String, Option<bool>>,
 }
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct MetadataSnapshot {
     pub filename: Metadata<Vec<u8>>,
     pub size: Metadata<u64>,
     pub kind: Metadata<KindFacts>,
+    pub dates: DateFacts,
+    pub tags: Metadata<Vec<String>>,
+    pub label: Metadata<crate::rules::FinderLabel>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct DateFacts {
+    pub created: Metadata<i64>,
+    pub modified: Metadata<i64>,
+    pub last_opened: Metadata<i64>,
+    pub added_to_folder: Metadata<i64>,
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Truth {
@@ -59,6 +77,9 @@ pub enum Basis {
     FinalExtension,
     PlatformType,
     ByteSize,
+    Date(crate::rules::DateSource),
+    FinderTags,
+    FinderLabel,
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum UnknownReason {
@@ -66,6 +87,9 @@ pub enum UnknownReason {
     InvalidFilename,
     NonUtf8,
     UnresolvedType,
+    MissingEvaluationContext,
+    CalendarUnavailable,
+    InvalidCalendarContext,
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Evaluation {
@@ -95,6 +119,25 @@ enum Compiled {
         negative: bool,
     },
     Size(SizeTest),
+    Date {
+        source: DateSource,
+        predicate: time::CompiledDate,
+    },
+    Tags {
+        mode: TagMode,
+        patterns: Option<RegexSet>,
+    },
+    Label {
+        negative: bool,
+        labels: Vec<FinderLabel>,
+    },
+}
+#[derive(Debug)]
+enum TagMode {
+    Any,
+    All,
+    None,
+    Empty,
 }
 fn error(code: &'static str) -> CompileError {
     CompileError { code }
@@ -120,6 +163,15 @@ fn regex(source: &str, sensitive: bool, code: &'static str) -> Result<Regex, Com
         .map_err(|_| error(code))
 }
 impl CompiledMetadataPredicate {
+    pub fn evaluate(&self, snapshot: &MetadataSnapshot) -> Evaluation {
+        self.evaluate_with_context(snapshot, None)
+    }
+    pub fn calendar_date(&self) -> Option<&crate::rules::CalendarDate> {
+        match &self.0 {
+            Compiled::Date { predicate, .. } => predicate.calendar_date(),
+            _ => None,
+        }
+    }
     pub fn compile(predicate: &Predicate) -> Result<Self, CompileError> {
         if !matches!(
             predicate,
@@ -127,6 +179,9 @@ impl CompiledMetadataPredicate {
                 | Predicate::Extension { .. }
                 | Predicate::Kind { .. }
                 | Predicate::Size { .. }
+                | Predicate::Date { .. }
+                | Predicate::Tags { .. }
+                | Predicate::Label { .. }
         ) {
             return Err(error("unsupported_predicate"));
         }
@@ -188,10 +243,57 @@ impl CompiledMetadataPredicate {
                 negative: *op == EqualityOperator::IsNot,
             },
             Predicate::Size { test, .. } => Compiled::Size(test.clone()),
+            Predicate::Date { source, test } => Compiled::Date {
+                source: source.clone(),
+                predicate: time::CompiledDate::new(test),
+            },
+            Predicate::Label { op, labels } => Compiled::Label {
+                negative: *op == SetOperator::NotOneOf,
+                labels: labels.clone(),
+            },
+            Predicate::Tags {
+                case_sensitive,
+                test,
+            } => {
+                let (mode, names) = match test {
+                    TagTest::ContainsAny { names } => (TagMode::Any, Some(names)),
+                    TagTest::ContainsAll { names } => (TagMode::All, Some(names)),
+                    TagTest::ContainsNone { names } => (TagMode::None, Some(names)),
+                    TagTest::IsEmpty {} => (TagMode::Empty, None),
+                };
+                let patterns = if let Some(names) = names {
+                    let mut total = 0usize;
+                    let mut patterns = Vec::new();
+                    for name in names {
+                        total = total.saturating_add(name.len());
+                        if total > MAX_PATTERN_BYTES {
+                            return Err(error("pattern_too_long"));
+                        };
+                        patterns.push(format!(r"\A(?:{})\z", regex::escape(&bounded_text(name)?)));
+                    }
+                    Some(
+                        RegexSetBuilder::new(patterns)
+                            .case_insensitive(!case_sensitive)
+                            .unicode(true)
+                            .size_limit(COMPILED_REGEX_BYTES)
+                            .dfa_size_limit(COMPILED_REGEX_BYTES)
+                            .nest_limit(64)
+                            .build()
+                            .map_err(|_| error("invalid_tag_set"))?,
+                    )
+                } else {
+                    None
+                };
+                Compiled::Tags { mode, patterns }
+            }
             _ => unreachable!("supported family checked before validation"),
         }))
     }
-    pub fn evaluate(&self, snapshot: &MetadataSnapshot) -> Evaluation {
+    pub fn evaluate_with_context(
+        &self,
+        snapshot: &MetadataSnapshot,
+        context: Option<&time::EvaluationContext>,
+    ) -> Evaluation {
         match &self.0 {
             Compiled::Name {
                 scope,
@@ -270,6 +372,50 @@ impl CompiledMetadataPredicate {
                     }) ^ negative)
                 }),
             ),
+            Compiled::Date { source, predicate } => Evaluation::from_result(
+                Basis::Date(source.clone()),
+                known(snapshot.dates.source(source))
+                    .and_then(|timestamp| predicate.evaluate(*timestamp, context)),
+            ),
+            Compiled::Label { negative, labels } => Evaluation::from_result(
+                Basis::FinderLabel,
+                known(&snapshot.label).map(|label| labels.contains(label) ^ negative),
+            ),
+            Compiled::Tags { mode, patterns } => Evaluation::from_result(
+                Basis::FinderTags,
+                known(&snapshot.tags).map(|names| {
+                    let Some(patterns) = patterns else {
+                        return names.is_empty();
+                    };
+                    let names: Vec<String> =
+                        names.iter().map(|name| name.nfc().collect()).collect();
+                    match mode {
+                        TagMode::Any => names.iter().any(|name| patterns.is_match(name)),
+                        TagMode::None => !names.iter().any(|name| patterns.is_match(name)),
+                        TagMode::All => {
+                            let mut matched = BTreeSet::new();
+                            for name in names {
+                                matched.extend(patterns.matches(&name).into_iter());
+                                if matched.len() == patterns.len() {
+                                    return true;
+                                }
+                            }
+                            false
+                        }
+                        TagMode::Empty => unreachable!("empty tag predicate has no matcher"),
+                    }
+                }),
+            ),
+        }
+    }
+}
+impl DateFacts {
+    fn source(&self, source: &DateSource) -> &Metadata<i64> {
+        match source {
+            DateSource::Created => &self.created,
+            DateSource::Modified => &self.modified,
+            DateSource::LastOpened => &self.last_opened,
+            DateSource::AddedToFolder => &self.added_to_folder,
         }
     }
 }

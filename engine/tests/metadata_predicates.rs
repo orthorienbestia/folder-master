@@ -5,6 +5,7 @@ fn snapshot(name: &[u8]) -> MetadataSnapshot {
         filename: Metadata::Known(name.to_vec()),
         size: Metadata::Known(1024),
         kind: Metadata::Unavailable(MetadataIssue::Missing),
+        ..Default::default()
     }
 }
 fn name(op: NameOperator, value: &str, case_sensitive: bool) -> Predicate {
@@ -125,9 +126,11 @@ fn invalid_patterns_and_unsupported_fields_cannot_be_compiled() {
             "invalid/overlong regex accepted"
         );
     }
-    let p = Predicate::Date {
-        source: DateSource::Modified,
-        test: DateTest::Today {},
+    let p = Predicate::Text {
+        op: TextOperator::Contains,
+        value: "text".into(),
+        source: ContentSource::EmbeddedOnly,
+        case_sensitive: false,
     };
     assert_eq!(
         CompiledMetadataPredicate::compile(&p).err().unwrap().code,

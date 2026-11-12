@@ -18,20 +18,24 @@
 		403EFDD090C66FA172EE5B7D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E7ED223D5C9FDB750A8025 /* main.swift */; };
 		40C5AD2C1CCD4320841E3578 /* FolderAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F7981D34975B2592B253B7 /* FolderAccessTests.swift */; };
 		4F4E616219CCD61A0A2DCA13 /* DocumentText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C0ECFBD8D21920537456FB /* DocumentText.swift */; };
+		51993C324805F39E54902A87 /* CalendarContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C9EBE3BCEAF1A61112792F /* CalendarContext.swift */; };
 		531C69E7A80F6A217F573241 /* ConditionDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DBDB6D46572CCD8910040 /* ConditionDraft.swift */; };
 		5AA7407773F9E85DBC5379B1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DC1C168B7086DC849F5E45A /* main.swift */; };
 		5D574E2FFD232E84C44B7126 /* EngineClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EAA19FB6586742DEFB6AEB /* EngineClient.swift */; };
+		5E5AECC1A2ABCA990FA44C91 /* CalendarContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C9EBE3BCEAF1A61112792F /* CalendarContext.swift */; };
 		6197B9F141B2DECCE256E107 /* PersistentFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E641CADA13655005E1C91890 /* PersistentFolder.swift */; };
 		638173113812190159C4D74B /* DocumentText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C0ECFBD8D21920537456FB /* DocumentText.swift */; };
 		6526D14DDE5FB256635E6BAF /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E771DAF4FE03AA8560E11 /* Experience.swift */; };
 		6A5C7E00A8AFF213E767190F /* DocumentTextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AA1CB816D2765ED3F37069 /* DocumentTextTests.swift */; };
 		6E7D3E59369582A5E8934499 /* PersistentFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E641CADA13655005E1C91890 /* PersistentFolder.swift */; };
+		6EED3A39C7112C907CCFB154 /* CalendarContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C9EBE3BCEAF1A61112792F /* CalendarContext.swift */; };
 		6FCF8EB9595B729C4D671D16 /* ContentFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB60F4949B5DE472EEE1BB0 /* ContentFixtures.swift */; };
 		71662E0DB37662F726E9CA31 /* ContentFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EB60F4949B5DE472EEE1BB0 /* ContentFixtures.swift */; };
 		73E1F649748030715B08C620 /* KindMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F14E0AF6726C7AC5CC6F1C /* KindMetadataTests.swift */; };
 		7F1D32FF37FC9258D7B380D6 /* IsolationProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */; };
 		8013E8A055B18AFA960D898C /* KindMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF1B96B37699EB54A70CB96 /* KindMetadata.swift */; };
 		833D66EA944631513A143261 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31517670DA6CA68194274708 /* AppModel.swift */; };
+		8418783B7DA850997C20B94B /* CalendarContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADFB619507CD97B63DC142 /* CalendarContextTests.swift */; };
 		8EAF8AAEA67CCA4D8706F162 /* ConditionDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A952EC069BBB0C9E45362 /* ConditionDraftTests.swift */; };
 		925E9310AB2507E793B82B84 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 289303BF39EA3AB42C3B8E36 /* PreviewView.swift */; };
 		9C9D1FA24D99F9F1F766C6AB /* ExperienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261F002A6275003F2D62387A /* ExperienceTests.swift */; };
@@ -46,6 +50,7 @@
 		B556D59B1A6F1EA34AB5606E /* StoredRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE8658A1512EA914A6ED1B /* StoredRule.swift */; };
 		BA4EC8C394A065185F7BADE2 /* StoredRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE8658A1512EA914A6ED1B /* StoredRule.swift */; };
 		BD6FAFBB08C45153713B9B23 /* StagedRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3FEB5E817B485FC759307 /* StagedRunner.swift */; };
+		C379D69E5857AEA66B0623FE /* calendar-context.json in Resources */ = {isa = PBXBuildFile; fileRef = 6535253FF78B0CD11FD1BA17 /* calendar-context.json */; };
 		CAEC5870096B7C43D49F44E0 /* ActionDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951C173D98EBE099C462DA04 /* ActionDraftTests.swift */; };
 		CC19A804E39F7EC30F703389 /* ContentSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A414DD361F819972C4CB6488 /* ContentSource.swift */; };
 		DAD9E820652FEDB9C6D9A8DC /* ActionDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678155E3B7300AF0EEFC9CE8 /* ActionDraft.swift */; };
@@ -107,10 +112,13 @@
 		3EB60F4949B5DE472EEE1BB0 /* ContentFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentFixtures.swift; sourceTree = "<group>"; };
 		3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptProofProtocol.swift; sourceTree = "<group>"; };
 		3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsolationProbe.swift; sourceTree = "<group>"; };
+		58ADFB619507CD97B63DC142 /* CalendarContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarContextTests.swift; sourceTree = "<group>"; };
 		5FF1B96B37699EB54A70CB96 /* KindMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KindMetadata.swift; sourceTree = "<group>"; };
 		64F7981D34975B2592B253B7 /* FolderAccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAccessTests.swift; sourceTree = "<group>"; };
+		6535253FF78B0CD11FD1BA17 /* calendar-context.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "calendar-context.json"; sourceTree = "<group>"; };
 		678155E3B7300AF0EEFC9CE8 /* ActionDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDraft.swift; sourceTree = "<group>"; };
 		6F4BCA397590C005357C6BAF /* ConditionTreeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionTreeEditor.swift; sourceTree = "<group>"; };
+		74C9EBE3BCEAF1A61112792F /* CalendarContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarContext.swift; sourceTree = "<group>"; };
 		7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentWorkspaceView.swift; sourceTree = "<group>"; };
 		80E7ED223D5C9FDB750A8025 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		82D8A50DA7DC00A4C8569DDD /* OCRProof.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OCRProof.entitlements; sourceTree = "<group>"; };
@@ -187,12 +195,14 @@
 			isa = PBXGroup;
 			children = (
 				951C173D98EBE099C462DA04 /* ActionDraftTests.swift */,
+				58ADFB619507CD97B63DC142 /* CalendarContextTests.swift */,
 				9D4A952EC069BBB0C9E45362 /* ConditionDraftTests.swift */,
 				C1AA1CB816D2765ED3F37069 /* DocumentTextTests.swift */,
 				261F002A6275003F2D62387A /* ExperienceTests.swift */,
 				64F7981D34975B2592B253B7 /* FolderAccessTests.swift */,
 				F3F14E0AF6726C7AC5CC6F1C /* KindMetadataTests.swift */,
 				2ED1DB8EEAFA571F9190DB8A /* RuleCodingTests.swift */,
+				C21BDB510E86089AE6164DAB /* Fixtures */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -213,6 +223,7 @@
 		8BDD5FACCA787D6F316BCB6C /* PlatformAdapters */ = {
 			isa = PBXGroup;
 			children = (
+				74C9EBE3BCEAF1A61112792F /* CalendarContext.swift */,
 				A414DD361F819972C4CB6488 /* ContentSource.swift */,
 				A4C0ECFBD8D21920537456FB /* DocumentText.swift */,
 				5FF1B96B37699EB54A70CB96 /* KindMetadata.swift */,
@@ -242,6 +253,14 @@
 			);
 			name = Service;
 			path = "../tests/native/script-proof/Service";
+			sourceTree = "<group>";
+		};
+		C21BDB510E86089AE6164DAB /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				6535253FF78B0CD11FD1BA17 /* calendar-context.json */,
+			);
+			path = Fixtures;
 			sourceTree = "<group>";
 		};
 		C5E7C38C3597DFC4677860AF /* ocr-proof */ = {
@@ -374,6 +393,7 @@
 			buildConfigurationList = 10D52C3A1E280285E9B44E99 /* Build configuration list for PBXNativeTarget "FolderMasterTests" */;
 			buildPhases = (
 				3868627056EA5E3B2C67A8B3 /* Sources */,
+				7803A6D7F0C7A153EE946494 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -458,6 +478,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		7803A6D7F0C7A153EE946494 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C379D69E5857AEA66B0623FE /* calendar-context.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXShellScriptBuildPhase section */
 		4AF29CD5E043A1F91894B956 /* Embed unentitled isolation probe */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -508,6 +539,8 @@
 			files = (
 				DAD9E820652FEDB9C6D9A8DC /* ActionDraft.swift in Sources */,
 				CAEC5870096B7C43D49F44E0 /* ActionDraftTests.swift in Sources */,
+				6EED3A39C7112C907CCFB154 /* CalendarContext.swift in Sources */,
+				8418783B7DA850997C20B94B /* CalendarContextTests.swift in Sources */,
 				531C69E7A80F6A217F573241 /* ConditionDraft.swift in Sources */,
 				8EAF8AAEA67CCA4D8706F162 /* ConditionDraftTests.swift in Sources */,
 				71662E0DB37662F726E9CA31 /* ContentFixtures.swift in Sources */,
@@ -532,6 +565,7 @@
 				9DDA9F3A59902D044A4DD0FC /* ActionChainEditor.swift in Sources */,
 				088F560140EC9F3B148E47DE /* ActionDraft.swift in Sources */,
 				833D66EA944631513A143261 /* AppModel.swift in Sources */,
+				51993C324805F39E54902A87 /* CalendarContext.swift in Sources */,
 				3C29252E3F29445A5D34DC3D /* ConditionDraft.swift in Sources */,
 				2C42B556F2B1B72297B6A4FA /* ConditionTreeEditor.swift in Sources */,
 				323E380D2613E55DCA0070CC /* ContentSource.swift in Sources */,
@@ -555,6 +589,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E5AECC1A2ABCA990FA44C91 /* CalendarContext.swift in Sources */,
 				6FCF8EB9595B729C4D671D16 /* ContentFixtures.swift in Sources */,
 				B256C5DEA7D31BDE26F8E8A1 /* ContentSource.swift in Sources */,
 				638173113812190159C4D74B /* DocumentText.swift in Sources */,
