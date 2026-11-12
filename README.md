@@ -2,7 +2,7 @@
 
 macOS 14+ menu bar file organizer in development: a **Rust engine with native SwiftUI/AppKit UI**, planned local OCR and direct distribution. Documents and file processing stay on the Mac.
 
-**Current state: M1 development foundation.** The native app saves real folder configuration and pause state in a private local SQLite store with exclusive ownership. Folder setup starts disabled and never scans existing files. A native PDF/Vision text adapter passes local OCR fixtures under process-level network denial. The separate sample rule/preview/history interface remains synthetic; watching, file actions, OCR rule integration, operational history and undo are not connected yet.
+**Current state: M1 development foundation.** The native app saves real folder configuration and pause state in a private local SQLite store with exclusive ownership. Folder setup starts disabled and never scans existing files. A native PDF/Vision text adapter passes local OCR fixtures under process-level network denial. The separate sample interface now has grouped typed conditions and ordered action controls, but rule/preview/history behavior remains synthetic; watching, file actions, OCR rule integration, operational history and undo are not connected yet.
 
 Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 

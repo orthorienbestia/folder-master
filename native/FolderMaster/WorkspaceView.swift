@@ -214,18 +214,13 @@ struct DemoWorkspaceView: View {
 
 struct RuleEditorView: View {
     @ObservedObject var model: AppModel
-    @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
-    @Environment(\.accessibilityReduceMotion) private var systemReduced
     private func edit(_ change: (inout DemoRule) -> Void) {
         guard var draft = model.draft else { return }
         change(&draft); model.draft = draft; model.savedFeedback = false
     }
-    private func mutate(_ change: (inout DemoRule) -> Void) {
-        let duration = (MotionChoice(rawValue: motion) ?? .system).duration(systemReduced: systemReduced, normal: 0.18)
-        withAnimation(duration == 0 ? nil : .easeInOut(duration: duration)) { edit(change) }
-    }
     var body: some View {
         if let draft = model.draft {
+            let editingSession = model.draftSessionID
             VStack(spacing: 0) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -255,26 +250,12 @@ struct RuleEditorView: View {
                             edit { $0.conditions = root }
                         }))
                         Divider()
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Then do these actions").font(.headline)
-                            if draft.actions.isEmpty {
-                                Label("Add at least one action before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
-                            }
-                            ForEach(Array(draft.actions.enumerated()), id: \.offset) { index, action in
-                                HStack(alignment: .center, spacing: 10) {
-                                    Text("\(index + 1)").font(.caption.monospacedDigit()).foregroundStyle(.secondary).frame(width: 20)
-                                    TextField("Action", text: Binding(get: { model.draft?.actions[safe: index] ?? "" }, set: { value in edit { if $0.actions.indices.contains(index) { $0.actions[index] = value } } }))
-                                        .textFieldStyle(.roundedBorder)
-                                    Button { mutate { $0.actions.remove(at: index) } } label: { Image(systemName: "minus.circle") }
-                                        .buttonStyle(.plain).help("Remove action")
-                                }.transition(.opacity)
-                            }
-                            Menu {
-                                ForEach(["Move to ", "Copy to ", "Rename using {stem}", "Add tag ", "Compress as ZIP", "Uncompress ZIP", "Move to Trash", "Permanently delete (requires approval)", "Run restricted script (requires approval)"], id: \.self) { value in
-                                    Button(value) { mutate { $0.actions.append(value) } }
-                                }
-                            } label: { Label("Add Action", systemImage: "plus") }.fixedSize()
-                        }
+                        ActionChainEditor(chain: Binding(get: {
+                            guard let current = model.draft, current.id == draft.id, model.draftSessionID == editingSession else { return draft.actions }
+                            return current.actions
+                        }, set: { chain in
+                            model.updateActionDraft(chain, ruleID: draft.id, sessionID: editingSession)
+                        }), conditions: draft.conditions, ruleEnabled: draft.enabled)
                         Label("Structural draft checks only. Matching, Rust regex/glob validation and file actions are not connected yet.", systemImage: "info.circle")
                             .font(.caption).foregroundStyle(.secondary)
                     }.padding(20)
@@ -298,8 +279,4 @@ struct RuleEditorView: View {
             ContentUnavailableView("Select a rule", systemImage: "slider.horizontal.3", description: Text("Create or select a demo rule to explore its conditions and actions."))
         }
     }
-}
-
-private extension Array {
-    subscript(safe index: Index) -> Element? { indices.contains(index) ? self[index] : nil }
 }

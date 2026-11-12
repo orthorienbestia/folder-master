@@ -87,3 +87,9 @@ Context7 resolved official SwiftUI documentation and retrieved `sheet(isPresente
 ## Script bootstrap candidate
 
 [Mach bootstrap removal research](SCRIPT_BOOTSTRAP_RESEARCH.md) records the Context7 lookup, installed public SDK declarations and Apple XNU/launchd primary sources. Controlled unsandboxed self-task experiments distinguish a userspace global from the kernel bootstrap slot and retained independent rights. Removing the tested slots survives exec, but no full public security guarantee, App Sandbox composition, same-user capability separation or runtime matrix is established. The existing strict gate remains failed; this is a candidate experiment rather than product enablement.
+
+## Native action form
+
+Context7 CLI resolved official AppKit and retrieved directory/file selection and alias-resolution guidance. The action chooser follows the existing `NSOpenPanel.begin` pattern with alias resolution off and verifies the returned local reference rather than treating panel selection as execution permission. Installed SDK compilation and disposable-file tests verify the byte/bookmark and executable-evidence paths. [NSOpenPanel](https://developer.apple.com/documentation/appkit/nsopenpanel), [resolvesAliases](https://developer.apple.com/documentation/appkit/nsopenpanel/resolvesaliases).
+
+A separate official SwiftUI lookup retrieved hosting initialization/sizing guidance for an attempted offscreen layout inspection. The resulting cache captures missed rendered layers/text, so they are not used as visual proof. Interactive native checks remain open. [NSHostingView](https://developer.apple.com/documentation/swiftui/nshostingview).

@@ -14,7 +14,7 @@ struct AppModelSmoke {
         guard scoped.dirty, scoped.draft?.enabled == false else { fail("New sample rule was treated as already saved") }
         scoped.draft?.name = "Project documents"
         scoped.draft?.conditions = .group(children: [.predicate(.init(text: "proposal"))])
-        scoped.draft?.actions = ["Add tag Work"]
+        scoped.draft?.actions = .init(steps: [DemoSamples.tagAction("Work")])
         guard scoped.saveDraft() else { fail("Could not save valid project sample") }
         let savedConditions = scoped.experience.rules[0].conditions
         scoped.draft?.name = String(repeating: "x", count: 201)
@@ -23,6 +23,17 @@ struct AppModelSmoke {
         scoped.draft?.conditions = .group(children: [.predicate()])
         guard !scoped.validDraft, !scoped.saveDraft(), scoped.experience.rules[0].conditions == savedConditions else { fail("Invalid condition values replaced the saved rule") }
         scoped.discardDraft()
+        let savedActions = scoped.experience.rules[0].actions
+        scoped.draft?.actions = .init(steps: [ActionDraft(.move)])
+        guard !scoped.validDraft, !scoped.saveDraft(), scoped.experience.rules[0].actions == savedActions else { fail("Invalid action destination replaced the saved rule") }
+        scoped.discardDraft()
+        let oldSession = scoped.draftSessionID
+        let oldRule = scoped.draft!.id
+        var delayed = savedActions
+        _ = delayed.append(.rename)
+        scoped.discardDraft()
+        scoped.updateActionDraft(delayed, ruleID: oldRule, sessionID: oldSession)
+        guard !scoped.dirty, scoped.draft?.actions == savedActions else { fail("Stale action chooser edited a reloaded draft") }
         let projectID = scoped.selectedRuleID
         scoped.selectDemoDestination(.folder(scoped.folders[0].id))
         guard scoped.experience.rules.count == 3, !scoped.experience.rules.contains(where: { $0.id == projectID }) else { fail("Project rules leaked into Downloads") }

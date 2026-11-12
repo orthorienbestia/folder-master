@@ -20,7 +20,7 @@ final class ExperienceTests: XCTestCase {
     }
 
     func testDuplicateGetsIndependentIdentityAndStartsDisabled() {
-        let original = DemoRule(name: "Invoices", enabled: true, conditions: .group(children: [.predicate(.init(field: .extensionName, text: "pdf"))]), actions: ["Move to Receipts"])
+        let original = DemoRule(name: "Invoices", enabled: true, conditions: .group(children: [.predicate(.init(field: .extensionName, text: "pdf"))]), actions: .init(steps: [DemoSamples.moveAction("Receipts")]))
         var state = ExperienceState(rules: [original])
         state.duplicateRule(original.id)
         XCTAssertEqual(state.rules.count, 2)
@@ -30,6 +30,21 @@ final class ExperienceTests: XCTestCase {
         XCTAssertEqual(state.rules[1].conditions.children.first?.predicateValue?.field, .extensionName)
         XCTAssertEqual(state.rules[1].conditions.children.first?.predicateValue?.text, "pdf")
         XCTAssertTrue(state.rules[1].conditions.allIDs.isDisjoint(with: original.conditions.allIDs))
-        XCTAssertEqual(state.rules[1].actions, ["Move to Receipts"])
+        XCTAssertEqual(state.rules[1].actions.steps[0].kind, .move)
+        XCTAssertEqual(state.rules[1].actions.steps[0].destination.subfolder, "Receipts")
+        XCTAssertNotEqual(state.rules[1].actions.steps[0].id, original.actions.steps[0].id)
     }
+    func testDuplicateRemapsCaptureSourceToItsIndependentConditionTree() {
+        let source = ConditionDraftNode.predicate(.init(operation: .regex, text: "(?P<year>[0-9]+)"))
+        var rename = ActionDraft(.rename)
+        rename.filenameTemplate = "{capture:year}"; rename.captureConditionID = source.id
+        let original = DemoRule(name: "Captured year", enabled: true, conditions: .group(children: [source]), actions: .init(steps: [rename]))
+        var state = ExperienceState(rules: [original]); state.duplicateRule(original.id)
+        let copy = state.rules[1]
+        XCTAssertFalse(copy.enabled)
+        XCTAssertNotEqual(copy.actions.steps[0].captureConditionID, source.id)
+        XCTAssertEqual(copy.actions.steps[0].captureConditionID, copy.conditions.children[0].id)
+        XCTAssertTrue(copy.actions.issues(enabled: copy.enabled, conditions: copy.conditions).isEmpty)
+    }
+
 }

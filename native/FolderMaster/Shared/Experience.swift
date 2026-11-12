@@ -16,7 +16,7 @@ struct DemoRule: Identifiable, Equatable {
     var name: String
     var enabled = false
     var conditions = ConditionDraftNode.group()
-    var actions: [String] = []
+    var actions = ActionChainDraft()
 }
 
 enum PreviewReadiness: String { case ready, unknown, conflict }
@@ -51,6 +51,13 @@ struct ExperienceState {
         copy.name += " Copy"
         copy.enabled = false
         copy.conditions = copy.conditions.renewedIdentity()
+        var mapping: [UUID: UUID] = [:]
+        func mapNodes(_ original: ConditionDraftNode, _ duplicate: ConditionDraftNode) {
+            mapping[original.id] = duplicate.id
+            for (a,b) in zip(original.children, duplicate.children) { mapNodes(a,b) }
+        }
+        mapNodes(rules[index].conditions, copy.conditions)
+        copy.actions = copy.actions.renewedIdentity(remappingCaptures: mapping)
         rules.insert(copy, at: index + 1)
     }
 }
@@ -71,23 +78,35 @@ enum DemoSamples {
         DemoFolder(name: "Scans", symbol: "doc.viewfinder", detail: "Unavailable · sample Off", availability: .unavailable),
         DemoFolder(name: "Projects", symbol: "folder", detail: "Available · sample Off"),
     ]
+    static func moveAction(_ subfolder: String) -> ActionDraft {
+        var action = ActionDraft(.move)
+        action.destination.root = .sample("/Sample")
+        action.destination.subfolder = subfolder
+        return action
+    }
+    static func tagAction(_ name: String) -> ActionDraft {
+        var action = ActionDraft(.metadata); action.tagNames = [name]; return action
+    }
+    static var invoiceRename: ActionDraft {
+        var action = ActionDraft(.rename); action.filenameTemplate = "{created:yyyy-MM-dd}-{stem}"; return action
+    }
     static let rules: [DemoRule] = {
         var image = ConditionPredicateDraft(field: .kind); image.kind = .image
         return [
             DemoRule(name: "File invoices", enabled: true, conditions: .group(children: [
                 .predicate(.init(field: .extensionName, text: "pdf")), .predicate(.init(field: .text, text: "invoice"))
-            ]), actions: ["Rename using {created:yyyy-MM-dd}-{stem}", "Add tag Finance", "Move to Receipts/2026"]),
+            ]), actions: .init(steps: [invoiceRename, tagAction("Finance"), moveAction("Receipts/2026")])),
             DemoRule(name: "Keep screenshots together", enabled: true, conditions: .group(children: [
                 .predicate(.init(operation: .begins, text: "Screenshot")), .predicate(image)
-            ]), actions: ["Move to Pictures/Screenshots"]),
+            ]), actions: .init(steps: [moveAction("Pictures/Screenshots")])),
             DemoRule(name: "Review old installers", conditions: .group(children: [
                 .predicate(.init(field: .extensionName, text: "dmg, pkg")), .predicate(.init(field: .date, text: "30"))
-            ]), actions: ["Move to Review/Installers"]),
+            ]), actions: .init(steps: [moveAction("Review/Installers")])),
         ]
     }()
     static var scanRule: DemoRule {
         var pdf = ConditionPredicateDraft(field: .kind); pdf.kind = .pdf
-        return DemoRule(name: "Tag scanned documents", conditions: .group(children: [.predicate(pdf)]), actions: ["Add tag Scanned"])
+        return DemoRule(name: "Tag scanned documents", conditions: .group(children: [.predicate(pdf)]), actions: .init(steps: [tagAction("Scanned")]))
     }
     static var preview: [DemoPreviewRow] { [
         DemoPreviewRow(name: "invoice-november.pdf", readiness: .ready),

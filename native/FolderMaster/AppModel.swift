@@ -41,6 +41,7 @@ final class AppModel: ObservableObject {
     @Published var experience = ExperienceState()
     @Published var selectedRuleID: UUID?
     @Published var draft: DemoRule?
+    @Published private(set) var draftSessionID = UUID()
     @Published var showUnsaved = false
     @Published var showPreview = false
     @Published var showRunConfirmation = false
@@ -111,7 +112,7 @@ final class AppModel: ObservableObject {
     }
     var validDraft: Bool {
         guard let draft else { return false }
-        return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && draft.name.count <= 200 && draft.conditions.validationIssues.isEmpty && !draft.actions.isEmpty
+        return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && draft.name.count <= 200 && draft.conditions.validationIssues.isEmpty && draft.actions.issues(enabled: draft.enabled, conditions: draft.conditions).isEmpty
     }
     var liveDirty: Bool { liveDraft != storedFolders.first { $0.id == selectedLiveFolderID } }
     var validLiveDraft: Bool {
@@ -327,6 +328,7 @@ final class AppModel: ObservableObject {
     }
 
     private func loadRule(_ id: UUID?) {
+        draftSessionID = UUID()
         selectedRuleID = id
         draft = experience.rules.first { $0.id == id }
         savedFeedback = false
@@ -347,9 +349,15 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func updateActionDraft(_ actions: ActionChainDraft, ruleID: UUID, sessionID: UUID) {
+        guard draft?.id == ruleID, draftSessionID == sessionID, !quitPending else { return }
+        draft?.actions = actions; savedFeedback = false
+    }
+
     @discardableResult func saveDraft() -> Bool {
         guard validDraft, let draft, let index = experience.rules.firstIndex(where: { $0.id == draft.id }) else { return false }
         experience.rules[index] = draft
+        draftSessionID = UUID()
         newDemoRuleID = nil; previousDemoRuleID = nil
         savedFeedback = true
         return true
@@ -371,7 +379,7 @@ final class AppModel: ObservableObject {
     }
 
     private func createRule() {
-        let rule = DemoRule(name: "Untitled Rule", conditions: .group(children: [.predicate()]), actions: [])
+        let rule = DemoRule(name: "Untitled Rule", conditions: .group(children: [.predicate()]), actions: .init())
         previousDemoRuleID = selectedRuleID; newDemoRuleID = rule.id
         experience.rules.append(rule)
         loadRule(rule.id)
