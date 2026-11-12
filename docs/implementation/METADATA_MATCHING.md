@@ -1,0 +1,18 @@
+# Metadata predicate evaluation
+
+Implement task 2.2 as a pure evaluator for name, extension, native kind and size. Reuse schema-v1 predicates. Filesystem discovery, groups/date/tags/labels, full template compilation, actual preview/execution and watchers remain required later tasks.
+
+- Explicit known/unavailable snapshot fields; Unknown survives negative operators. Byte filenames remain lossless. Selected filename/stem/extension must decode as UTF-8 before Unicode comparison; invalid components do not use replacement characters.
+- Name input and pattern text normalize to NFC. Unicode simple case folding uses Rust regex consistently, with locale-independent behavior (no multi-character expansion such as ß→ss). Name scopes follow Unix final-extension/stem semantics, including dotfiles and trailing dots. Literal operators escape regex metacharacters; regex is search unless anchored by the user.
+- Compile anchored filename globs with `*`, `?`, bracket classes/ranges/negation, backslash escapes and nested brace alternation. Wildcards consume Unicode scalars; no filesystem access/path traversal. Use the same bounded Unicode regex compiler. Reject malformed patterns, overlong input and excessive brace depth.
+- Extension compares only the final extension, insensitive to case, with known absence separate from invalid encoding. Observed extensions apply the same Unicode lowercasing as schema/UI values before NFC/simple folding. Size compares exact u64 bytes with inclusive Between and strict greater/less; display units never rescale stored thresholds.
+- Native kind observations carry the platform identifier, complete category membership and requested custom-type conformance answers. PDF may also be Document. Document means conformance to text/composite-content/spreadsheet/presentation/PDF; Video uses movie conformance. Other is the complement of recognized categories for a known type. Missing/unsupported custom-type answers stay Unknown, including Is not.
+- Pin regex and unicode-normalization after checking licenses/MSRV; globset/Wax were inspected but are not added. The former generates byte regexes; the latter does not expose the compilation budget needed here. No dependency or custom traversal library is needed for the filename-only glob grammar.
+
+Verification: failing contracts for every operator, Unicode/case/NFC, glob grammar, exact size boundaries, absent/invalid extensions, kind-vs-extension mismatch and unknown propagation. Native UTType unit tests verify category/conformance facts. Run Rust/native regressions, linked smoke/static/OpenSpec checks and universal build, then source review and a scoped Git checkpoint. Do not infer operational matching from this pure foundation.
+
+## Verified — 12 November 2026
+
+Eight initial Rust tests and three native tests failed against stubs before implementation. Eleven final Rust matcher tests cover all operators/category mappings, Unicode/normalization, byte components, unknown reasons and compiler budgets. Review found the dotted-I extension normalization mismatch; positive/negative regression failed before the fix and passes afterward. Follow-up source review found no remaining issue.
+
+`make test presentation-smoke rule-persistence-smoke check universal` passed: 58 Rust / 40 native tests, zero failures, one existing physical invalid-UTF-8 fixture skip, and 72 native configuration fixtures. Universal minos 14.0 and local signature verified. `make ocr-proof` also passed after its target picked up the new adapter source. Task 2.2 is complete; no actual scanning, evaluator UI, group/date/tag/label logic, full save-time compiler or effect is claimed. Full experience, OS/runtime and performance acceptance remain separate open tasks.

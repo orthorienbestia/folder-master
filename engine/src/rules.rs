@@ -629,7 +629,7 @@ impl ConditionNode {
     }
 }
 impl Predicate {
-    fn validate(&self, path: &str) -> Validation {
+    pub(crate) fn validate(&self, path: &str) -> Validation {
         match self {
             Self::Name { value, .. } | Self::Text { value, .. } => {
                 required(value, &format!("{path}.value"))?

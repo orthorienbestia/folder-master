@@ -18,7 +18,7 @@ struct ConditionTreeEditor: View {
             ConditionNodeEditor(root: $root, nodeID: root.id, focus: $focus,
                                 motion: MotionChoice(rawValue: motion) ?? .system,
                                 systemReduced: systemReduced)
-            Text("Regex and glob use Rust syntax. Syntax is not validated in this form; matching and save-time syntax validation are not implemented here.")
+            Text("Regex uses Rust syntax. Globs support * ? [classes] and {alternatives}, with backslash escapes. Pattern compilation is not yet connected to Save or this form.")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

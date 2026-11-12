@@ -6,6 +6,8 @@ macOS 14+ menu bar file organizer in development: a **Rust engine with native Sw
 
 The Rules tab edits all eight condition and nine action families as typed configuration and saves immutable Rust revisions. Failed or stale saves retain the draft; navigation and Quit protect unsaved changes. See the [native persistence checkpoint](docs/implementation/NATIVE_RULE_PERSISTENCE.md).
 
+The pure Rust evaluator now covers name, final extension, native kind and size predicates, with explicit Unknown results for unavailable data. It is not yet connected to filesystem discovery or the UI; see [matching semantics and evidence](docs/implementation/METADATA_MATCHING.md).
+
 Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 
 [Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy. The [native storyboard evidence](docs/UI_STORYBOARD_EVIDENCE.md) records the current confirmed-preview, partial-result and sample-undo journey plus missing acceptance.
@@ -22,7 +24,7 @@ Build the development app with `make build`; see [development instructions and e
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 8/65 complete; M1 lifecycle/UX/platform gates remain open.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 9/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master
