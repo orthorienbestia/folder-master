@@ -192,7 +192,10 @@ impl WorkerState {
             }
             Command::ValidateRule { definition } => {
                 match RuleDefinition::from_json(definition.get()) {
-                    Ok(_) => Ok(json!({"valid":true,"issues":[]})),
+                    Ok(rule) => match crate::compiler::CompiledRule::compile(&rule) {
+                        Ok(_) => Ok(json!({"valid":true,"issues":[]})),
+                        Err(issues) => Ok(json!({"valid":false,"issues":issues})),
+                    },
                     Err(issues) => Ok(json!({"valid":false,"issues":issues})),
                 }
             }

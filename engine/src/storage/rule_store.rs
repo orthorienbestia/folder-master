@@ -61,7 +61,8 @@ impl Store {
         definition: &RuleDefinition,
     ) -> Result<RuleRecord> {
         validate_id(folder_id)?;
-        if let Some(issue) = definition.validation_issues().first() {
+        if let Err(issues) = crate::compiler::CompiledRule::compile(definition) {
+            let issue = &issues[0];
             return Err(error(
                 "invalid_rule",
                 format!("{}: {}", issue.path, issue.message),

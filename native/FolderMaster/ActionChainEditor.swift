@@ -7,6 +7,7 @@ struct ActionChainEditor: View {
     let conditions: ConditionDraftNode
     let ruleEnabled: Bool
     var sample = true
+    var compilerIssues: [StoredRuleIssue] = []
     @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var systemReduced
     @FocusState private var focus: ActionEditorFocus?
@@ -22,7 +23,7 @@ struct ActionChainEditor: View {
             ForEach(chain.steps) { step in
                 ActionRowEditor(chain: $chain, actionID: step.id, conditions: conditions,
                                 ruleEnabled: ruleEnabled, focus: $focus,
-                                motion: MotionChoice(rawValue: motion) ?? .system, systemReduced: systemReduced, sample: sample)
+                                motion: MotionChoice(rawValue: motion) ?? .system, systemReduced: systemReduced, sample: sample, compilerIssues: compilerIssues)
             }
             Menu {
                 ForEach(ActionKind.allCases) { kind in
@@ -75,6 +76,7 @@ private struct ActionRowEditor: View {
     let motion: MotionChoice
     let systemReduced: Bool
     let sample: Bool
+    let compilerIssues: [StoredRuleIssue]
     @State private var expanded = true
     @State private var chooser = ActionChooserRequest()
     @State private var selectionError: String?
@@ -102,6 +104,9 @@ private struct ActionRowEditor: View {
                     if chooser.id != nil { ProgressView("Checking selected location…").controlSize(.small) }
                     ForEach(chain.issues(enabled: ruleEnabled, conditions: conditions).filter { $0.actionID == actionID }) { issue in
                         ActionIssueLabel(message: issue.message)
+                    }
+                    ForEach(compilerIssues.filter { $0.node_id == actionID }) { issue in
+                        ActionIssueLabel(message: issue.message).id("compiler-\(issue.id)")
                     }
                     HStack {
                         Button { move(-1) } label: { Label("Up", systemImage: "arrow.up") }
@@ -140,7 +145,7 @@ private struct ActionRowEditor: View {
                 input("Replace with (may be empty)", text: value(\.replacement, fallback: step.replacement))
                 Toggle("Use Rust regex", isOn: value(\.regex, fallback: step.regex)).toggleStyle(.checkbox)
                 Toggle("Replace all occurrences", isOn: value(\.replaceAll, fallback: step.replaceAll)).toggleStyle(.checkbox)
-                Text("Literal find by default. Rust regex and replacement syntax are not compiled in this form.")
+                Text(sample ? "Literal find by default. This sample form does not compile regex or replacement captures." : "Literal find by default. Save checks Rust regex and replacement capture references locally.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Toggle("Preserve extension", isOn: value(\.preserveExtension, fallback: step.preserveExtension)).toggleStyle(.checkbox)
@@ -268,7 +273,7 @@ private struct ActionRowEditor: View {
                     Text("\(node.predicateValue?.field.rawValue ?? "Regex"): \(node.predicateValue?.text ?? "")").tag(Optional(node.id))
                 }
             }
-            Text("Needed for {capture:name}; only regex conditions under All groups are offered. Named captures and Rust syntax are not compiled here.")
+            Text(sample ? "Needed for {capture:name}; only regex conditions under All groups are offered. This sample form does not compile named captures." : "Needed for {capture:name}; only regex conditions under All groups are offered. Save checks the selected source and named groups.")
                 .font(.caption).foregroundStyle(.secondary)
         }
     }
@@ -288,7 +293,7 @@ private struct ActionRowEditor: View {
                     Button(token) { text.wrappedValue += token; focus.wrappedValue = .value(actionID, title) }
                 }
             }.fixedSize()
-            Text("Date fields: yyyy, MM, dd, HH, mm, ss; separators - and _. Expanded names/paths, captures and counters require later planner validation.")
+            Text(sample ? "Date fields: yyyy, MM, dd, HH, mm, ss; separators - and _. Counter padding: 1–20 digits. This sample form does not compile templates." : "Date fields: yyyy, MM, dd, HH, mm, ss; separators - and _. Counter padding: 1–20 digits. Save checks syntax and capture references; Preview will check file-specific values.")
                 .font(.caption).foregroundStyle(.secondary)
         }
     }

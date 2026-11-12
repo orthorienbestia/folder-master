@@ -40,6 +40,12 @@ final class ActionDraftTests: XCTestCase {
         rename.find = "invoice"; rename.replacement = ""
         XCTAssertTrue(rename.issues(enabled: false, conditions: conditions).isEmpty)
     }
+    func testCounterPaddingRejectsUnboundedAllocationAndAllowsFullUInt64Width() {
+        XCTAssertTrue(ActionTemplateDraft.issues("{counter:20}", filename: true).isEmpty)
+        for token in ["{counter:0}", "{counter:21}", "{counter:999999999}"] {
+            XCTAssertFalse(ActionTemplateDraft.issues(token, filename: true).isEmpty, token)
+        }
+    }
     func testMetadataRequiresActualChangeAndReplaceAcknowledgement() {
         var tags = ActionDraft(.metadata)
         XCTAssertFalse(tags.issues(enabled: false, conditions: conditions).isEmpty)

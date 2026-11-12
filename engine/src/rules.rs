@@ -386,6 +386,8 @@ pub struct ValidationIssue {
     pub code: &'static str,
     pub path: String,
     pub message: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub node_id: Option<RuleId>,
 }
 type Validation = Result<(), ValidationIssue>;
 fn issue(code: &'static str, path: impl Into<String>, message: &'static str) -> ValidationIssue {
@@ -393,6 +395,7 @@ fn issue(code: &'static str, path: impl Into<String>, message: &'static str) -> 
         code,
         path: path.into(),
         message,
+        node_id: None,
     }
 }
 fn required(value: &str, path: &str) -> Validation {
@@ -424,7 +427,8 @@ fn tag_names(names: &[String], path: &str) -> Validation {
     Ok(())
 }
 impl RuleDefinition {
-    /// Return the first actionable issue. Full pattern/template compilation is a later gate.
+    /// Decode the structural schema, including old editable revisions.
+    /// New saves and validate_rule also run the pattern/output compiler.
     pub fn from_json(text: &str) -> Result<Self, Vec<ValidationIssue>> {
         if text.len() > MAX_RULE_JSON_BYTES {
             return Err(vec![issue(

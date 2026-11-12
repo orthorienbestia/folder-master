@@ -198,3 +198,67 @@ fn rule_list_pages_have_a_byte_budget_as_well_as_an_item_limit() {
     assert_eq!(last.rules[0].id.as_str(), id(901));
     assert!(last.next_offset.is_none());
 }
+
+#[test]
+fn saves_reject_invalid_patterns_templates_and_capture_names_without_advancing_head() {
+    let f = Fixture::new();
+    let mut store = Store::open(&f.data()).unwrap();
+    f.folder(&mut store, "inbox");
+    let original = rule(900, "Original");
+    let saved = store
+        .save_rule_definition("inbox", None, &original)
+        .unwrap();
+    let mut bad_regex = document(900, "Bad pattern");
+    bad_regex["conditions"]["expression"]["children"][0]["expression"]["predicate"]["op"] =
+        json!("regex");
+    bad_regex["conditions"]["expression"]["children"][0]["expression"]["predicate"]["value"] =
+        json!("(");
+    let mut bad_token = document(900, "Bad token");
+    bad_token["actions"][0]["action"]["rename"]["template"]["text"] = json!("{unknown}");
+    let mut bad_capture = document(900, "Bad capture");
+    bad_capture["conditions"]["expression"]["children"][0]["expression"]["predicate"]["op"] =
+        json!("regex");
+    bad_capture["conditions"]["expression"]["children"][0]["expression"]["predicate"]["value"] =
+        json!("(?P<invoice>[0-9]+)");
+    bad_capture["actions"][0]["action"]["rename"]["template"] =
+        json!({"text":"{capture:missing}","capture_condition_id":id(2)});
+    for value in [bad_regex, bad_token, bad_capture] {
+        let typed = RuleDefinition::from_json(&value.to_string()).unwrap();
+        assert_eq!(
+            store
+                .save_rule_definition("inbox", Some(1), &typed)
+                .unwrap_err()
+                .code,
+            "invalid_rule"
+        );
+        assert_eq!(
+            store.rule_definition(&id(900), None).unwrap(),
+            Some(saved.clone())
+        );
+        assert!(store.rule_definition(&id(900), Some(2)).unwrap().is_none());
+    }
+}
+
+#[test]
+fn old_structurally_valid_invalid_pattern_remains_editable_and_can_be_repaired() {
+    let f = Fixture::new();
+    let mut store = Store::open(&f.data()).unwrap();
+    f.folder(&mut store, "inbox");
+    let mut old = document(900, "Old invalid pattern");
+    old["conditions"]["expression"]["children"][0]["expression"]["predicate"]["op"] =
+        json!("regex");
+    old["conditions"]["expression"]["children"][0]["expression"]["predicate"]["value"] = json!("(");
+    store
+        .save_rule_snapshot(&id(900), "inbox", 1, &old)
+        .unwrap();
+    let loaded = store.rule_definition(&id(900), None).unwrap().unwrap();
+    assert_eq!(serde_json::to_value(&loaded.definition).unwrap(), old);
+    assert_eq!(
+        store
+            .save_rule_definition("inbox", Some(1), &rule(900, "Repaired"))
+            .unwrap()
+            .revision,
+        2
+    );
+    assert_eq!(store.rule_snapshot(&id(900), 1).unwrap(), Some(old));
+}

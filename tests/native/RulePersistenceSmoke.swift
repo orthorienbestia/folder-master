@@ -227,6 +227,30 @@ struct RulePersistenceSmoke {
             guard !model.dirty, model.draft?.name == "Changed elsewhere", model.revision == 4 else {
                 throw Failure.check("Deliberate reload did not load current head")
             }
+            var invalidPattern = model.draft!
+            let conditionID = invalidPattern.conditions.children[0].id
+            invalidPattern.conditions.update(conditionID) { node in
+                var predicate = node.predicateValue!
+                predicate.field = .name
+                predicate.operation = .regex
+                predicate.text = "("
+                node.content = .predicate(predicate)
+            }
+            model.update(invalidPattern, session: model.sessionID)
+            let revisionBeforeCompile = model.revision
+            guard !(await model.save()), model.dirty, model.revision == revisionBeforeCompile,
+                model.compilerIssues.first?.code == "invalid_regex",
+                model.compilerIssues.first?.node_id == conditionID
+            else { throw Failure.check("Invalid pattern lost draft/revision or inline condition error") }
+            var fixedPattern = model.draft!
+            fixedPattern.conditions.update(conditionID) { node in
+                var predicate = node.predicateValue!
+                predicate.text = "invoice"
+                node.content = .predicate(predicate)
+            }
+            model.update(fixedPattern, session: model.sessionID)
+            guard model.compilerIssues.isEmpty, model.error == nil else { throw Failure.check("Editing retained stale compiler feedback") }
+            model.discard()
             let scriptID = try await engine.listRules(folderID: folder.id).first {
                 $0.name == ActionKind.script.rawValue
             }!.id

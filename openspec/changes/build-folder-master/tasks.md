@@ -18,7 +18,7 @@
 - [x] 2.1 Implement typed condition/action models and editor validation limits; verify roundtrip persistence, invalid field/operator pairs, empty/deep groups and terminal-action rejection.
 - [x] 2.2 Implement name/extension/kind/size predicates; verify each operator, Unicode/case, unit boundaries, no extension and mismatched extension/kind fixtures.
 - [x] 2.3 Implement date/tag/label predicates and All/Any/None logic; verify missing metadata, negative Unknown, calendar/elapsed semantics and truth tables.
-- [ ] 2.4 Implement template/regex/capture compilation; verify allowed tokens/date formats, invalid/ambiguous captures, traversal rejection and deterministic counters.
+- [x] 2.4 Implement template/regex/capture compilation; verify allowed tokens/date formats, invalid/ambiguous captures, traversal rejection and deterministic counters.
 - [ ] 2.5 Implement folder enrollment, scope overlap/exclusion/package/symlink policy and baseline indexing; verify existing files remain untouched and regular-file scope is exact.
 - [ ] 2.6 Integrate native watch events plus rescan/polling fallback; verify watches start before scan, root identity checks, event coalescing and missed-event reconciliation.
 - [ ] 2.7 Implement stable-file deferral, burst coalescing, bounded queue/dirty fallback and output receipts; verify partial downloads, changing files, overflow and cross-watch loop suppression.

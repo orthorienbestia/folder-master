@@ -115,18 +115,22 @@ private struct LiveRuleEditor: View {
                             ConditionTreeEditor(
                                 root: Binding(
                                     get: { model.draft?.conditions ?? draft.conditions },
-                                    set: { conditions in edit(session) { $0.conditions = conditions } }), sample: false)
+                                    set: { conditions in edit(session) { $0.conditions = conditions } }), sample: false, compilerIssues: model.compilerIssues)
                             Divider()
                             ActionChainEditor(
                                 chain: Binding(
                                     get: { model.draft?.actions ?? draft.actions },
                                     set: { actions in edit(session) { $0.actions = actions } }),
-                                conditions: draft.conditions, ruleEnabled: draft.enabled, sample: false)
+                                conditions: draft.conditions, ruleEnabled: draft.enabled, sample: false, compilerIssues: model.compilerIssues)
                             Label(
                                 "Rules are saved locally. Preview, matching, watching and file actions are not available yet.",
                                 systemImage: "info.circle"
                             ).font(.caption).foregroundStyle(.secondary)
                         }.padding(20)
+                    }.onChange(of: model.compilerIssues.map(\.id)) { _, _ in
+                        if let first = model.compilerIssues.first {
+                            scroll.scrollTo("compiler-\(first.id)", anchor: .center)
+                        }
                     }.onChange(of: draft.id, initial: true) { _, _ in
                         scroll.scrollTo("live-rule-top", anchor: .top)
                         nameFocused = model.isNew

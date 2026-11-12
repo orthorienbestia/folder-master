@@ -142,7 +142,7 @@ enum TagMode {
 fn error(code: &'static str) -> CompileError {
     CompileError { code }
 }
-fn bounded_text(value: &str) -> Result<String, CompileError> {
+pub(crate) fn bounded_text(value: &str) -> Result<String, CompileError> {
     if value.len() > MAX_PATTERN_BYTES {
         return Err(error("pattern_too_long"));
     }
@@ -152,7 +152,11 @@ fn bounded_text(value: &str) -> Result<String, CompileError> {
     }
     Ok(normalized)
 }
-fn regex(source: &str, sensitive: bool, code: &'static str) -> Result<Regex, CompileError> {
+pub(crate) fn regex(
+    source: &str,
+    sensitive: bool,
+    code: &'static str,
+) -> Result<Regex, CompileError> {
     RegexBuilder::new(source)
         .case_insensitive(!sensitive)
         .unicode(true)

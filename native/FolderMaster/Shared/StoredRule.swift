@@ -168,7 +168,9 @@ struct StoredRuleSummary: Decodable, Identifiable {
     var condition_count: Int
     var action_count: Int
 }
-struct StoredRuleIssue: Decodable {
+struct StoredRuleIssue: Decodable, Identifiable {
+    var node_id: UUID?
+    var id: String { "\(node_id?.uuidString ?? "rule"):\(path):\(code)" }
     var code: String
     var path: String
     var message: String

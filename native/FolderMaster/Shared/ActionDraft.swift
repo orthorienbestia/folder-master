@@ -203,7 +203,7 @@ enum ActionTemplateDraft {
                 let option = String(parts[1])
                 switch parts[0] {
                 case "created", "modified", "now": valid = validDateFormat(option)
-                case "counter": valid = !option.isEmpty && option.utf8.allSatisfy { (48...57).contains($0) } && (UInt32(option) ?? 0) > 0
+                case "counter": valid = !option.isEmpty && option.utf8.allSatisfy { (48...57).contains($0) } && (1...20).contains(UInt32(option) ?? 0)
                 case "capture": valid = !option.isEmpty && option.unicodeScalars.allSatisfy { CharacterSet.alphanumerics.contains($0) || $0 == "_" }
                 default: break
                 }

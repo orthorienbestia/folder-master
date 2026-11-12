@@ -8,6 +8,8 @@ The Rules tab edits all eight condition and nine action families as typed config
 
 The pure Rust evaluator now covers all seven metadata families—name, extension, kind, size, date, tags and Finder labels—and three-valued All/Any/None groups. Captured native calendar facts handle DST; unavailable data stays Unknown. It is not yet connected to filesystem discovery or the UI, and content matching remains pending. See [metadata](docs/implementation/METADATA_MATCHING.md) and [date/group evidence](docs/implementation/GROUP_DATE_MATCHING.md).
 
+Save now compiles regexes, globs, capture references, templates and rename replacements in Rust. Invalid saves retain their draft/revision and reveal the affected row. Pure output expansion preserves byte names and assigns deterministic counter proposals; operational preview and durable output reservation remain pending. See the [compiler checkpoint](docs/implementation/RULE_COMPILER.md).
+
 Build the development app with `make build`; see [development instructions and evidence boundaries](docs/DEVELOPMENT.md). `make test`, `make bridge-smoke`, `make presentation-smoke`, `make persistence-smoke`, `make check` and `make universal` verify the foundation.
 
 [Updated project goal](docs/GOAL.md): native UI/UX, animations and transitions are first-class acceptance requirements alongside engine correctness and privacy. The [native storyboard evidence](docs/UI_STORYBOARD_EVIDENCE.md) records the current confirmed-preview, partial-result and sample-undo journey plus missing acceptance.
@@ -24,7 +26,7 @@ Build the development app with `make build`; see [development instructions and e
 
 ## OpenSpec
 
-Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 10/65 complete; M1 lifecycle/UX/platform gates remain open.
+Active change: [build-folder-master](openspec/changes/build-folder-master/proposal.md). Eight [capability specs](openspec/changes/build-folder-master/specs) define testable behavior; [implementation tasks](openspec/changes/build-folder-master/tasks.md) are checked only after their described behavior is implemented and verified. Current progress: 11/65 complete; M1 lifecycle/UX/platform gates remain open.
 
 ```sh
 openspec status --change build-folder-master

@@ -4,6 +4,7 @@ import SwiftUI
 struct ConditionTreeEditor: View {
     @Binding var root: ConditionDraftNode
     var sample = true
+    var compilerIssues: [StoredRuleIssue] = []
     @Environment(\.accessibilityReduceMotion) private var systemReduced
     @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
     @FocusState private var focus: ConditionEditorFocus?
@@ -17,8 +18,8 @@ struct ConditionTreeEditor: View {
                 .font(.caption).foregroundStyle(.secondary)
             ConditionNodeEditor(root: $root, nodeID: root.id, focus: $focus,
                                 motion: MotionChoice(rawValue: motion) ?? .system,
-                                systemReduced: systemReduced)
-            Text("Regex uses Rust syntax. Globs support * ? [classes] and {alternatives}, with backslash escapes. Pattern compilation is not yet connected to Save or this form.")
+                                systemReduced: systemReduced, compilerIssues: compilerIssues)
+            Text(sample ? "Regex uses Rust syntax. Globs support * ? [classes] and {alternatives}, with backslash escapes. Sample rules do not run the compiler." : "Regex uses Rust syntax. Globs support * ? [classes] and {alternatives}, with backslash escapes. Save checks patterns locally and marks invalid conditions.")
                 .font(.caption).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -35,6 +36,7 @@ private struct ConditionNodeEditor: View {
     let focus: FocusState<ConditionEditorFocus?>.Binding
     let motion: MotionChoice
     let systemReduced: Bool
+    let compilerIssues: [StoredRuleIssue]
     @Environment(\.timeZone) private var timeZone
 
     var body: some View {
@@ -46,7 +48,7 @@ private struct ConditionNodeEditor: View {
                     nodeIssues
                     ForEach(children) { child in
                         ConditionNodeEditor(root: $root, nodeID: child.id, focus: focus,
-                                            motion: motion, systemReduced: systemReduced)
+                                            motion: motion, systemReduced: systemReduced, compilerIssues: compilerIssues)
                             .padding(.leading, 8)
                             .transition(motion.allowsMovement(systemReduced: systemReduced)
                                         ? .opacity.combined(with: .move(edge: .top)) : .identity)
@@ -113,7 +115,7 @@ private struct ConditionNodeEditor: View {
             }
             caseControl(predicate)
             if predicate.operation == .regex || predicate.operation == .glob {
-                Text("Rust \(predicate.operation.rawValue) syntax is not checked here.")
+                Text("Rust \(predicate.operation.rawValue) syntax is checked when saving a real rule.")
                     .font(.caption).foregroundStyle(.secondary)
             }
         case .extensionName:
@@ -254,7 +256,13 @@ private struct ConditionNodeEditor: View {
             .toggleStyle(.checkbox)
     }
 
-    private var nodeIssues: some View {
+    @ViewBuilder private var nodeIssues: some View {
+        ForEach(compilerIssues.filter { $0.node_id == nodeID }) { issue in
+            Label(issue.message, systemImage: "exclamationmark.circle")
+                .id("compiler-\(issue.id)")
+                .font(.caption).foregroundStyle(.red).fixedSize(horizontal: false, vertical: true)
+                .accessibilityLabel("Blocking issue: \(issue.message)")
+        }
         ForEach(root.validationIssues.filter { $0.nodeID == nodeID }) { issue in
             Label(issue.message, systemImage: "exclamationmark.circle")
                 .font(.caption).foregroundStyle(.red)

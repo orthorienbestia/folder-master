@@ -11,6 +11,7 @@ final class LiveRuleModel: ObservableObject {
     @Published private(set) var pending = false
     @Published private(set) var loaded = false
     @Published var error: String?
+    @Published private(set) var compilerIssues: [StoredRuleIssue] = []
     @Published private(set) var savedRevision: UInt64?
     @Published private(set) var sessionID = UUID()
     @Published var showUnsaved = false
@@ -33,6 +34,7 @@ final class LiveRuleModel: ObservableObject {
         let token = UUID()
         generation = token
         sessionID = UUID()
+        compilerIssues = []
         folderID = id
         summaries = []
         selectedID = nil
@@ -66,6 +68,7 @@ final class LiveRuleModel: ObservableObject {
             baseline = nil
             revision = nil
             sessionID = UUID()
+            compilerIssues = []
             return
         }
         guard let record = try await engine.rule(id: id), record.folder_id == folderID else {
@@ -97,6 +100,7 @@ final class LiveRuleModel: ObservableObject {
         baseline = value
         savedRevision = nil
         sessionID = UUID()
+        compilerIssues = []
     }
     func select(_ id: UUID?) {
         guard !pending, !locked, id != selectedID else { return }
@@ -128,6 +132,7 @@ final class LiveRuleModel: ObservableObject {
             savedRevision = nil
             error = nil
             sessionID = UUID()
+            compilerIssues = []
         case .select(let id):
             pending = true
             error = nil
@@ -173,6 +178,7 @@ final class LiveRuleModel: ObservableObject {
         } else {
             draft = baseline
             sessionID = UUID()
+            compilerIssues = []
             savedRevision = nil
             error = nil
         }
@@ -181,18 +187,22 @@ final class LiveRuleModel: ObservableObject {
         guard !pending, !locked, sessionID == session, draft?.id == value.id else { return }
         draft = value
         savedRevision = nil
+        if !compilerIssues.isEmpty { error = nil }
+        compilerIssues = []
     }
     @discardableResult func save(whileQuitting: Bool = false) async -> Bool {
         guard !pending, !locked || whileQuitting, let folderID, let draft else { return false }
         pending = true
         error = nil
         savedRevision = nil
+        compilerIssues = []
         defer { pending = false }
         do {
             let definition = try StoredRuleDefinition(draft: draft)
             let issues = try await engine.validateRule(definition)
+            compilerIssues = issues
             if let first = issues.first {
-                throw EngineClientError.operation(code: first.code, message: "\(first.path): \(first.message)")
+                throw EngineClientError.operation(code: first.code, message: first.message)
             }
             let record = try await engine.saveRule(definition, folderID: folderID, expectedRevision: revision)
             guard record.folder_id == folderID, try record.definition.matches(definition) else {
@@ -207,6 +217,7 @@ final class LiveRuleModel: ObservableObject {
             revision = record.revision
             savedRevision = record.revision
             sessionID = UUID()
+            compilerIssues = []
             let summary = StoredRuleSummary(
                 id: saved.id, revision: record.revision, name: saved.name, enabled: saved.enabled,
                 condition_count: saved.conditions.predicateCount, action_count: saved.actions.count)

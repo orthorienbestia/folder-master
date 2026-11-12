@@ -265,3 +265,25 @@ fn rule_command_parameters_remain_strict_before_queueing() {
         0
     );
 }
+
+#[test]
+fn validation_reports_compile_errors_with_the_affected_node_identity() {
+    let e = Engine::new();
+    let mut rule = definition();
+    rule["conditions"]["expression"]["children"][0]["expression"]["predicate"]["op"] =
+        json!("regex");
+    rule["conditions"]["expression"]["children"][0]["expression"]["predicate"]["value"] =
+        json!("(");
+    let reply = call(
+        &e,
+        "compile",
+        json!({"op":"validate_rule", "definition":rule}),
+    );
+    assert_eq!(reply["payload"]["valid"], false);
+    assert_eq!(reply["payload"]["issues"][0]["code"], "invalid_regex");
+    assert_eq!(reply["payload"]["issues"][0]["node_id"], id(2));
+    assert_eq!(
+        reply["payload"]["issues"][0]["path"],
+        "conditions.expression.children[0].expression.predicate.value"
+    );
+}
