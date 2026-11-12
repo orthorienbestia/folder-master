@@ -83,3 +83,7 @@ Context7 resolved official SwiftUI documentation and retrieved confirmation-dial
 ## Folder-state storyboard follow-up
 
 Context7 resolved official SwiftUI documentation and retrieved `sheet(isPresented:onDismiss:content:)`. Its dismissal callback provides the lifecycle boundary used to route View Demo History before opening an unsaved-edit confirmation. The callback contract alone is not a sequencing proof; linked-model checks and an actual native saved-preview → dismissal → Save prompt → history journey verify this integration on the current Mac. [SwiftUI sheet lifecycle](https://developer.apple.com/documentation/swiftui/view/sheet(ispresented:ondismiss:content:)), [native evidence](UI_STORYBOARD_EVIDENCE.md)
+
+## Script bootstrap candidate
+
+[Mach bootstrap removal research](SCRIPT_BOOTSTRAP_RESEARCH.md) records the Context7 lookup, installed public SDK declarations and Apple XNU/launchd primary sources. Controlled unsandboxed self-task experiments distinguish a userspace global from the kernel bootstrap slot and retained independent rights. Removing the tested slots survives exec, but no full public security guarantee, App Sandbox composition, same-user capability separation or runtime matrix is established. The existing strict gate remains failed; this is a candidate experiment rather than product enablement.

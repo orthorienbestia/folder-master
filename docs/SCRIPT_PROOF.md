@@ -47,3 +47,5 @@ This proof deliberately uses small fixture bounds: 1 MiB input, 64 KiB script/me
 ## Decision boundary
 
 Task 1.4's basic staged-XPC proof can be assessed independently of task 1.5's full isolation gate. The current App Sandbox-only mechanism has **not** passed the required offline/IPC acceptance. Keep the product script capability off and preserve the no-egress contract while investigating a supported stronger mechanism. Do not replace the failing gate with identifier checks, an unrestricted host runner or an unreviewed deprecated sandbox profile. A mechanism that changes script/interpreter compatibility requires an explicit design revision; the public release gates remain open.
+
+Exploratory follow-up: [Mach bootstrap removal research](SCRIPT_BOOTSTRAP_RESEARCH.md) records public self-task APIs, available-service controls, retained-right counterexamples and native/zsh exec observations. It proposes a separate signed-helper experiment; it does not change this acceptance gate, helper entitlements or product script availability. Clearing a bootstrap slot does not revoke other copies of the right or establish full IPC isolation.

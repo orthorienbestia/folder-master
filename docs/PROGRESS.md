@@ -1,6 +1,6 @@
 # Folder Master — Progress and evidence
 
-Last updated: 11 November 2026. Status: **active implementation — M1 foundation; 7/65 engineering tasks complete**. Real folder setup persists locally and the native content/OCR adapter passes synthetic offline cases, but the app is not yet a working file organizer. Full script isolation remains a failing gate.
+Last updated: 12 November 2026. Status: **active implementation — M1 foundation; 7/65 engineering tasks complete**. Real folder setup persists locally and the native content/OCR adapter passes synthetic offline cases, but the app is not yet a working file organizer. Full script isolation remains a failing gate.
 
 ## Objective and constraints
 
@@ -148,3 +148,8 @@ Additional consistency fixes: regex requires complete text; started chains retai
 - Native structured controls replace sample condition strings for all eight matcher families. All/Any/None groups use stable row identities, three-level/fifty-predicate limits, field-specific values and inline errors. Exact decimal size conversion rejects fractional bytes and overflow. Duplicate regenerates tree identities; saved sample rules remain separate from dirty drafts.
 - Save/Test Draft reject invalid structure and names over 200 characters. This is native form validation only: real matching, Rust regex/glob compilation, UTType/tag discovery, typed action editing and durable rule schema integration are pending. Tasks 1.11, 1.12, 2.1 and 5.2 remain unchecked.
 - Verification: test-first seven-method failure then green; final `make test` has 24 Rust passes and 22 native passes, zero failures, one existing physical invalid-UTF-8 fixture skip. `make presentation-smoke` passed after separate guard-removal mutation checks failed as expected. `make check`, `make ocr-proof` and `make universal` passed. Native light-appearance controls/focus/range/tag/nesting/Save observations are recorded in [UI_STORYBOARD_EVIDENCE.md](UI_STORYBOARD_EVIDENCE.md). Full keyboard/VoiceOver and motion recordings remain Not run.
+
+## Script isolation research follow-up — 12 November 2026
+
+- [Bootstrap removal research](SCRIPT_BOOTSTRAP_RESEARCH.md) and its small own-process C probe characterize a possible stronger child-launch boundary. Available-service controls reproduce both global-only bypass and retained-old-right access; clearing the kernel slot/global and registered rights survives native/zsh exec with failed controlled lookup. Universal compilation is evidence of build compatibility only.
+- Root reproduced five controls outside Codex's outer sandbox. Mach returned null registered-array slots, so verification correctly tests zero valid rights rather than zero array length. This is not the real sandboxed helper or full capability/descendant/compatibility proof. The existing strict isolation gate remains failed; task 1.5 stays unchecked and scripts stay unavailable. Next is a separate opt-in helper experiment, preserving the baseline and interpreter scope.
