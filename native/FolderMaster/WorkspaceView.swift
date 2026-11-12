@@ -214,6 +214,7 @@ struct DemoWorkspaceView: View {
 
 struct RuleEditorView: View {
     @ObservedObject var model: AppModel
+    @FocusState private var nameFocused: Bool
     private func edit(_ change: (inout DemoRule) -> Void) {
         guard var draft = model.draft else { return }
         change(&draft); model.draft = draft; model.savedFeedback = false
@@ -231,34 +232,41 @@ struct RuleEditorView: View {
                     Toggle("Enabled", isOn: Binding(get: { model.draft?.enabled ?? false }, set: { value in edit { $0.enabled = value } })).toggleStyle(.switch).controlSize(.small)
                 }.padding(20)
                 Divider()
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 24) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Name").font(.subheadline.weight(.medium))
-                            TextField("Rule name", text: Binding(get: { model.draft?.name ?? "" }, set: { value in edit { $0.name = value } }))
-                                .textFieldStyle(.roundedBorder)
-                                .accessibilityLabel("Sample rule name")
-                            if draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || draft.name.count > 200 {
-                                Label("Enter a name of 1–200 characters before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
-                            }
-                        }
-                        ConditionTreeEditor(root: Binding(get: {
-                            guard let current = model.draft, current.id == draft.id else { return draft.conditions }
-                            return current.conditions
-                        }, set: { root in
-                            guard model.draft?.id == draft.id else { return }
-                            edit { $0.conditions = root }
-                        }))
-                        Divider()
-                        ActionChainEditor(chain: Binding(get: {
-                            guard let current = model.draft, current.id == draft.id, model.draftSessionID == editingSession else { return draft.actions }
-                            return current.actions
-                        }, set: { chain in
-                            model.updateActionDraft(chain, ruleID: draft.id, sessionID: editingSession)
-                        }), conditions: draft.conditions, ruleEnabled: draft.enabled)
-                        Label("Structural draft checks only. Matching, Rust regex/glob validation and file actions are not connected yet.", systemImage: "info.circle")
-                            .font(.caption).foregroundStyle(.secondary)
-                    }.padding(20)
+                ScrollViewReader { scroll in
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 24) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Name").font(.subheadline.weight(.medium))
+                                TextField("Rule name", text: Binding(get: { model.draft?.name ?? "" }, set: { value in edit { $0.name = value } }))
+                                    .textFieldStyle(.roundedBorder)
+                                    .focused($nameFocused)
+                                    .accessibilityLabel("Sample rule name")
+                                if draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || draft.name.count > 200 {
+                                    Label("Enter a name of 1–200 characters before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
+                                }
+                            }.id("rule-editor-top")
+                            ConditionTreeEditor(root: Binding(get: {
+                                guard let current = model.draft, current.id == draft.id else { return draft.conditions }
+                                return current.conditions
+                            }, set: { root in
+                                guard model.draft?.id == draft.id else { return }
+                                edit { $0.conditions = root }
+                            }))
+                            Divider()
+                            ActionChainEditor(chain: Binding(get: {
+                                guard let current = model.draft, current.id == draft.id, model.draftSessionID == editingSession else { return draft.actions }
+                                return current.actions
+                            }, set: { chain in
+                                model.updateActionDraft(chain, ruleID: draft.id, sessionID: editingSession)
+                            }), conditions: draft.conditions, ruleEnabled: draft.enabled)
+                            Label("Structural draft checks only. Matching, Rust regex/glob validation and file actions are not connected yet.", systemImage: "info.circle")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }.padding(20)
+                    }
+                    .onChange(of: draft.id, initial: true) { _, _ in
+                        scroll.scrollTo("rule-editor-top", anchor: .top)
+                        nameFocused = model.draftIsNew
+                    }
                 }
                 Divider()
                 VStack(alignment: .leading, spacing: 8) {

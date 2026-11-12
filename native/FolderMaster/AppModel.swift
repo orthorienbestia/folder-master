@@ -114,6 +114,7 @@ final class AppModel: ObservableObject {
         guard let draft else { return false }
         return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && draft.name.count <= 200 && draft.conditions.validationIssues.isEmpty && draft.actions.issues(enabled: draft.enabled, conditions: draft.conditions).isEmpty
     }
+    var draftIsNew: Bool { newDemoRuleID != nil && draft?.id == newDemoRuleID }
     var liveDirty: Bool { liveDraft != storedFolders.first { $0.id == selectedLiveFolderID } }
     var validLiveDraft: Bool {
         guard let liveDraft else { return false }
