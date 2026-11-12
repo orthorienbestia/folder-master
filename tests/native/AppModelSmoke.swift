@@ -13,9 +13,16 @@ struct AppModelSmoke {
         scoped.addRule()
         guard scoped.dirty, scoped.draft?.enabled == false else { fail("New sample rule was treated as already saved") }
         scoped.draft?.name = "Project documents"
-        scoped.draft?.conditions = ["Name contains proposal"]
+        scoped.draft?.conditions = .group(children: [.predicate(.init(text: "proposal"))])
         scoped.draft?.actions = ["Add tag Work"]
         guard scoped.saveDraft() else { fail("Could not save valid project sample") }
+        let savedConditions = scoped.experience.rules[0].conditions
+        scoped.draft?.name = String(repeating: "x", count: 201)
+        guard !scoped.validDraft, !scoped.saveDraft() else { fail("Oversized sample rule name was saved") }
+        scoped.draft?.name = "Project documents"
+        scoped.draft?.conditions = .group(children: [.predicate()])
+        guard !scoped.validDraft, !scoped.saveDraft(), scoped.experience.rules[0].conditions == savedConditions else { fail("Invalid condition values replaced the saved rule") }
+        scoped.discardDraft()
         let projectID = scoped.selectedRuleID
         scoped.selectDemoDestination(.folder(scoped.folders[0].id))
         guard scoped.experience.rules.count == 3, !scoped.experience.rules.contains(where: { $0.id == projectID }) else { fail("Project rules leaked into Downloads") }

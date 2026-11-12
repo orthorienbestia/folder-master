@@ -199,7 +199,7 @@ struct DemoWorkspaceView: View {
                                 .accessibilityLabel(rule.enabled ? "Enabled demo rule" : "Disabled demo rule")
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(rule.name).fontWeight(.medium)
-                                Text("\(rule.conditions.count) conditions · \(rule.actions.count) actions").font(.caption).foregroundStyle(.secondary)
+                                Text("\(rule.conditions.predicateCount) conditions · \(rule.actions.count) actions").font(.caption).foregroundStyle(.secondary)
                             }
                         }.padding(.vertical, 7).tag(rule.id)
                         .contextMenu { Button("Duplicate as Disabled") { model.experience.duplicateRule(rule.id) }.disabled(model.dirty) }
@@ -243,31 +243,17 @@ struct RuleEditorView: View {
                             TextField("Rule name", text: Binding(get: { model.draft?.name ?? "" }, set: { value in edit { $0.name = value } }))
                                 .textFieldStyle(.roundedBorder)
                                 .accessibilityLabel("Sample rule name")
-                            if draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                Label("Enter a name before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
+                            if draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || draft.name.count > 200 {
+                                Label("Enter a name of 1–200 characters before saving.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
                             }
                         }
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack { Text("Match all of these conditions").font(.headline); Spacer() }
-                            if draft.conditions.isEmpty {
-                                Label("Add at least one condition.", systemImage: "exclamationmark.circle").font(.caption).foregroundStyle(.red)
-                            }
-                            ForEach(Array(draft.conditions.enumerated()), id: \.offset) { index, condition in
-                                HStack {
-                                    Image(systemName: "line.3.horizontal.decrease").foregroundStyle(.secondary)
-                                    TextField("Condition", text: Binding(get: { model.draft?.conditions[safe: index] ?? "" }, set: { value in edit { if $0.conditions.indices.contains(index) { $0.conditions[index] = value } } }))
-                                        .textFieldStyle(.roundedBorder)
-                                    Button { mutate { $0.conditions.remove(at: index) } } label: { Image(systemName: "minus.circle") }
-                                        .buttonStyle(.plain).help("Remove condition")
-                                }.transition(.opacity)
-                            }
-                            Menu {
-                                ForEach(["Name contains ", "Extension is one of ", "Kind is Image", "Size greater than 1 MiB", "Modified date older than 7 days", "Tags contain Work", "Color label is Blue", "Text contains "], id: \.self) { value in
-                                    Button(value) { mutate { $0.conditions.append(value) } }
-                                }
-                            } label: { Label("Add Condition", systemImage: "plus") }
-                            .fixedSize()
-                        }
+                        ConditionTreeEditor(root: Binding(get: {
+                            guard let current = model.draft, current.id == draft.id else { return draft.conditions }
+                            return current.conditions
+                        }, set: { root in
+                            guard model.draft?.id == draft.id else { return }
+                            edit { $0.conditions = root }
+                        }))
                         Divider()
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Then do these actions").font(.headline)
@@ -289,17 +275,23 @@ struct RuleEditorView: View {
                                 }
                             } label: { Label("Add Action", systemImage: "plus") }.fixedSize()
                         }
-                        Label("This storyboard uses sample text. Typed rule validation and real file actions are not connected yet.", systemImage: "info.circle")
+                        Label("Structural draft checks only. Matching, Rust regex/glob validation and file actions are not connected yet.", systemImage: "info.circle")
                             .font(.caption).foregroundStyle(.secondary)
                     }.padding(20)
                 }
                 Divider()
-                HStack {
-                    if model.savedFeedback { Label("Saved to demo", systemImage: "checkmark.circle").font(.caption).foregroundStyle(.secondary) }
-                    Spacer()
-                    Button("Discard") { model.discardDraft() }.disabled(!model.dirty)
-                    Button("Test Draft…") { model.presentPreview(source: .draft) }.disabled(!model.validDraft)
-                    Button("Save Demo Rule") { model.saveDraft() }.buttonStyle(.borderedProminent).disabled(!model.validDraft || !model.dirty)
+                VStack(alignment: .leading, spacing: 8) {
+                    if !model.validDraft {
+                        Label("Correct the marked fields before saving this sample rule.", systemImage: "exclamationmark.circle")
+                            .font(.caption).foregroundStyle(.red)
+                    }
+                    HStack {
+                        if model.savedFeedback { Label("Saved to demo", systemImage: "checkmark.circle").font(.caption).foregroundStyle(.secondary) }
+                        Spacer()
+                        Button("Discard") { model.discardDraft() }.disabled(!model.dirty)
+                        Button("Test Draft…") { model.presentPreview(source: .draft) }.disabled(!model.validDraft)
+                        Button("Save Demo Rule") { model.saveDraft() }.buttonStyle(.borderedProminent).disabled(!model.validDraft || !model.dirty)
+                    }
                 }.padding(16)
             }
         } else {

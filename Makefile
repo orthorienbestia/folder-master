@@ -22,7 +22,7 @@ bridge-smoke: build
 	build/bridge-smoke
 
 presentation-smoke: build
-	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift native/FolderMaster/Shared/PersistentFolder.swift native/FolderMaster/Shared/Experience.swift native/FolderMaster/AppModel.swift tests/native/AppModelSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/presentation-smoke
+	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift native/FolderMaster/Shared/PersistentFolder.swift native/FolderMaster/Shared/Experience.swift native/FolderMaster/Shared/ConditionDraft.swift native/PlatformAdapters/ContentSource.swift native/FolderMaster/AppModel.swift tests/native/AppModelSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/presentation-smoke
 	build/presentation-smoke
 
 persistence-smoke: build

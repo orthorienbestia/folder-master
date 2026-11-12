@@ -111,7 +111,7 @@ final class AppModel: ObservableObject {
     }
     var validDraft: Bool {
         guard let draft else { return false }
-        return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !draft.conditions.isEmpty && !draft.actions.isEmpty
+        return !draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && draft.name.count <= 200 && draft.conditions.validationIssues.isEmpty && !draft.actions.isEmpty
     }
     var liveDirty: Bool { liveDraft != storedFolders.first { $0.id == selectedLiveFolderID } }
     var validLiveDraft: Bool {
@@ -176,7 +176,7 @@ final class AppModel: ObservableObject {
         if !demoInitialized {
             folders = DemoSamples.folders
             demoRuleSets[folders[0].id] = DemoSamples.rules
-            demoRuleSets[folders[1].id] = [DemoRule(name: "Tag scanned documents", conditions: ["Kind is PDF"], actions: ["Add tag Scanned"])]
+            demoRuleSets[folders[1].id] = [DemoSamples.scanRule]
             demoRuleSets[folders[2].id] = []
             demoInitialized = true
             loadDemoDestination(.folder(folders[0].id))
@@ -371,7 +371,7 @@ final class AppModel: ObservableObject {
     }
 
     private func createRule() {
-        let rule = DemoRule(name: "Untitled Rule", conditions: ["Name contains "], actions: [])
+        let rule = DemoRule(name: "Untitled Rule", conditions: .group(children: [.predicate()]), actions: [])
         previousDemoRuleID = selectedRuleID; newDemoRuleID = rule.id
         experience.rules.append(rule)
         loadRule(rule.id)

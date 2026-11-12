@@ -6,7 +6,6 @@ import ImageIO
 import UniformTypeIdentifiers
 
 enum ContentFormat { case utf8, pdf, image, unsupported }
-enum ContentSource { case embeddedOnly, embeddedThenOCR, forceOCR }
 enum OCRQuality { case accurate, fast }
 enum ContentCompleteness: String, Codable { case complete, partial, unavailable, canceled }
 enum ContentIssue: String, Codable, Error {

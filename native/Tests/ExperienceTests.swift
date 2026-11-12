@@ -20,14 +20,16 @@ final class ExperienceTests: XCTestCase {
     }
 
     func testDuplicateGetsIndependentIdentityAndStartsDisabled() {
-        let original = DemoRule(name: "Invoices", enabled: true, conditions: ["Extension is pdf"], actions: ["Move to Receipts"])
+        let original = DemoRule(name: "Invoices", enabled: true, conditions: .group(children: [.predicate(.init(field: .extensionName, text: "pdf"))]), actions: ["Move to Receipts"])
         var state = ExperienceState(rules: [original])
         state.duplicateRule(original.id)
         XCTAssertEqual(state.rules.count, 2)
         guard state.rules.count == 2 else { return }
         XCTAssertNotEqual(state.rules[0].id, state.rules[1].id)
         XCTAssertFalse(state.rules[1].enabled)
-        XCTAssertEqual(state.rules[1].conditions, ["Extension is pdf"])
+        XCTAssertEqual(state.rules[1].conditions.children.first?.predicateValue?.field, .extensionName)
+        XCTAssertEqual(state.rules[1].conditions.children.first?.predicateValue?.text, "pdf")
+        XCTAssertTrue(state.rules[1].conditions.allIDs.isDisjoint(with: original.conditions.allIDs))
         XCTAssertEqual(state.rules[1].actions, ["Move to Receipts"])
     }
 }

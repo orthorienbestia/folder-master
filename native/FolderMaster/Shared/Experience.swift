@@ -15,7 +15,7 @@ struct DemoRule: Identifiable, Equatable {
     var id = UUID()
     var name: String
     var enabled = false
-    var conditions: [String] = []
+    var conditions = ConditionDraftNode.group()
     var actions: [String] = []
 }
 
@@ -50,6 +50,7 @@ struct ExperienceState {
         copy.id = UUID()
         copy.name += " Copy"
         copy.enabled = false
+        copy.conditions = copy.conditions.renewedIdentity()
         rules.insert(copy, at: index + 1)
     }
 }
@@ -70,11 +71,24 @@ enum DemoSamples {
         DemoFolder(name: "Scans", symbol: "doc.viewfinder", detail: "Unavailable · sample Off", availability: .unavailable),
         DemoFolder(name: "Projects", symbol: "folder", detail: "Available · sample Off"),
     ]
-    static let rules = [
-        DemoRule(name: "File invoices", enabled: true, conditions: ["Extension is one of pdf", "Text contains invoice"], actions: ["Rename using {created:yyyy-MM-dd}-{stem}", "Add tag Finance", "Move to Receipts/2026"]),
-        DemoRule(name: "Keep screenshots together", enabled: true, conditions: ["Name begins with Screenshot", "Kind is Image"], actions: ["Move to Pictures/Screenshots"]),
-        DemoRule(name: "Review old installers", conditions: ["Extension is one of dmg, pkg", "Modified date older than 30 days"], actions: ["Move to Review/Installers"]),
-    ]
+    static let rules: [DemoRule] = {
+        var image = ConditionPredicateDraft(field: .kind); image.kind = .image
+        return [
+            DemoRule(name: "File invoices", enabled: true, conditions: .group(children: [
+                .predicate(.init(field: .extensionName, text: "pdf")), .predicate(.init(field: .text, text: "invoice"))
+            ]), actions: ["Rename using {created:yyyy-MM-dd}-{stem}", "Add tag Finance", "Move to Receipts/2026"]),
+            DemoRule(name: "Keep screenshots together", enabled: true, conditions: .group(children: [
+                .predicate(.init(operation: .begins, text: "Screenshot")), .predicate(image)
+            ]), actions: ["Move to Pictures/Screenshots"]),
+            DemoRule(name: "Review old installers", conditions: .group(children: [
+                .predicate(.init(field: .extensionName, text: "dmg, pkg")), .predicate(.init(field: .date, text: "30"))
+            ]), actions: ["Move to Review/Installers"]),
+        ]
+    }()
+    static var scanRule: DemoRule {
+        var pdf = ConditionPredicateDraft(field: .kind); pdf.kind = .pdf
+        return DemoRule(name: "Tag scanned documents", conditions: .group(children: [.predicate(pdf)]), actions: ["Add tag Scanned"])
+    }
     static var preview: [DemoPreviewRow] { [
         DemoPreviewRow(name: "invoice-november.pdf", readiness: .ready),
         DemoPreviewRow(name: "invoice-studio.pdf", readiness: .ready),
