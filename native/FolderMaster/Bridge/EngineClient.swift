@@ -12,6 +12,11 @@ struct EnginePayload: Decodable {
     var folders: [StoredFolder]?
     var folder: StoredFolder?
     var next_offset: Int?
+    var valid: Bool?
+    var issues: [StoredRuleIssue]?
+    var rule: StoredRuleRecord?
+    var rules: [StoredRuleSummary]?
+    var rule_count: Int?
 }
 
 struct EngineReply: Decodable {
@@ -80,6 +85,31 @@ actor EngineClient {
     }
     func removeFolder(_ folder: StoredFolder) async throws {
         _ = try await requestCommand(["op":"remove_folder", "id":folder.id, "revision":folder.revision])
+    }
+
+    func listRules(folderID: String) async throws -> [StoredRuleSummary] {
+        var rules: [StoredRuleSummary] = []; var offset = 0
+        while true {
+            let reply = try await requestCommand(["op":"list_rules", "folder_id":folderID, "offset":offset])
+            guard let page = reply.payload.rules else { throw EngineClientError.protocolMismatch }
+            rules.append(contentsOf: page)
+            guard let next = reply.payload.next_offset else { return rules }
+            guard next > offset else { throw EngineClientError.protocolMismatch }; offset = next
+        }
+    }
+    func rule(id: UUID, revision: UInt64? = nil) async throws -> StoredRuleRecord? {
+        try await requestCommand(["op":"get_rule", "id":id.uuidString, "revision":revision.map { $0 as Any } ?? NSNull()]).payload.rule
+    }
+    func validateRule(_ definition: StoredRuleDefinition) async throws -> [StoredRuleIssue] {
+        let object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(definition))
+        let reply = try await requestCommand(["op":"validate_rule", "definition":object])
+        guard let valid = reply.payload.valid, let issues = reply.payload.issues, valid == issues.isEmpty else { throw EngineClientError.protocolMismatch }
+        return issues
+    }
+    func saveRule(_ definition: StoredRuleDefinition, folderID: String, expectedRevision: UInt64?) async throws -> StoredRuleRecord {
+        let object = try JSONSerialization.jsonObject(with: JSONEncoder().encode(definition))
+        let reply = try await requestCommand(["op":"save_rule", "folder_id":folderID, "expected_revision":expectedRevision.map { $0 as Any } ?? NSNull(), "definition":object])
+        guard let record = reply.payload.rule else { throw EngineClientError.protocolMismatch }; return record
     }
 
     func request(op: String, paused: Bool? = nil, path: Data? = nil) async throws -> EngineReply {

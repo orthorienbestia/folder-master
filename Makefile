@@ -1,8 +1,9 @@
 HOST_ARCH := $(shell uname -m)
 PROJECT := native/FolderMaster.xcodeproj
 DERIVED := build/DerivedData
+NATIVE_SHARED := $(wildcard native/FolderMaster/Shared/*.swift) native/PlatformAdapters/ContentSource.swift
 
-.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke script-proof script-isolation-proof ocr-proof metadata-proof check
+.PHONY: generate build universal test bridge-smoke presentation-smoke persistence-smoke rule-persistence-smoke script-proof script-isolation-proof ocr-proof metadata-proof check
 
 generate:
 	xcodegen generate --spec native/project.yml
@@ -18,16 +19,20 @@ test: generate
 	xcodebuild -quiet -project $(PROJECT) -scheme FolderMaster -configuration Debug -derivedDataPath $(DERIVED) -destination 'platform=macOS,arch=$(HOST_ARCH)' test
 
 bridge-smoke: build
-	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Shared/PersistentFolder.swift native/FolderMaster/Bridge/EngineClient.swift tests/native/BridgeSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/bridge-smoke
+	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h $(NATIVE_SHARED) native/FolderMaster/Bridge/EngineClient.swift tests/native/BridgeSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/bridge-smoke
 	build/bridge-smoke
 
 presentation-smoke: build
-	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift native/FolderMaster/Shared/PersistentFolder.swift native/FolderMaster/Shared/Experience.swift native/FolderMaster/Shared/ConditionDraft.swift native/FolderMaster/Shared/ActionDraft.swift native/PlatformAdapters/ContentSource.swift native/FolderMaster/AppModel.swift tests/native/AppModelSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/presentation-smoke
+	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift $(NATIVE_SHARED) native/FolderMaster/LiveRuleModel.swift native/FolderMaster/AppModel.swift tests/native/AppModelSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/presentation-smoke
 	build/presentation-smoke
 
 persistence-smoke: build
-	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift native/FolderMaster/Shared/PersistentFolder.swift tests/native/PersistentStoreSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/persistence-smoke
+	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift $(NATIVE_SHARED) tests/native/PersistentStoreSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/persistence-smoke
 	build/persistence-smoke
+
+rule-persistence-smoke: build
+	swiftc -target $(HOST_ARCH)-apple-macos14.0 -parse-as-library -module-cache-path build/SwiftModuleCache -import-objc-header native/Bridge/FolderMasterEngine.h native/FolderMaster/Bridge/EngineClient.swift $(NATIVE_SHARED) native/FolderMaster/LiveRuleModel.swift tests/native/RulePersistenceSmoke.swift -L build/rust/Debug -lfolder_master_engine -liconv -lresolv -o build/rule-persistence-smoke
+	build/rule-persistence-smoke
 
 check:
 	cargo fmt --all --check

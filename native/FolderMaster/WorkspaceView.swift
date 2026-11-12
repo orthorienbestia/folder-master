@@ -9,8 +9,8 @@ struct WorkspaceView: View {
         }
         .disabled(model.quitPending)
         .overlay(alignment: .bottom) {
-            if model.quitPending && (model.folderPending || model.enginePending || model.workspaceConnecting) {
-                HStack { ProgressView().controlSize(.small); Text("Finishing settings update before quitting…") }
+            if model.quitPending && (model.folderPending || model.liveRules.pending || model.enginePending || model.workspaceConnecting) {
+                HStack { ProgressView().controlSize(.small); Text("Finishing configuration update before quitting…") }
                     .padding(12).background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8)).padding(16)
             }
         }

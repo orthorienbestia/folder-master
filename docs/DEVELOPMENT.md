@@ -1,6 +1,6 @@
 # Development foundation
 
-The app builds a native SwiftUI interface connected to a local Rust worker. Real folder configuration and pause state persist in SQLite; a separate **explicitly synthetic storyboard** demonstrates future rule/preview/history screens. A native PDF/Vision adapter now passes local OCR fixtures. Watching, file effects, OCR rule integration, durable operation execution and supported undo are not connected yet. Do not use this build to organize actual files.
+The app builds a native SwiftUI interface connected to a local Rust worker. Real folder configuration, typed rule revisions and pause state persist in SQLite; a separate **explicitly synthetic storyboard** demonstrates future preview/results/history screens. A native PDF/Vision adapter now passes local OCR fixtures. Watching, matching, file effects, OCR rule integration, durable operation execution and supported undo are not connected yet. Do not use this build to organize actual files.
 
 ## Toolchain
 
@@ -25,6 +25,7 @@ make test
 make bridge-smoke
 make presentation-smoke
 make persistence-smoke
+make rule-persistence-smoke
 make script-proof
 make ocr-proof
 make metadata-proof
@@ -101,12 +102,16 @@ Validation works without an open store; save/get/list require ownership. Rule do
 
 Saves append immutable revisions in one transaction and compare the supplied current revision; stale saves, cross-folder updates, reused historical IDs and incompatible current documents are rejected without advancing the head. Folder removal drops current heads through the existing foreign-key cascade, retaining historical revisions. Creation order is stable across saves; explicit reordering is pending. Malformed Save returns `invalid_rule`, unsupported input schema returns `unsupported_rule_version`, and incompatible stored documents return `invalid_saved_rule`. Existing low-level `save_rule_snapshot` remains an opaque M1 storage primitive; new worker commands exclusively use typed APIs.
 
-The native sample editor still uses its in-memory models. Connecting its serialization, save/load acknowledgements and failure states to this contract is required before task 2.1 is complete.
+The real folder's Rules tab uses `LiveRuleModel`, `LiveRulesView` and `Shared/StoredRule.swift`. It retrieves summaries followed by the selected definition, maps the reviewed form controls to schema v1, then validates and saves through Rust. Success feedback follows the acknowledged revision; stale/failed commands retain the draft. Save retains form-only identities/acknowledgements after checking the returned configuration; these never become execution approvals. Folder/demo navigation and Quit protect both folder and rule drafts and asynchronously drain pending commands. A deliberate Reload Saved offers Save/Discard/Keep Editing when dirty. New rules start disabled, and saved enabled configuration cannot activate automation in this build.
+
+The native adapter preserves exact UInt64 byte sizes with retained units, literal tag/argv values, byte paths/bookmarks and separate ZIP destination/filename capture sources. Label arrays compare as sets while duplicates remain invalid. Unknown or unrepresentable options fail to load for editing rather than disappearing on Save. Script/delete session acknowledgements reset on reload; executable/custom interpreter metadata is rechecked off the main actor without replacing stored references or executing content. Real script approval and runtime preflight remain pending. Sample location references cannot enter real persistence.
+
+`make rule-persistence-smoke` exercises all condition operators/action families and alternate options through Swift→Rust→SQLite→Swift, crosses summary paging, checks exact maximum sizes, stale controller saves, deliberate reload, script metadata/session behavior and restart, and verifies generated source bytes remain untouched. This is configuration evidence, not preview or execution evidence.
 
 ## Evidence boundaries
 
 Rust tests exercise worker/FFI contracts, persistence, immutable snapshots, migrations/rollback, consistent backup, private data boundaries and same/cross-process ownership including forced process death. Native XCTest covers motion/state plus native bookmark/path helpers. Bridge, presentation and persistence smoke targets compile/link real Swift and Rust; presentation covers dirty navigation, pending-save guards, initialization retry and Quit Save/Discard/Cancel including failed saves and pending-update draining, while persistence covers folder setup, revisions, reopen, pause, ownership and settings-only removal with original bytes retained. Queued post-submit cancellation through Swift is not deterministically exercised end to end yet; Rust unit tests exercise the queued cancel state. Native UI inspection covers the storyboard and real folder chooser/setup/cancel states; it does not prove file safety, OCR, script isolation, full accessibility or lifecycle behavior. See PROGRESS.md for actual outcomes and unfinished gates.
 
-The sample condition form uses `Shared/ConditionDraft.swift` and `ConditionTreeEditor.swift`: UUID-based recursive nodes, native value controls and structural limits only. It does not serialize a durable Rust rule or evaluate files. `PlatformAdapters/ContentSource.swift` is shared with the actual text adapter; keep the OCRProof target compiling when changing it. `make presentation-smoke` covers Save isolation and name/condition guards, while XCTest covers exact size conversion, invalid groups/operators/ranges and stable node identity.
+Both real and sample condition forms use `Shared/ConditionDraft.swift` and `ConditionTreeEditor.swift`: UUID-based recursive nodes, native value controls and structural limits. The real form serializes through StoredRule; neither form evaluates files. `PlatformAdapters/ContentSource.swift` is shared with the actual text adapter; keep the OCRProof target compiling when changing it. `make presentation-smoke` covers real rule navigation/Quit, sample Save isolation and name/condition guards, while XCTest covers exact size conversion, invalid groups/operators/ranges and stable node identity.
 
 `Shared/ActionDraft.swift` and `ActionChainEditor.swift` provide typed native action form state. Location references carry byte paths/bookmarks and explicit sample labels; their metadata is not execution authorization. Draft session IDs and chooser request ownership guard delayed replies. Scripts/delete remain disabled; native template checks do not replace Rust regex/capture/template compilation or volume preflight. `make presentation-smoke` includes invalid-action Save and stale-session regressions; `ActionDraftTests` covers order, values, request ownership and disposable local-file selection. Rust uses pinned `unicode-segmentation` 1.12.0 for the rule-name limit; native OCR-target inputs are unchanged.

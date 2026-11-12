@@ -38,6 +38,9 @@
 		A7D1E3B2EAF31E1909587FCC /* IsolationProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7AE475B6FC9A0B6E3CF771 /* IsolationProbe.swift */; };
 		B17641990080586D0B1C7B0B /* ScriptProofProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2913CCAF74B37151B5D6B2 /* ScriptProofProtocol.swift */; };
 		B256C5DEA7D31BDE26F8E8A1 /* ContentSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A414DD361F819972C4CB6488 /* ContentSource.swift */; };
+		B432F43F81A6203F06190D2F /* RuleCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ED1DB8EEAFA571F9190DB8A /* RuleCodingTests.swift */; };
+		B556D59B1A6F1EA34AB5606E /* StoredRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE8658A1512EA914A6ED1B /* StoredRule.swift */; };
+		BA4EC8C394A065185F7BADE2 /* StoredRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAE8658A1512EA914A6ED1B /* StoredRule.swift */; };
 		BD6FAFBB08C45153713B9B23 /* StagedRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3FEB5E817B485FC759307 /* StagedRunner.swift */; };
 		CAEC5870096B7C43D49F44E0 /* ActionDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951C173D98EBE099C462DA04 /* ActionDraftTests.swift */; };
 		CC19A804E39F7EC30F703389 /* ContentSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A414DD361F819972C4CB6488 /* ContentSource.swift */; };
@@ -45,8 +48,10 @@
 		DB19DF7B00DAAB7D9AA1B4F3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A3C1CF6D9C2EA093F5EEA8 /* main.swift */; };
 		E10631307C78997F4D5EBBE6 /* FolderMasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */; };
 		E33325A492D0B3B29B95DEE3 /* Experience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200E771DAF4FE03AA8560E11 /* Experience.swift */; };
+		EEC9E0B77B7CCF9FEFB05B13 /* LiveRulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F550D3FEBAFCFFA0CF11F0 /* LiveRulesView.swift */; };
 		F007BD7930293875CCBCA725 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205776964702B52AFB52FAD8 /* main.swift */; };
 		F4B6688DFF1DE7C0E5223F60 /* DocumentText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C0ECFBD8D21920537456FB /* DocumentText.swift */; };
+		FC0A7F2DE60EF6F03B751017 /* LiveRuleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89454F4A1CCC4C060F9F3AF2 /* LiveRuleModel.swift */; };
 		FE85674EBAFE329A4DC53229 /* ScriptProofService.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A535CFBDE250483952CE767 /* ScriptProofService.xpc */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -81,6 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08F550D3FEBAFCFFA0CF11F0 /* LiveRulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRulesView.swift; sourceTree = "<group>"; };
 		14A3C1CF6D9C2EA093F5EEA8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		1D9737BC7BCDD342570B2E73 /* ScriptProofService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScriptProofService.entitlements; sourceTree = "<group>"; };
 		1DC1C168B7086DC849F5E45A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -90,6 +96,7 @@
 		261F002A6275003F2D62387A /* ExperienceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceTests.swift; sourceTree = "<group>"; };
 		289303BF39EA3AB42C3B8E36 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		2B8812B0072EB2840B2B4DF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2ED1DB8EEAFA571F9190DB8A /* RuleCodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleCodingTests.swift; sourceTree = "<group>"; };
 		31517670DA6CA68194274708 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		34CCF079A21CCBEC28DAE2A6 /* ScriptProofHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScriptProofHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		399DBDB6D46572CCD8910040 /* ConditionDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionDraft.swift; sourceTree = "<group>"; };
@@ -102,6 +109,7 @@
 		7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentWorkspaceView.swift; sourceTree = "<group>"; };
 		80E7ED223D5C9FDB750A8025 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		82D8A50DA7DC00A4C8569DDD /* OCRProof.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OCRProof.entitlements; sourceTree = "<group>"; };
+		89454F4A1CCC4C060F9F3AF2 /* LiveRuleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRuleModel.swift; sourceTree = "<group>"; };
 		8A535CFBDE250483952CE767 /* ScriptProofService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = ScriptProofService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C6F5F6D67835899C988E3EE /* FolderMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FolderMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		951C173D98EBE099C462DA04 /* ActionDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDraftTests.swift; sourceTree = "<group>"; };
@@ -120,6 +128,7 @@
 		E3B3FC60BB0791EBDC686555 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E451299DADF443BA6ADB481D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E641CADA13655005E1C91890 /* PersistentFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentFolder.swift; sourceTree = "<group>"; };
+		EAAE8658A1512EA914A6ED1B /* StoredRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredRule.swift; sourceTree = "<group>"; };
 		F8836C077138EF801C58B606 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		FB98276342FFF4F17EF38851 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -176,6 +185,7 @@
 				C1AA1CB816D2765ED3F37069 /* DocumentTextTests.swift */,
 				261F002A6275003F2D62387A /* ExperienceTests.swift */,
 				64F7981D34975B2592B253B7 /* FolderAccessTests.swift */,
+				2ED1DB8EEAFA571F9190DB8A /* RuleCodingTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -209,6 +219,7 @@
 				399DBDB6D46572CCD8910040 /* ConditionDraft.swift */,
 				200E771DAF4FE03AA8560E11 /* Experience.swift */,
 				E641CADA13655005E1C91890 /* PersistentFolder.swift */,
+				EAAE8658A1512EA914A6ED1B /* StoredRule.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -265,6 +276,8 @@
 				B4F3F2B5D583930742054C8A /* FolderMasterApp.swift */,
 				F8836C077138EF801C58B606 /* HistoryView.swift */,
 				E3B3FC60BB0791EBDC686555 /* Info.plist */,
+				89454F4A1CCC4C060F9F3AF2 /* LiveRuleModel.swift */,
+				08F550D3FEBAFCFFA0CF11F0 /* LiveRulesView.swift */,
 				7FB676F2379C5A3B44C9554A /* PersistentWorkspaceView.swift */,
 				289303BF39EA3AB42C3B8E36 /* PreviewView.swift */,
 				C92F1639C92AA7F9E906787E /* WorkspaceView.swift */,
@@ -497,6 +510,8 @@
 				9C9D1FA24D99F9F1F766C6AB /* ExperienceTests.swift in Sources */,
 				40C5AD2C1CCD4320841E3578 /* FolderAccessTests.swift in Sources */,
 				6197B9F141B2DECCE256E107 /* PersistentFolder.swift in Sources */,
+				B432F43F81A6203F06190D2F /* RuleCodingTests.swift in Sources */,
+				B556D59B1A6F1EA34AB5606E /* StoredRule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,9 +530,12 @@
 				6526D14DDE5FB256635E6BAF /* Experience.swift in Sources */,
 				E10631307C78997F4D5EBBE6 /* FolderMasterApp.swift in Sources */,
 				0A1A646390D34A1886149BCD /* HistoryView.swift in Sources */,
+				FC0A7F2DE60EF6F03B751017 /* LiveRuleModel.swift in Sources */,
+				EEC9E0B77B7CCF9FEFB05B13 /* LiveRulesView.swift in Sources */,
 				6E7D3E59369582A5E8934499 /* PersistentFolder.swift in Sources */,
 				A2530E86C18286448C6E24A1 /* PersistentWorkspaceView.swift in Sources */,
 				925E9310AB2507E793B82B84 /* PreviewView.swift in Sources */,
+				BA4EC8C394A065185F7BADE2 /* StoredRule.swift in Sources */,
 				A015B6300C4C884FD8E1179E /* WorkspaceView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

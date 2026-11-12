@@ -6,6 +6,7 @@ struct ActionChainEditor: View {
     @Binding var chain: ActionChainDraft
     let conditions: ConditionDraftNode
     let ruleEnabled: Bool
+    var sample = true
     @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var systemReduced
     @FocusState private var focus: ActionEditorFocus?
@@ -13,7 +14,7 @@ struct ActionChainEditor: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Then do these actions").font(.headline)
-            Text("\(chain.count) of 20 actions · sample configuration only")
+            Text("\(chain.count) of 20 actions · \(sample ? "sample configuration only" : "saved configuration; execution unavailable")")
                 .font(.caption).foregroundStyle(.secondary)
             ForEach(chain.issues(enabled: ruleEnabled, conditions: conditions).filter { $0.actionID == nil }) { issue in
                 ActionIssueLabel(message: issue.message)
@@ -21,7 +22,7 @@ struct ActionChainEditor: View {
             ForEach(chain.steps) { step in
                 ActionRowEditor(chain: $chain, actionID: step.id, conditions: conditions,
                                 ruleEnabled: ruleEnabled, focus: $focus,
-                                motion: MotionChoice(rawValue: motion) ?? .system, systemReduced: systemReduced)
+                                motion: MotionChoice(rawValue: motion) ?? .system, systemReduced: systemReduced, sample: sample)
             }
             Menu {
                 ForEach(ActionKind.allCases) { kind in
@@ -73,6 +74,7 @@ private struct ActionRowEditor: View {
     let focus: FocusState<ActionEditorFocus?>.Binding
     let motion: MotionChoice
     let systemReduced: Bool
+    let sample: Bool
     @State private var expanded = true
     @State private var chooser = ActionChooserRequest()
     @State private var selectionError: String?
@@ -148,8 +150,9 @@ private struct ActionRowEditor: View {
         case .compress:
             Text("ZIP · originals retained · no password or encryption").font(.caption).foregroundStyle(.secondary)
             destinationControls(step.destination, target: .destination)
-            templateInput("Archive filename template", text: value(\.filenameTemplate, fallback: step.filenameTemplate))
             capturePicker(step)
+            templateInput("Archive filename template", text: value(\.filenameTemplate, fallback: step.filenameTemplate))
+            capturePicker(step, archive: true)
         case .uncompress:
             Text("Terminal · ZIP only · retains the archive · creates a new output subfolder, never merges")
                 .font(.caption).foregroundStyle(.secondary)
@@ -164,7 +167,7 @@ private struct ActionRowEditor: View {
         case .delete:
             Label("Terminal · no Undo · not secure erase", systemImage: "exclamationmark.triangle")
             Toggle("I understand permanent deletion is not recoverable through this app", isOn: value(\.deleteAcknowledged, fallback: step.deleteAcknowledged)).toggleStyle(.checkbox)
-            Text("Sample acknowledgement only. Delete rules cannot be enabled in this build; global capability and real per-rule approvals are not implemented.")
+            Text("Configuration acknowledgement only. Delete rules cannot be enabled in this build; global capability and real per-rule approvals are not implemented.")
                 .font(.caption).foregroundStyle(.secondary)
         case .script: scriptControls(step)
         }
@@ -250,16 +253,16 @@ private struct ActionRowEditor: View {
                 .font(.caption).foregroundStyle(.secondary)
             Toggle("Publish validated outputs", isOn: value(\.script.publishOutput, fallback: step.script.publishOutput)).toggleStyle(.checkbox)
             if step.script.publishOutput { destinationControls(step.script.destination, target: .output); capturePicker(step) }
-            Toggle("Acknowledge this sample script configuration", isOn: Binding(get: { current?.scriptAcknowledged ?? false }, set: { flag in edit { $0.acknowledgeScript(flag) } })).toggleStyle(.checkbox)
+            Toggle("Acknowledge this \(sample ? "sample " : "")script configuration", isOn: Binding(get: { current?.scriptAcknowledged ?? false }, set: { flag in edit { $0.acknowledgeScript(flag) } })).toggleStyle(.checkbox)
             Text("Changing invocation options resets this acknowledgement. No content hash or executable approval is granted. Scripts cannot be enabled until isolation and global/per-rule approval gates pass.")
                 .font(.caption).foregroundStyle(.secondary)
             Button("Test Script…") {}.disabled(true).help("Unavailable: restricted execution and real capability approvals are not integrated. Test Draft never runs scripts.")
         }
     }
 
-    private func capturePicker(_ step: ActionDraft) -> some View {
+    private func capturePicker(_ step: ActionDraft, archive: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Picker("Capture source", selection: value(\.captureConditionID, fallback: step.captureConditionID)) {
+            Picker(archive ? "Archive filename capture source" : "Capture source", selection: archive ? value(\.archiveCaptureConditionID, fallback: step.archiveCaptureConditionID) : value(\.captureConditionID, fallback: step.captureConditionID)) {
                 Text("None").tag(UUID?.none)
                 ForEach(ActionDraft.captureSources(in: conditions)) { node in
                     Text("\(node.predicateValue?.field.rawValue ?? "Regex"): \(node.predicateValue?.text ?? "")").tag(Optional(node.id))
@@ -295,7 +298,7 @@ private struct ActionRowEditor: View {
             Text(title).font(.subheadline)
             if let selection {
                 Text(selection.displayPath).font(.caption).textSelection(.enabled).lineLimit(3)
-                Label(selection.sample ? "Sample location · not selected on disk" : "Local selection · session only", systemImage: selection.sample ? "rectangle.dashed" : "folder")
+                Label(selection.sample ? "Sample location · not selected on disk" : "Local location reference", systemImage: selection.sample ? "rectangle.dashed" : "folder")
                     .font(.caption).foregroundStyle(.secondary)
             } else { Text("No location selected").font(.caption).foregroundStyle(.secondary) }
             HStack {
@@ -313,7 +316,7 @@ private struct ActionRowEditor: View {
         let directory = target == .destination || target == .output
         panel.canChooseDirectories = directory; panel.canChooseFiles = !directory
         panel.allowsMultipleSelection = false; panel.resolvesAliases = false
-        panel.message = "Choose a local \(directory ? "folder" : "file") for this sample rule. Nothing will run or be written."
+        panel.message = "Choose a local \(directory ? "folder" : "file") for this \(sample ? "sample " : "")rule. Nothing will run or be written."
         panel.begin { response in
             guard response == .OK, let url = panel.url else { chooser.finish(request); return }
             Task { @MainActor in

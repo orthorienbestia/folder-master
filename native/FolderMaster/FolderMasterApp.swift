@@ -14,9 +14,11 @@ struct FolderMasterApp: App {
         .defaultSize(width: 1100, height: 720)
         .commands {
             CommandGroup(after: .newItem) {
-                Button("New Demo Rule") { model.addRule() }
+                Button(model.demo ? "New Demo Rule" : "New Rule") {
+                    if model.demo { model.addRule() } else { model.liveRules.create() }
+                }
                     .keyboardShortcut("n")
-                    .disabled(!model.demo || model.selectedDemoFolder?.availability != .available)
+                    .disabled(model.quitPending || (model.demo ? model.selectedDemoFolder?.availability != .available : !model.workspaceReady || model.folderPending || model.liveRules.folderID == nil || model.liveRules.pending))
             }
         }
         MenuBarExtra("Folder Master", systemImage: "tray.2") {
@@ -51,9 +53,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     private func confirmFolderChanges(_ model: AppModel) -> QuitDecision {
         let alert = NSAlert()
-        alert.messageText = "Save folder changes before quitting?"
-        alert.informativeText = "Save keeps your folder settings. Discard Changes leaves the saved settings unchanged."
-        alert.addButton(withTitle: "Save").isEnabled = model.validLiveDraft
+        alert.messageText = "Save workspace changes before quitting?"
+        alert.informativeText = "Save keeps your edited folder settings and rule. Discard Changes leaves saved configuration unchanged."
+        alert.addButton(withTitle: "Save").isEnabled = model.validWorkspaceDrafts
         alert.addButton(withTitle: "Discard Changes")
         alert.addButton(withTitle: "Cancel").keyEquivalent = "\u{1b}"
         NSApp.activate(ignoringOtherApps: true)

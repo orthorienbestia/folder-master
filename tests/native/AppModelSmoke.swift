@@ -248,7 +248,30 @@ struct AppModelSmoke {
                 try FileManager.default.removeItem(at: root)
             } catch { fail("Quit workflow test failed: \(error)") }
         }
-        print("Native presentation smoke passed: folder scope, empty/unavailable/reconnect, dirty navigation, confirmed preview, partial outcomes, pause, undo, cancellation and Quit")
+        let ruleRoot = FileManager.default.temporaryDirectory.appendingPathComponent("folder-master-rule-navigation-\(UUID().uuidString)", isDirectory:true)
+        do {
+            try FileManager.default.createDirectory(at:ruleRoot,withIntermediateDirectories:false,attributes:[.posixPermissions:0o700])
+            let inbox=ruleRoot.appendingPathComponent("Inbox",isDirectory:true);try FileManager.default.createDirectory(at:inbox,withIntermediateDirectories:false)
+            let model=AppModel(dataDirectory:ruleRoot.appendingPathComponent("data",isDirectory:true));await model.connect()
+            model.folderCandidate=try NativeFolderAccess.candidate(for:inbox)
+            guard await model.addLiveFolder(name:"Inbox") else { fail("Rule navigation enrollment failed") }
+            await settleRules(model)
+            model.liveRules.create();var rule=model.liveRules.draft!;rule.name="Saved rule";rule.conditions = .group(children:[.predicate(.init(text:"invoice"))]);rule.actions = .init(steps:[ActionDraft(.rename)])
+            model.liveRules.update(rule,session:model.liveRules.sessionID)
+            guard await model.liveRules.save() else { fail("Could not persist rule navigation fixture") }
+            rule=model.liveRules.draft!;rule.name="Unsaved before demo";model.liveRules.update(rule,session:model.liveRules.sessionID)
+            model.exploreDemo()
+            guard model.showLiveUnsaved,!model.demo,model.liveRules.dirty else { fail("Demo entry discarded a real rule draft") }
+            await model.resolveLiveUnsaved(save:false);await settleRules(model)
+            guard model.demo,!model.liveRules.dirty else { fail("Discard navigation did not restore saved rule") }
+            model.leaveDemo();rule=model.liveRules.draft!;rule.name="Unsaved before quit";model.liveRules.update(rule,session:model.liveRules.sessionID)
+            let canceled=await model.prepareForQuit { .cancel }
+            guard !canceled,!model.quitPending,model.liveRules.dirty,!model.liveRules.locked else { fail("Cancel Quit lost or locked a rule draft") }
+            let ready=await model.prepareForQuit { .save }
+            guard ready,!model.liveRules.dirty,model.liveRules.revision == 2 else { fail("Quit Save did not persist the real rule") }
+            await model.shutdown();try FileManager.default.removeItem(at:ruleRoot)
+        } catch { fail("Real rule navigation/Quit regression failed: \(error)") }
+        print("Native presentation smoke passed: folder/rule dirty navigation and Quit, sample scope, confirmed preview, partial outcomes, pause, undo and cancellation")
     }
     static func fail(_ message: String) -> Never {
         FileHandle.standardError.write(Data((message + "\n").utf8))
@@ -260,5 +283,9 @@ struct AppModelSmoke {
             guard Date() < deadline else { fail("Sample run did not settle within its bounded fixture time") }
             try? await Task.sleep(nanoseconds: 10_000_000)
         }
+    }
+    @MainActor static func settleRules(_ model:AppModel) async {
+        let deadline=Date().addingTimeInterval(6)
+        while model.liveRules.pending { guard Date()<deadline else { fail("Rule configuration command did not settle") };try? await Task.sleep(nanoseconds:5_000_000) }
     }
 }

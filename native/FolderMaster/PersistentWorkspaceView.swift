@@ -4,6 +4,7 @@ struct PersistentWorkspaceView: View {
     @ObservedObject var model: AppModel
     @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
     @Environment(\.accessibilityReduceMotion) private var systemReduced
+    @State private var section = "Rules"
     var body: some View {
         NavigationSplitView {
             VStack(spacing: 0) {
@@ -38,7 +39,19 @@ struct PersistentWorkspaceView: View {
                         Button("Dismiss") { model.error = nil }
                 }.font(.callout).padding(16).background(.yellow.opacity(0.10))
                 }
-                if model.liveDraft != nil { LiveFolderEditor(model: model) }
+                if model.liveDraft != nil {
+                    VStack(spacing: 0) {
+                        HStack {
+                            Text(model.liveDraft?.display_name ?? "Folder").font(.headline)
+                            Spacer()
+                            Picker("Folder view", selection: $section) { Text("Rules").tag("Rules"); Text("Folder Settings").tag("Settings") }
+                                .pickerStyle(.segmented).frame(width: 260)
+                        }.padding(16)
+                        Divider()
+                        if section == "Rules" { LiveRulesView(model: model.liveRules).disabled(model.folderPending) }
+                        else { LiveFolderEditor(model: model) }
+                    }
+                }
                 else {
                     VStack(spacing: 18) {
                         Image(systemName: "folder.badge.gearshape").font(.system(size: 48, weight: .light)).foregroundStyle(.tint)
@@ -67,11 +80,11 @@ struct PersistentWorkspaceView: View {
         .sheet(isPresented: $model.showAddFolder) {
             if let candidate = model.folderCandidate { AddFolderSheet(model: model, candidate: candidate) }
         }
-        .confirmationDialog("Save changes to this folder?", isPresented: $model.showLiveUnsaved, titleVisibility: .visible) {
-            Button("Save") { Task { await model.resolveLiveUnsaved(save: true) } }.disabled(!model.validLiveDraft)
+        .confirmationDialog("Save workspace changes?", isPresented: $model.showLiveUnsaved, titleVisibility: .visible) {
+            Button("Save") { Task { await model.resolveLiveUnsaved(save: true) } }.disabled(!model.validWorkspaceDrafts)
             Button("Discard Changes", role: .destructive) { Task { await model.resolveLiveUnsaved(save: false) } }
             Button("Keep Editing", role: .cancel) { }
-        }
+        } message: { Text("Your edited rule and folder settings are saved locally. Saving never runs files.") }
         .animation(animation, value: model.selectedLiveFolderID)
     }
     private var animation: Animation? {
@@ -149,7 +162,7 @@ private struct LiveFolderEditor: View {
                         }
                     }
                     Section {
-                        Label("Rule editing, previews, watching and file actions are still being connected. Saving these options never runs an existing file.", systemImage: "info.circle")
+                        Label("Rules can be saved in the Rules tab. Previews, watching and file actions are still being connected. Saving never runs existing files.", systemImage: "info.circle")
                             .font(.callout).foregroundStyle(.secondary)
                         Button("Remove Folder Configuration…", role: .destructive) { showRemove = true }
                     }
@@ -169,7 +182,7 @@ private struct LiveFolderEditor: View {
                     if let saved = model.storedFolders.first(where: { $0.id == folder.id }) { Task { await model.removeLiveFolder(saved) } }
                 }
                 Button("Cancel", role: .cancel) { }
-            } message: { Text("Saved settings are removed. The folder and its files remain untouched.") }
+            } message: { Text("Folder settings and current rule configurations are removed, including unsaved edits. Historical revisions remain local. The folder and its files remain untouched.") }
         }
     }
 }

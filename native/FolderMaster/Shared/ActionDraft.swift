@@ -64,6 +64,7 @@ struct ActionDraft: Identifiable, Equatable {
     var script = ActionScriptDraft()
     var scriptAcknowledgement: ActionScriptDraft?
     var captureConditionID: UUID?
+    var archiveCaptureConditionID: UUID?
     init(_ kind: ActionKind) {
         self.kind = kind
         if kind == .compress { filenameTemplate = "{stem}.zip" }
@@ -115,13 +116,16 @@ struct ActionDraft: Identifiable, Equatable {
         let templates: [String]
         switch kind {
         case .move, .copy, .uncompress: templates = [destination.subfolder]
-        case .compress: templates = [destination.subfolder, filenameTemplate]
+        case .compress: templates = [destination.subfolder]
         case .rename: templates = renameMode == .template ? [filenameTemplate] : []
         case .script: templates = script.publishOutput ? [script.destination.subfolder] : []
         default: templates = []
         }
         if templates.contains(where: { $0.contains("{capture:") }) && !Self.captureSources(in: conditions).contains(where: { $0.id == captureConditionID }) {
             add("capture", "Choose an unambiguous regex condition under All groups for capture tokens. Named capture syntax still requires Rust validation.")
+        }
+        if kind == .compress && filenameTemplate.contains("{capture:") && !Self.captureSources(in: conditions).contains(where: { $0.id == archiveCaptureConditionID }) {
+            add("archiveCapture", "Choose an unambiguous regex condition for archive filename captures.")
         }
         return result
     }
@@ -137,6 +141,7 @@ struct ActionDraft: Identifiable, Equatable {
         copy.deleteAcknowledged = false; copy.scriptAcknowledgement = nil
         copy.replaceTagsAcknowledged = false
         copy.captureConditionID = captureConditionID.flatMap { remappingCaptures[$0] }
+        copy.archiveCaptureConditionID = archiveCaptureConditionID.flatMap { remappingCaptures[$0] }
         return copy
     }
 }

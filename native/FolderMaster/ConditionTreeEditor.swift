@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Synthetic form state only. This editor neither reads files nor evaluates rules.
+/// Native form state only. This editor neither reads files nor evaluates rules.
 struct ConditionTreeEditor: View {
     @Binding var root: ConditionDraftNode
+    var sample = true
     @Environment(\.accessibilityReduceMotion) private var systemReduced
     @AppStorage("motionChoice") private var motion = MotionChoice.system.rawValue
     @FocusState private var focus: ConditionEditorFocus?
@@ -10,7 +11,7 @@ struct ConditionTreeEditor: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Conditions").font(.headline)
-            Text("Synthetic condition form — no actual rule evaluation or file access occurs.")
+            Text(sample ? "Synthetic condition form — no actual rule evaluation or file access occurs." : "Conditions are saved locally. Evaluation and file access are not connected yet.")
                 .font(.caption).foregroundStyle(.secondary)
             Text("\(root.predicateCount) of 50 conditions · up to 3 group levels")
                 .font(.caption).foregroundStyle(.secondary)

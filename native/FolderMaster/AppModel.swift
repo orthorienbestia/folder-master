@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 enum WorkspaceDestination: Hashable { case folder(UUID), history }
 enum PreviewPhase {
@@ -97,14 +98,18 @@ final class AppModel: ObservableObject {
     private var newDemoRuleID: UUID?
     private var previousDemoRuleID: UUID?
     private let dataDirectory: URL?
-    let engine = EngineClient()
+    let engine: EngineClient
+    let liveRules: LiveRuleModel
+    private var ruleChanges: AnyCancellable?
 
     init(dataDirectory: URL? = nil) {
+        let client = EngineClient(); engine = client; liveRules = LiveRuleModel(engine: client)
         #if DEBUG
         self.dataDirectory = dataDirectory ?? ProcessInfo.processInfo.environment["FOLDER_MASTER_TEST_DATA_ROOT"].map { URL(fileURLWithPath: $0, isDirectory: true) }
         #else
         self.dataDirectory = dataDirectory
         #endif
+        ruleChanges = liveRules.objectWillChange.sink { [weak self] _ in self?.objectWillChange.send() }
     }
 
     var dirty: Bool {
@@ -116,6 +121,8 @@ final class AppModel: ObservableObject {
     }
     var draftIsNew: Bool { newDemoRuleID != nil && draft?.id == newDemoRuleID }
     var liveDirty: Bool { liveDraft != storedFolders.first { $0.id == selectedLiveFolderID } }
+    var workspaceDirty: Bool { liveDirty || liveRules.dirty }
+    var validWorkspaceDrafts: Bool { (!liveDirty || validLiveDraft) && (!liveRules.dirty || liveRules.valid) }
     var validLiveDraft: Bool {
         guard let liveDraft else { return false }
         return !liveDraft.display_name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && liveDraft.display_name.count <= 200
@@ -168,8 +175,8 @@ final class AppModel: ObservableObject {
     }
 
     func exploreDemo() {
-        guard !folderPending, !quitPending else { return }
-        if liveDirty { pendingLiveAction = .demo; showLiveUnsaved = true; return }
+        guard !folderPending, !liveRules.pending, !quitPending else { return }
+        if workspaceDirty { pendingLiveAction = .demo; showLiveUnsaved = true; return }
         enterDemo()
     }
     private func enterDemo() {
@@ -186,22 +193,27 @@ final class AppModel: ObservableObject {
     }
 
     func selectLiveFolder(_ id: String?) {
-        guard !folderPending, !quitPending else { return }
+        guard !folderPending, !liveRules.pending, !quitPending else { return }
         guard selectedLiveFolderID != id else { return }
-        if liveDirty { pendingLiveAction = .select(id); showLiveUnsaved = true; return }
+        if workspaceDirty { pendingLiveAction = .select(id); showLiveUnsaved = true; return }
         loadLiveFolder(id)
     }
     private func loadLiveFolder(_ id: String?) {
         selectedLiveFolderID = id
         liveDraft = storedFolders.first { $0.id == id }
         folderSavedFeedback = false
+        liveRules.openFolder(id)
     }
-    func discardLiveDraft() { guard !folderPending, !quitPending else { return }; loadLiveFolder(selectedLiveFolderID) }
+    func discardLiveDraft() { guard !folderPending, !quitPending else { return }; liveDraft = storedFolders.first { $0.id == selectedLiveFolderID }; folderSavedFeedback = false }
     func resolveLiveUnsaved(save: Bool) async {
-        guard !folderPending, !quitPending else { return }
-        if save, !(await saveLiveFolder()) { return }
+        guard !folderPending, !liveRules.pending, !quitPending else { return }
+        if save {
+            if liveRules.dirty, !(await liveRules.save()) { error = liveRules.error; return }
+            if liveDirty, !(await saveLiveFolder()) { return }
+        }
         let action = pendingLiveAction; pendingLiveAction = nil
         discardLiveDraft()
+        if liveRules.dirty { liveRules.discard() }
         switch action {
         case .select(let id): loadLiveFolder(id)
         case .demo: enterDemo()
@@ -250,14 +262,14 @@ final class AppModel: ObservableObject {
             storedFolders.append(saved)
             // Preserve any unsaved edits in the current folder; selecting the
             // new folder goes through the same navigation guard as the sidebar.
-            if liveDirty { pendingLiveAction = .select(saved.id); showLiveUnsaved = true }
+            if workspaceDirty { pendingLiveAction = .select(saved.id); showLiveUnsaved = true }
             else { loadLiveFolder(saved.id) }
             showAddFolder = false; folderCandidate = nil
             return true
         } catch { self.error = error.localizedDescription; return false }
     }
     func removeLiveFolder(_ folder: StoredFolder) async {
-        guard workspaceReady, !folderPending, !quitPending else { return }
+        guard workspaceReady, !folderPending, !liveRules.pending, !quitPending else { return }
         folderPending = true; error = nil
         defer { folderPending = false }
         do {
@@ -489,17 +501,19 @@ final class AppModel: ObservableObject {
     func prepareForQuit(confirm: @MainActor () async -> QuitDecision) async -> Bool {
         guard !quitPending else { return false }
         quitPending = true
+        liveRules.locked = true
         // Allow acknowledged configuration updates to settle before inspecting
         // dirty state or shutting down the worker. This never waits on the UI
         // thread synchronously. File-effect draining remains a later milestone.
         do {
-            while folderPending || enginePending || workspaceConnecting { try await Task.sleep(nanoseconds: 10_000_000) }
-        } catch { quitPending = false; return false }
-        if liveDirty {
+            while folderPending || liveRules.pending || enginePending || workspaceConnecting { try await Task.sleep(nanoseconds: 10_000_000) }
+        } catch { quitPending = false; liveRules.locked = false; return false }
+        if workspaceDirty {
             switch await confirm() {
-            case .cancel: quitPending = false; return false
+            case .cancel: quitPending = false; liveRules.locked = false; return false
             case .save:
-                guard await persistLiveFolderDraft() else { quitPending = false; return false }
+                if liveRules.dirty, !(await liveRules.save(whileQuitting: true)) { error = liveRules.error; quitPending = false; liveRules.locked = false; return false }
+                if liveDirty, !(await persistLiveFolderDraft()) { quitPending = false; liveRules.locked = false; return false }
             case .discard: break
             }
         }
